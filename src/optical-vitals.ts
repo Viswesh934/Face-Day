@@ -36,6 +36,7 @@ export class OpticalVitalsScanner {
   private sampleTimes: number[] = [];
   private lastPulseBpm: number = 72;
   private lastBreathingRate: number = 14;
+  private lastFrameSentTime: number = 0;
 
   // Frame streaming support for local bridge
   public onFrameData?: (rgbaBuffer: Uint8Array, width: number, height: number) => void;
@@ -92,8 +93,9 @@ export class OpticalVitalsScanner {
     const imgData = this.ctx.getImageData(0, 0, 160, 120);
     const data = imgData.data;
 
-    // Optional frame delivery to local Presage bridge
-    if (this.onFrameData && elapsedSec % 2 === 0) {
+    // Steady ~20 fps frame delivery to local Presage bridge
+    if (this.onFrameData && now - this.lastFrameSentTime >= 50) {
+      this.lastFrameSentTime = now;
       this.onFrameData(new Uint8Array(data.buffer), 160, 120);
     }
 

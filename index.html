@@ -29,6 +29,9 @@
       <span id="nav-mask-icon"></span>
     </div>
     <div class="nav-controls">
+      <div id="bridge-status-pill" class="bridge-status-pill" title="Live Measurement Engine Status">
+        <span class="bridge-dot" id="bridge-dot"></span>
+      </div>
       <button id="btn-sound" class="comic-btn comic-btn-sm" title="Toggle Sound">
         <span id="sound-icon"></span>
       </button>
@@ -195,39 +198,43 @@
     <!-- PHASE 3: THE DECREE & TRADING CARD REVEAL      -->
     <!-- ============================================== -->
     <section id="phase-3" class="phase-panel">
-      <div class="card-stage-container">
-        <div class="verdict-banner">
-          <h2 class="verdict-title" id="verdict-team-name">THE DECREE IS CAST!</h2>
-          <p class="verdict-subtitle" id="verdict-subtext">A NEW COLLECTIBLE CARD HAS BEEN MINTED</p>
-        </div>
+      <div class="verdict-banner">
+        <h2 class="verdict-title" id="verdict-team-name">THE DECREE IS CAST!</h2>
+        <p class="verdict-subtitle" id="verdict-subtext">A NEW COLLECTIBLE CARD HAS BEEN MINTED</p>
+      </div>
 
-        <!-- 3D Card Display -->
-        <div class="card-3d-wrap" id="card-wrap-interactive">
-          <div id="card-canvas-mount">
-            <!-- Canvas is inserted here -->
+      <div class="phase3-layout-duel">
+        <!-- Left Column: 3D Comic Book Cover & Quick Actions -->
+        <div class="phase3-card-col">
+          <div class="card-3d-wrap" id="card-wrap-interactive">
+            <div id="card-canvas-mount">
+              <!-- Canvas is inserted here -->
+            </div>
+          </div>
+
+          <div class="card-actions-toolbar">
+            <button id="btn-download-card" class="comic-btn comic-btn-gold">
+              <span id="btn-download-icon"></span>
+              <span>DOWNLOAD</span>
+            </button>
+            <button id="btn-share-x" class="comic-btn comic-btn-dark">
+              <span id="btn-share-icon"></span>
+              <span>POST TO X</span>
+            </button>
+            <button id="btn-play-again" class="comic-btn">
+              <span>AGAIN</span>
+            </button>
           </div>
         </div>
 
-        <!-- Actions Toolbar -->
-        <div class="card-actions-toolbar">
-          <button id="btn-download-card" class="comic-btn comic-btn-gold">
-            <span id="btn-download-icon"></span>
-            <span>DOWNLOAD COMIC COVER</span>
-          </button>
-          <button id="btn-share-x" class="comic-btn comic-btn-dark">
-            <span id="btn-share-icon"></span>
-            <span>POST TO X</span>
-          </button>
-          <button id="btn-play-again" class="comic-btn">
-            <span>TRY ANOTHER TRIAL</span>
-          </button>
+        <!-- Right Column: Biometric Telemetry & Astral Heat Map -->
+        <div class="phase3-dossier-col">
+          <!-- Strange Reading Thermal Heat Map Mount -->
+          <div id="heatmap-mount"></div>
+
+          <!-- Biometric Stat Dashboard Mount -->
+          <div id="stat-dossier-mount"></div>
         </div>
-
-        <!-- Strange Reading Thermal Heat Map Mount -->
-        <div id="heatmap-mount" style="width: 100%; display: flex; justify-content: center;"></div>
-
-        <!-- Biometric Stat Dashboard Mount -->
-        <div id="stat-dossier-mount" style="width: 100%; display: flex; justify-content: center;"></div>
       </div>
     </section>
   </main>

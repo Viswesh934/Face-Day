@@ -29,30 +29,89 @@ export class BiometricBridge {
   public onComplete?: (finalVitals: UnifiedVitals) => void;
   public onError?: (err: Error) => void;
   public onGuidance?: (text: string) => void;
+  public onConnectionChange?: (info: { connected: boolean; hasApiKey: boolean; sdkAvailable: boolean; mode: string }) => void;
+
+  private retryTimer: number | null = null;
+  private connectionInfo = {
+    connected: false,
+    hasApiKey: false,
+    sdkAvailable: false,
+    mode: 'browser-camera'
+  };
 
   constructor() {
     this.probeLocalRunner();
+    this.startReconnectionPolling();
   }
 
-  // Attempt discovery of local Presage Node runner
+  private startReconnectionPolling() {
+    if (this.retryTimer) return;
+    this.retryTimer = window.setInterval(() => {
+      if (!this.isWsConnected) {
+        this.probeLocalRunner();
+      }
+    }, 4000);
+  }
+
+  // Attempt discovery of local Presage Node runner via Vite proxy or direct WS
   public probeLocalRunner() {
+    if (this.isWsConnected && this.ws) return;
+
     try {
-      const socket = new WebSocket('ws://127.0.0.1:8765');
+      const isHttps = window.location.protocol === 'https:';
+      const wsProto = isHttps ? 'wss:' : 'ws:';
+      // In dev with Vite, /presage-bridge proxies to 8765. Otherwise try direct 127.0.0.1:8765
+      const wsUrl = window.location.host 
+        ? `${wsProto}//${window.location.host}/presage-bridge`
+        : 'ws://127.0.0.1:8765';
+
+      const socket = new WebSocket(wsUrl);
+
       socket.onopen = () => {
         this.isWsConnected = true;
         this.ws = socket;
-        console.log('[Face Day] Connected to local Presage SmartSpectra Bridge.');
+        console.log('[Face Day] Connected to Presage SmartSpectra Bridge at', wsUrl);
         this.bindWsEvents(socket);
       };
+
       socket.onerror = () => {
+        // Fallback to direct 127.0.0.1:8765 if proxy attempt failed on HTTP
+        if (!isHttps && wsUrl.includes('/presage-bridge')) {
+          try {
+            const fallbackSocket = new WebSocket('ws://127.0.0.1:8765');
+            fallbackSocket.onopen = () => {
+              this.isWsConnected = true;
+              this.ws = fallbackSocket;
+              this.bindWsEvents(fallbackSocket);
+            };
+          } catch {
+            // direct failed too
+          }
+        }
         this.isWsConnected = false;
+        this.notifyStatus(false);
       };
+
       socket.onclose = () => {
         this.isWsConnected = false;
         this.ws = null;
+        this.notifyStatus(false);
       };
     } catch {
       this.isWsConnected = false;
+      this.notifyStatus(false);
+    }
+  }
+
+  private notifyStatus(connected: boolean, hasApiKey = false, sdkAvailable = false) {
+    this.connectionInfo = {
+      connected,
+      hasApiKey,
+      sdkAvailable,
+      mode: connected && sdkAvailable ? 'presage-hardware' : 'browser-camera'
+    };
+    if (this.onConnectionChange) {
+      this.onConnectionChange(this.connectionInfo);
     }
   }
 
@@ -60,17 +119,29 @@ export class BiometricBridge {
     return this.isWsConnected;
   }
 
+  public get currentStatus() {
+    return this.connectionInfo;
+  }
+
   private bindWsEvents(socket: WebSocket) {
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
 
-        if (data.type === 'session_configured') {
+        if (data.type === 'connected') {
+          this.notifyStatus(true, !!data.hasApiKey, !!data.sdkAvailable);
+        } else if (data.type === 'session_configured') {
           this.needsFrames = !!data.needsFrames;
           console.log(`[Face Day] Presage Bridge configured: mode=${data.mode}, needsFrames=${this.needsFrames}`);
         } else if (data.type === 'validationStatus') {
           if (this.onGuidance && data.guidance) {
             this.onGuidance(data.guidance);
+          }
+        } else if (data.type === 'error') {
+          console.warn('[Face Day] Presage Bridge returned error:', data.message);
+          if (data.authFailed) {
+            // Presage server rejected key: seamlessly switch to optical scanner
+            this.activeMode = 'browser-camera';
           }
         } else if (data.type === 'metrics') {
           const uv: UnifiedVitals = {

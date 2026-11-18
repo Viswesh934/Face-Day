@@ -199,6 +199,41 @@ body {
   gap: 12px;
 }
 
+/* Live Bridge / Engine Status Pill */
+.bridge-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #FAF8F2;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  font-family: 'Bangers', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.bridge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FFB300;
+  display: inline-block;
+  box-shadow: 0 0 6px #FFB300;
+}
+
+.bridge-dot.online {
+  background: #00E676;
+  box-shadow: 0 0 6px #00E676;
+}
+
+.bridge-dot.local {
+  background: #00E5FF;
+  box-shadow: 0 0 6px #00E5FF;
+}
+
 /* Comic Action Buttons */
 .comic-btn {
   font-family: 'Bangers', sans-serif;
@@ -258,9 +293,9 @@ body {
 
 /* Main Container */
 .main-wrapper {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 24px 16px 60px;
+  padding: 12px 16px 28px;
 }
 
 /* Phase Panels */
@@ -283,9 +318,9 @@ body {
   border: 4px solid var(--ink);
   border-radius: 16px;
   background: #111116;
-  box-shadow: 8px 8px 0 var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .hero-compact-duel {
@@ -293,7 +328,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 12px 18px;
+  padding: 10px 16px;
   background: #111116;
   position: relative;
 }
@@ -399,22 +434,23 @@ body {
   border: 4px solid var(--ink);
   border-radius: 16px;
   background: #FFFFFF;
-  box-shadow: 8px 8px 0 var(--ink);
-  padding: 32px;
+  box-shadow: 6px 6px 0 var(--ink);
+  padding: 18px 22px;
   text-align: center;
 }
 
 .gate-headline {
   font-family: 'Bangers', sans-serif;
-  font-size: 36px;
+  font-size: 30px;
   letter-spacing: 1px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .gate-subhead {
-  font-size: 16px;
-  color: #4A4A52;
-  margin-bottom: 28px;
+  font-size: 14px;
+  color: #111116;
+  font-weight: 700;
+  margin-bottom: 16px;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
@@ -435,27 +471,30 @@ body {
 .choice-box {
   border: 3.5px solid var(--ink);
   border-radius: 12px;
-  padding: 24px 20px;
+  padding: 16px 14px;
   background: #FAF8F2;
   box-shadow: 4px 4px 0 var(--ink);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   text-align: center;
 }
 
 .choice-title {
   font-family: 'Bangers', sans-serif;
-  font-size: 24px;
-  letter-spacing: 1px;
+  font-size: 20px;
+  letter-spacing: 0.8px;
+  color: var(--ink);
 }
 
 .choice-desc {
-  font-size: 14px;
-  color: #55555C;
+  font-size: 13px;
+  color: #111116;
+  font-weight: 600;
   line-height: 1.4;
+  margin-top: 4px;
 }
 
 /* Consent Modal */
@@ -531,7 +570,7 @@ body {
 
 .hud-topbar {
   background: #1C1E24;
-  padding: 14px 24px;
+  padding: 10px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -540,7 +579,7 @@ body {
 
 .hud-title {
   font-family: 'Bangers', sans-serif;
-  font-size: 24px;
+  font-size: 22px;
   letter-spacing: 1px;
   display: flex;
   align-items: center;
@@ -549,13 +588,13 @@ body {
 
 .countdown-badge {
   font-family: 'Bangers', sans-serif;
-  font-size: 28px;
+  font-size: 24px;
   background: var(--thor-gold);
   color: var(--ink);
-  padding: 4px 16px;
+  padding: 2px 14px;
   border: 3px solid var(--ink);
   border-radius: 8px;
-  box-shadow: 3px 3px 0 #000000;
+  box-shadow: 2px 2px 0 #000000;
 }
 
 .hud-guidance-banner {
@@ -563,12 +602,12 @@ body {
   color: var(--thor-gold);
   border: 2px solid var(--thor-gold);
   border-radius: 6px;
-  padding: 8px 16px;
+  padding: 6px 14px;
   font-family: 'Bangers', sans-serif;
-  font-size: 17px;
+  font-size: 16px;
   letter-spacing: 1px;
   text-align: center;
-  margin: 14px 24px 0;
+  margin: 10px 18px 0;
   box-shadow: 0 0 12px rgba(255, 204, 0, 0.2);
   transition: all 0.2s ease;
 }
@@ -576,8 +615,8 @@ body {
 .hud-stage {
   position: relative;
   width: 100%;
-  max-width: 640px;
-  margin: 16px auto 20px;
+  max-width: 420px;
+  margin: 10px auto 12px;
   aspect-ratio: 4 / 3;
   border: 4px solid #2B2F38;
   border-radius: 12px;
@@ -614,8 +653,8 @@ body {
 }
 
 .reticle-oval {
-  width: 220px;
-  height: 280px;
+  width: 170px;
+  height: 220px;
   border: 3px dashed var(--thor-azure);
   border-radius: 50%;
   box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
@@ -631,8 +670,8 @@ body {
 .hud-telemetry {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  padding: 0 24px 20px;
+  gap: 10px;
+  padding: 0 18px 14px;
 }
 
 @media (max-width: 768px) {
@@ -651,22 +690,23 @@ body {
   background: #1C1E24;
   border: 2px solid #2B2F38;
   border-radius: 8px;
-  padding: 12px 16px;
+  padding: 8px 12px;
   text-align: center;
 }
 
 .hud-stat-label {
   font-family: 'Bangers', sans-serif;
-  font-size: 14px;
-  letter-spacing: 1px;
-  color: #8C94A6;
-  margin-bottom: 4px;
+  font-size: 13px;
+  letter-spacing: 0.8px;
+  color: #00E5FF;
+  margin-bottom: 2px;
 }
 
 .hud-stat-val {
   font-family: 'Bangers', sans-serif;
-  font-size: 32px;
+  font-size: 24px;
   color: #FFFFFF;
+  line-height: 1;
 }
 
 /* PHASE 2 (BYPASS): The Overseer's Inquiry (Quiz) */
@@ -731,16 +771,10 @@ body {
   box-shadow: 2px 2px 0 var(--ink);
 }
 
-/* PHASE 3: The Trading Card Stage */
-.card-stage-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 32px;
-}
-
+/* PHASE 3: The Trading Card Stage (Side-by-Side Battleground) */
 .verdict-banner {
   text-align: center;
+  margin-bottom: 16px;
   animation: shakeBurst 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
@@ -753,26 +787,56 @@ body {
 
 .verdict-title {
   font-family: 'Bangers', sans-serif;
-  font-size: 52px;
-  letter-spacing: 2px;
+  font-size: 38px;
+  letter-spacing: 1.5px;
   color: var(--ink);
-  text-shadow: 3px 3px 0 var(--thor-gold);
+  text-shadow: 2px 2px 0 var(--thor-gold);
   line-height: 1;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .verdict-subtitle {
   font-weight: 800;
-  font-size: 18px;
-  letter-spacing: 1.5px;
-  color: #4A4A52;
+  font-size: 14px;
+  letter-spacing: 1.2px;
+  color: #111116;
+}
+
+.phase3-layout-duel {
+  display: grid;
+  grid-template-columns: 440px 1fr;
+  gap: 24px;
+  align-items: start;
+  width: 100%;
+}
+
+@media (max-width: 1040px) {
+  .phase3-layout-duel {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+}
+
+.phase3-card-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.phase3-dossier-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
 }
 
 /* Card 3D Wrap & Comic Cover Presentation */
 .card-3d-wrap {
   perspective: 1000px;
-  width: 480px;
-  max-width: 94vw;
+  width: 440px;
+  max-width: 92vw;
   cursor: pointer;
 }
 
@@ -780,44 +844,44 @@ body {
   width: 100%;
   height: auto;
   border-radius: 12px;
-  box-shadow: 12px 16px 0 var(--ink), 0 20px 40px rgba(0, 0, 0, 0.35);
+  box-shadow: 10px 14px 0 var(--ink), 0 20px 40px rgba(0, 0, 0, 0.35);
   transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.2s ease;
   transform-style: preserve-3d;
 }
 
 .card-3d-wrap:hover .card-canvas-display {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 16px 24px 0 var(--ink), 0 30px 60px rgba(0, 0, 0, 0.4);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 14px 20px 0 var(--ink), 0 28px 50px rgba(0, 0, 0, 0.4);
 }
 
 /* BIOMETRIC STAT DOSSIER DASHBOARD */
 .stat-dossier-box {
   width: 100%;
-  max-width: 860px;
   background: #FFFFFF;
   border: 4px solid var(--ink);
   border-radius: 16px;
-  box-shadow: 8px 8px 0 var(--ink);
-  padding: 24px 28px;
-  margin-top: 10px;
+  box-shadow: 6px 6px 0 var(--ink);
+  padding: 18px 22px;
+  margin-top: 0;
 }
 
 .dossier-header {
   border-bottom: 3px solid var(--ink);
-  padding-bottom: 12px;
-  margin-bottom: 20px;
+  padding-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 .dossier-title-tag {
   font-family: 'Bangers', sans-serif;
-  font-size: 26px;
+  font-size: 24px;
   letter-spacing: 1px;
+  color: var(--ink);
 }
 
 .dossier-sub-id {
   font-size: 12px;
-  font-weight: 700;
-  color: #61616B;
+  font-weight: 800;
+  color: #111116;
 }
 
 .dossier-grid {
@@ -870,15 +934,15 @@ body {
 .dossier-unit {
   font-size: 11px;
   font-weight: 800;
-  color: #71717A;
+  color: #111116;
 }
 
 .dossier-label {
   display: block;
-  font-size: 10px;
-  font-weight: 800;
+  font-size: 11px;
+  font-weight: 900;
   letter-spacing: 0.5px;
-  color: #52525B;
+  color: #111116;
   margin-top: 4px;
 }
 
@@ -890,7 +954,8 @@ body {
   display: flex;
   justify-content: space-between;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 900;
+  color: #111116;
   margin-bottom: 4px;
 }
 
@@ -909,8 +974,8 @@ body {
 
 .dossier-note {
   font-size: 13px;
-  font-weight: 600;
-  color: #3F3F46;
+  font-weight: 700;
+  color: #111116;
   line-height: 1.4;
   margin-top: 8px;
 }
@@ -1043,26 +1108,25 @@ body {
 /* STRANGE READING: ASTRAL FACIAL HEAT MAP & DISCLAIMER */
 .heatmap-panel-box {
   width: 100%;
-  max-width: 860px;
   background: #0E1322;
   border: 4px solid var(--ink);
   border-radius: 16px;
-  box-shadow: 8px 8px 0 var(--ink);
-  padding: 24px 28px;
-  margin-top: 16px;
+  box-shadow: 6px 6px 0 var(--ink);
+  padding: 18px 22px;
+  margin-top: 0;
   color: #FFFFFF;
 }
 
 .heatmap-header {
   border-bottom: 3px solid #232B45;
-  padding-bottom: 12px;
-  margin-bottom: 20px;
+  padding-bottom: 10px;
+  margin-bottom: 16px;
   text-align: left;
 }
 
 .heatmap-title {
   font-family: 'Bangers', sans-serif;
-  font-size: 30px;
+  font-size: 26px;
   letter-spacing: 1.5px;
   color: #FF9800;
   text-shadow: 2px 2px 0 var(--ink);
@@ -1074,12 +1138,12 @@ body {
   font-weight: 800;
   color: #00E5FF;
   letter-spacing: 1px;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .heatmap-body-layout {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   align-items: stretch;
 }
 
@@ -1095,7 +1159,7 @@ body {
   flex-direction: column;
   align-items: center;
   background: #060810;
-  padding: 14px;
+  padding: 12px;
   border: 3px solid var(--ink);
   border-radius: 12px;
   box-shadow: 4px 4px 0 var(--ink);
@@ -1115,10 +1179,10 @@ body {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-top: 12px;
+  margin-top: 10px;
   font-size: 11px;
-  font-weight: 800;
-  color: #A0AABF;
+  font-weight: 900;
+  color: #FFFFFF;
 }
 
 .thermal-gradient-strip {
@@ -1133,7 +1197,7 @@ body {
 .heatmap-features-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 12px;
   flex: 1;
 }
 
@@ -1147,7 +1211,7 @@ body {
   background: #161D33;
   border: 2px solid #2E3856;
   border-radius: 10px;
-  padding: 12px 14px;
+  padding: 10px 12px;
   text-align: left;
   box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
 }
@@ -1156,7 +1220,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .feature-badge {
@@ -1178,16 +1242,16 @@ body {
 .feature-title {
   font-family: 'Bangers', sans-serif;
   font-size: 16px;
-  color: #FFFFFF;
+  color: #FFCC00;
   letter-spacing: 0.6px;
   margin-bottom: 4px;
 }
 
 .feature-desc {
-  font-size: 12px;
-  color: #C5CEE0;
+  font-size: 13px;
+  color: #FFFFFF;
   line-height: 1.4;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .heatmap-disclaimer-box {

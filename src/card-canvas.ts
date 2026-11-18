@@ -397,10 +397,14 @@ export class CardCanvasRenderer {
     ctx.textAlign = 'left';
     this.wrapText(ctx, `"${profile.flavorQuote}"`, boxX + 20, boxY + 36, boxW - 40, 24);
 
-    // Rarity & Numbering strip inside Blurb
-    ctx.fillStyle = '#424242';
+    // Rarity & Numbering strip inside Blurb (High Contrast Ink & Gold)
+    ctx.fillStyle = '#D32F2F';
+    ctx.font = '900 13px "Bangers", monospace';
+    ctx.fillText(`★ ${profile.rarity} ★`, boxX + 20, boxY + 128);
+
+    ctx.fillStyle = '#111116';
     ctx.font = '800 12px "Courier New", monospace';
-    ctx.fillText(`★ ${profile.rarity} ★ // CARD ${profile.cardNumber}`, boxX + 20, boxY + 128);
+    ctx.fillText(`// CARD ${profile.cardNumber}`, boxX + 160, boxY + 128);
   }
 
   private drawBiometricRibbon(ctx: CanvasRenderingContext2D, profile: CardProfile, primary: string) {
@@ -426,13 +430,15 @@ export class CardCanvasRenderer {
     const colW = barW / statsList.length;
     statsList.forEach((st, idx) => {
       const colX = 24 + idx * colW + colW / 2;
-      ctx.fillStyle = '#B0BEC5';
-      ctx.font = '900 12px "Bangers", sans-serif';
+      // High-Contrast Pure White Label
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '900 13px "Bangers", sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(st.label, colX, barY + 28);
 
+      // Large Vivid Value with Inked Shadow
       ctx.fillStyle = primary;
-      ctx.font = '900 20px "Bangers", sans-serif';
+      ctx.font = '900 22px "Bangers", sans-serif';
       ctx.fillText(st.val, colX, barY + 62);
     });
   }
@@ -462,13 +468,13 @@ export class CardCanvasRenderer {
     ctx.textAlign = 'center';
     ctx.fillText('7 1486 02458 9', codeX + codeW / 2, codeY + 84);
 
-    // Vintage Comic Copyright & Legal Note (Zero prompt bleeding!)
-    ctx.fillStyle = '#ECEFF1';
-    ctx.font = '800 15px "Bangers", sans-serif';
+    // Vintage Comic Copyright & Legal Note (High Contrast White & Bright Cyan)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '900 16px "Bangers", sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText(`SERIES 01 // 2026 // ${profile.edition}`, this.width - 32, codeY + 44);
-    ctx.fillStyle = '#90A4AE';
-    ctx.font = '600 12px sans-serif';
+    ctx.fillStyle = '#00E5FF';
+    ctx.font = '700 12px sans-serif';
     ctx.fillText('© 2026 FACE DAY COMICS // ALL RIGHTS RESERVED WORLDWIDE', this.width - 32, codeY + 68);
   }
 

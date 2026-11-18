@@ -141,12 +141,18 @@ wss.on('connection', (ws) => {
           return;
         }
 
-        const { SmartSpectraSDK, CameraSelection, cardioMetrics, breathingMetrics, faceMetrics, decodeMetrics } = smartSpectra;
-        const requestedMetrics = [...cardioMetrics, ...breathingMetrics, ...faceMetrics];
+        const { SmartSpectraSDK, CameraSelection, MetricType, decodeMetrics } = smartSpectra;
+        const requestedMetrics = [
+          MetricType.PULSE_RATE, 
+          MetricType.HRV, 
+          MetricType.BREATHING_RATE,
+          MetricType.FACE_LANDMARKS,
+          MetricType.EXPRESSIONS
+        ];
 
         await stopSession();
 
-        console.log('[Face Day Bridge] Initializing SmartSpectra SDK session with 30s credit guard...');
+        console.log('[Face Day Bridge] Initializing SmartSpectra SDK session with challenge metrics and 30s credit guard...');
         sdkInstance = new SmartSpectraSDK({
           apiKey,
           requestedMetrics,

@@ -43,6 +43,11 @@ const elements = {
   btnStartStrangeFlow: $('btn-start-strange-flow'),
   btnStartInquiryFlow: $('btn-start-inquiry-flow'),
 
+  // Live Bridge / Engine Indicator
+  bridgeStatusPill: $('bridge-status-pill'),
+  bridgeDot: $('bridge-dot'),
+  bridgeStatusLabel: $('bridge-status-label'),
+
   // Marvel Intro Loader
   marvelIntroLoader: $('marvel-intro-loader'),
   btnSkipMarvel: $('btn-skip-marvel'),
@@ -593,9 +598,31 @@ function initDuelInteractions() {
   });
 }
 
+// Live Bridge Status Indicator
+function initBridgeStatus() {
+  const updateUi = (info: { connected: boolean; hasApiKey: boolean; sdkAvailable: boolean; mode: string }) => {
+    if (elements.bridgeDot && elements.bridgeStatusLabel) {
+      if (info.connected && info.sdkAvailable) {
+        elements.bridgeDot.className = 'bridge-dot online';
+        elements.bridgeStatusLabel.textContent = 'PRESAGE C-API: ACTIVE';
+      } else if (info.connected) {
+        elements.bridgeDot.className = 'bridge-dot online';
+        elements.bridgeStatusLabel.textContent = 'BRIDGE: CONNECTED';
+      } else {
+        elements.bridgeDot.className = 'bridge-dot local';
+        elements.bridgeStatusLabel.textContent = 'BROWSER OPTICAL: READY';
+      }
+    }
+  };
+
+  bridge.onConnectionChange = updateUi;
+  updateUi(bridge.currentStatus);
+}
+
 // App Initialization
 function bootstrap() {
   mountIcons();
+  initBridgeStatus();
   initMarvelIntroLoader();
   initDuelInteractions();
   initSoundControls();

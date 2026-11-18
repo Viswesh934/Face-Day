@@ -118,7 +118,11 @@ wss.on('connection', (ws) => {
         // High-performance binary frame pipeline (RGBA buffer)
         // Stride = 160 * 4 = 640 bytes for a 160x120 frame
         const nowUs = Number(process.hrtime.bigint() / 1000n);
-        sdkInstance.sendFrame(raw, 160, 120, 640, smartSpectra.PixelFormat.kRGBA, nowUs);
+        try {
+          sdkInstance.sendFrame(raw, 160, 120, 640, smartSpectra.PixelFormat.kRGBA, nowUs);
+        } catch {
+          // Suppress frames if native engine halted on auth
+        }
         return;
       }
 
@@ -232,9 +236,14 @@ wss.on('connection', (ws) => {
           }
         });
 
-        sdkInstance.on('error', (err) => {
-          console.error('[Face Day Bridge] SDK Error:', err);
-          broadcast({ type: 'error', message: err.message || 'SmartSpectra Engine Error' });
+        sdkInstance.on('error', (code, message, retryable) => {
+          console.error(`[Face Day Bridge] SmartSpectra Error code ${code}:`, message, `retryable=${retryable}`);
+          broadcast({ 
+            type: 'error', 
+            code, 
+            message: typeof message === 'string' ? message : String(code), 
+            authFailed: code === 2 || String(message).includes('authentication failed')
+          });
         });
 
         sdkInstance.start();

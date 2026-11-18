@@ -87,9 +87,10 @@
       <div class="action-gate">
         <h2 class="gate-headline">STEP FORTH TO BE SORTED</h2>
         <p class="gate-subhead">
-          Your physical micro-rhythms or tactical instincts will forge your collectible trading card. Select your trial:
+          Your physical micro-rhythms, facial nature, or tactical instincts will forge your vintage comic cover:
         </p>
         <div class="gate-options">
+          <!-- Choice 1: The Trial of Worthiness (Presage) -->
           <div class="choice-box">
             <div id="choice-camera-icon"></div>
             <div>
@@ -103,6 +104,21 @@
             </button>
           </div>
 
+          <!-- Choice 2: Strange Reading (Astral Face Reading) -->
+          <div class="choice-box">
+            <div id="choice-strange-icon"></div>
+            <div>
+              <h3 class="choice-title">STRANGE READING</h3>
+              <p class="choice-desc">
+                The Astral Mirror reads your natural temperament — diagnosing serene calm vs arcane tactical focus from facial micro-signals.
+              </p>
+            </div>
+            <button id="btn-start-strange-flow" class="comic-btn" style="width: 100%; background: #E65100; color: #FFFFFF;">
+              <span>ASTRAL FACE READING</span>
+            </button>
+          </div>
+
+          <!-- Choice 3: The Overseer's Inquiry (Bypass Mode) -->
           <div class="choice-box">
             <div id="choice-inquiry-icon"></div>
             <div>
@@ -209,7 +225,7 @@
         <div class="card-actions-toolbar">
           <button id="btn-download-card" class="comic-btn comic-btn-gold">
             <span id="btn-download-icon"></span>
-            <span>DOWNLOAD TRADING CARD</span>
+            <span>DOWNLOAD COMIC COVER</span>
           </button>
           <button id="btn-share-x" class="comic-btn comic-btn-dark">
             <span id="btn-share-icon"></span>
@@ -219,6 +235,9 @@
             <span>TRY ANOTHER TRIAL</span>
           </button>
         </div>
+
+        <!-- Biometric Stat Dashboard Mount -->
+        <div id="stat-dossier-mount" style="width: 100%; display: flex; justify-content: center;"></div>
       </div>
     </section>
   </main>

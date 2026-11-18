@@ -20,13 +20,24 @@ export const icons = {
     <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-svg">
       <path d="M12 12C12 8 16 6 24 6C32 6 36 8 36 12V28C36 36 29 42 24 43C19 42 12 36 12 28V12Z" fill="#00C853" stroke="#111116" stroke-width="3" stroke-linejoin="round"/>
       <path d="M15 14H33V26C33 33 28 38 24 39C20 38 15 33 15 26V14Z" fill="#B0BEC5" stroke="#111116" stroke-width="2"/>
-      <!-- Slit Eyes -->
       <path d="M18 19L23 21L18 22H17L18 19Z" fill="#111116"/>
       <path d="M30 19L25 21L30 22H31L30 19Z" fill="#111116"/>
-      <!-- Iron Rivets & Vent -->
       <path d="M24 24V31M21 28H27M20 33H28" stroke="#111116" stroke-width="2" stroke-linecap="round"/>
       <circle cx="16" cy="11" r="1.5" fill="#ECEFF1" stroke="#111116" stroke-width="1"/>
       <circle cx="32" cy="11" r="1.5" fill="#ECEFF1" stroke="#111116" stroke-width="1"/>
+    </svg>
+  `,
+
+  // Doctor Strange's Eye of Agamotto / Mystical Third Eye
+  strange: `
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-svg">
+      <ellipse cx="24" cy="24" rx="20" ry="12" fill="#E65100" stroke="#111116" stroke-width="3"/>
+      <circle cx="24" cy="24" r="8" fill="#FFD54F" stroke="#111116" stroke-width="2.5"/>
+      <ellipse cx="24" cy="24" rx="3.5" ry="7" fill="#111116"/>
+      <path d="M4 24C10 14 38 14 44 24" stroke="#FFE082" stroke-width="2" stroke-dasharray="2 2"/>
+      <path d="M4 24C10 34 38 34 44 24" stroke="#FFE082" stroke-width="2" stroke-dasharray="2 2"/>
+      <circle cx="10" cy="24" r="1.5" fill="#FFFFFF"/>
+      <circle cx="38" cy="24" r="1.5" fill="#FFFFFF"/>
     </svg>
   `,
 
@@ -102,6 +113,14 @@ export const icons = {
       <line x1="16" y1="13" x2="8" y2="13"/>
       <line x1="16" y1="17" x2="8" y2="17"/>
       <polyline points="10 9 9 9 8 9"/>
+    </svg>
+  `,
+
+  // Dashboard / Telemetry
+  dashboard: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <path d="M3 9h18M9 21V9"/>
     </svg>
   `,
 

@@ -5,9 +5,10 @@ import confetti from 'canvas-confetti';
 import { icons } from './icons';
 import { sound } from './sound-engine';
 import { BiometricBridge, UnifiedVitals } from './biometric-bridge';
-import { sortFromVitals, sortFromInquiry, CardProfile } from './sorting-engine';
+import { sortFromVitals, sortFromInquiry, sortStrangeReading, CardProfile } from './sorting-engine';
 import { cardRenderer } from './card-canvas';
 import { deckVault } from './card-deck';
+import { statDashboard } from './stat-dashboard';
 
 // DOM Element References
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -32,8 +33,10 @@ const elements = {
   heroThorIcon: $('hero-thor-icon'),
   heroDoomIcon: $('hero-doom-icon'),
   choiceCameraIcon: $('choice-camera-icon'),
+  choiceStrangeIcon: $('choice-strange-icon'),
   choiceInquiryIcon: $('choice-inquiry-icon'),
   btnStartCameraFlow: $('btn-start-camera-flow'),
+  btnStartStrangeFlow: $('btn-start-strange-flow'),
   btnStartInquiryFlow: $('btn-start-inquiry-flow'),
 
   // Consent Modal
@@ -63,6 +66,7 @@ const elements = {
   verdictTeamName: $('verdict-team-name'),
   verdictSubtext: $('verdict-subtext'),
   cardCanvasMount: $('card-canvas-mount'),
+  statDossierMount: $('stat-dossier-mount'),
   btnDownloadCard: $('btn-download-card'),
   btnDownloadIcon: $('btn-download-icon'),
   btnShareX: $('btn-share-x'),
@@ -81,6 +85,7 @@ const elements = {
 // Global App State
 const bridge = new BiometricBridge();
 let currentProfile: CardProfile | null = null;
+let activeTrialMode: 'worthiness' | 'strange' = 'worthiness';
 
 // Inquiry Quiz State
 interface QuizQuestion {
@@ -132,6 +137,7 @@ function mountIcons() {
   elements.heroThorIcon.innerHTML = icons.hammer;
   elements.heroDoomIcon.innerHTML = icons.mask;
   elements.choiceCameraIcon.innerHTML = icons.camera;
+  elements.choiceStrangeIcon.innerHTML = icons.strange;
   elements.choiceInquiryIcon.innerHTML = icons.inquiry;
   elements.hudCrosshairIcon.innerHTML = icons.crosshair;
 
@@ -165,6 +171,13 @@ function initSoundControls() {
 function initCameraFlow() {
   elements.btnStartCameraFlow.addEventListener('click', () => {
     sound.playClick();
+    activeTrialMode = 'worthiness';
+    elements.modalConsent.style.display = 'flex';
+  });
+
+  elements.btnStartStrangeFlow.addEventListener('click', () => {
+    sound.playClick();
+    activeTrialMode = 'strange';
     elements.modalConsent.style.display = 'flex';
   });
 
@@ -280,13 +293,23 @@ async function startCameraTrial() {
   bridge.onComplete = (finalV: UnifiedVitals) => {
     bridge.stopTrial();
     const vitalsToUse = finalV || lastVitals;
-    const profile = sortFromVitals({
-      pulseRate: vitalsToUse.pulseBpm,
-      breathingRate: vitalsToUse.breathingRate,
-      rmssd: vitalsToUse.rmssd,
-      stressIndex: vitalsToUse.stressIndex,
-      calmScore: vitalsToUse.calmScore
-    });
+    const profile = activeTrialMode === 'strange'
+      ? sortStrangeReading({
+          pulseRate: vitalsToUse.pulseBpm,
+          breathingRate: vitalsToUse.breathingRate,
+          rmssd: vitalsToUse.rmssd,
+          stressIndex: vitalsToUse.stressIndex,
+          calmScore: vitalsToUse.calmScore,
+          expressions: vitalsToUse.expressions
+        })
+      : sortFromVitals({
+          pulseRate: vitalsToUse.pulseBpm,
+          breathingRate: vitalsToUse.breathingRate,
+          rmssd: vitalsToUse.rmssd,
+          stressIndex: vitalsToUse.stressIndex,
+          calmScore: vitalsToUse.calmScore,
+          expressions: vitalsToUse.expressions
+        });
     revealVerdict(profile);
   };
 
@@ -361,16 +384,23 @@ function revealVerdict(profile: CardProfile) {
 
   // Trigger Team Audio & Banner
   const isThor = profile.team === 'thor';
+  const isDoom = profile.team === 'doom';
+
   if (isThor) {
     sound.playThunder();
     elements.verdictTeamName.textContent = 'THE HAMMER HAS CHOSEN!';
     elements.verdictTeamName.style.textShadow = '3px 3px 0 var(--thor-gold)';
     elements.verdictSubtext.textContent = `DRAFTED INTO TEAM THOR AS "${profile.archetype.toUpperCase()}"`;
-  } else {
+  } else if (isDoom) {
     sound.playDoomClank();
     elements.verdictTeamName.textContent = 'DOOM DEMANDS YOUR ALLEGIANCE!';
     elements.verdictTeamName.style.textShadow = '3px 3px 0 var(--doom-emerald)';
     elements.verdictSubtext.textContent = `DRAFTED INTO TEAM DOOM AS "${profile.archetype.toUpperCase()}"`;
+  } else {
+    sound.playFanfare();
+    elements.verdictTeamName.textContent = 'THE ASTRAL MIRROR HAS DECREED!';
+    elements.verdictTeamName.style.textShadow = '3px 3px 0 var(--strange-amber)';
+    elements.verdictSubtext.textContent = `MINTED AS "${profile.archetype.toUpperCase()}"`;
   }
 
   // Sound fanfare and card whoosh
@@ -381,17 +411,24 @@ function revealVerdict(profile: CardProfile) {
 
   // Confetti burst
   confetti({
-    particleCount: 80,
-    spread: 70,
+    particleCount: 90,
+    spread: 75,
     origin: { y: 0.6 },
-    colors: isThor ? ['#FFCC00', '#00E5FF', '#111116'] : ['#00C853', '#D4D8DD', '#111116']
+    colors: isThor 
+      ? ['#FFCC00', '#00E5FF', '#111116'] 
+      : isDoom 
+        ? ['#00C853', '#D4D8DD', '#111116'] 
+        : ['#E65100', '#FFD54F', '#111116']
   });
 
-  // Render Card to Canvas & Mount
+  // Render Comic Book Cover Page to Canvas & Mount
   const canvas = cardRenderer.render(profile);
   canvas.className = 'card-canvas-display';
   elements.cardCanvasMount.innerHTML = '';
   elements.cardCanvasMount.appendChild(canvas);
+
+  // Render Biometric Stat Dashboard
+  statDashboard.render(profile, elements.statDossierMount);
 }
 
 // Actions Toolbar

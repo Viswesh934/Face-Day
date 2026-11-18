@@ -1,5 +1,5 @@
 // src/sorting-engine.ts
-// Algorithmic sorting for Face Day: Determines Team Thor (Hammer), Team Doom (Mask), or Strange Reading (Astral Face Reading)
+// Algorithmic sorting for Face Day: Determines Team Thor (Hammer), Team Doom (Mask), or Doctor Strange (Astral Sorcery)
 
 export type Team = 'thor' | 'doom' | 'strange';
 export type Rarity = 'RARE' | 'ULTRA-RARE' | 'LEGENDARY FOIL';
@@ -28,10 +28,10 @@ export interface CardProfile {
   archetype: string;
   rarity: Rarity;
   stats: {
-    agility: number;    // AGI
-    endurance: number;  // END
-    focus: number;      // FOC
-    willpower: number;  // WIL
+    agility: number;    // AGI for Thor/Doom | AST (Astral Energy) for Strange
+    endurance: number;  // END for Thor/Doom | MYS (Mystic Sorcery) for Strange
+    focus: number;      // FOC for Thor/Doom | GEO (Sacred Geometry) for Strange
+    willpower: number;  // WIL for Thor/Doom | CHR (Chrono Stability) for Strange
   };
   powerRating: number;
   flavorQuote: string;
@@ -67,12 +67,12 @@ const DOOM_TITLES = [
 ];
 
 const STRANGE_TITLES = [
+  'Master of the Mystic Arts',
   'Sorcerer of the Astral Mirror',
-  'Master of Serene Mysticism',
-  'The Arcane Inquisitor',
-  'Cosmic Guardian of Agamotto',
-  'Keeper of the Mystic Cadence',
-  'Architect of Dimensional Will'
+  'Keeper of the Time Stone',
+  'Guardian of the Sanctorum',
+  'Architect of the Multiverse',
+  'Wielder of the Vishanti'
 ];
 
 // Witty, iconic comic quotes (Zero prompt bleeding!)
@@ -93,18 +93,23 @@ const DOOM_QUOTES = [
 ];
 
 const STRANGE_QUOTES = [
-  'The Astral Mirror reveals your mystic nature! 85% cosmic wisdom, 15% thinking intensely about what to eat for dinner.',
-  'The Eye of Agamotto has gazed upon your cheeks. Verdict: Dangerously unbothered by the chaos of reality.',
-  'Your third eye is wide open across dimensions, but your physical eyes are screaming for a cup of coffee.',
-  'Your brow furrow suggests deep multidimensional meditation... or you just remembered you forgot to lock the front door.'
+  'The Eye of Agamotto unmasks the dimensional veil. You master the arcane geometry of time and space.',
+  'Dormammu, I’ve come to bargain! Your astral cadence resonates with infinite timelines and cosmic calm.',
+  'We never lose our demons, mortal—we only learn to live above them through mystic discipline.',
+  'The mirror dimension bends to your breath. Ancient Kamar-Taj sorcery flows through your pulse.',
+  'Faith is my sword, truth my shield, and knowledge my armor. The Vishanti approve your dimensional composure.'
 ];
 
 export function sortFromVitals(v: VitalsInput, forcedTeam?: Team): CardProfile {
-  const pulse = v.pulseRate || 72;
-  const rmssd = v.rmssd || 42;
-  const breathing = v.breathingRate || 14;
-  const stress = v.stressIndex || 95;
-  const calm = v.calmScore ?? Math.round(Math.min(95, Math.max(10, (rmssd / 65) * 100)));
+  const pulse = Math.round(v.pulseRate || 72);
+  const rmssd = Math.round(v.rmssd || 42);
+  const breathing = Math.round(v.breathingRate || 14);
+  const stress = Math.round(v.stressIndex || 95);
+
+  // Normalized calmScore centered at 50 for 72 BPM
+  const calm = v.calmScore !== undefined
+    ? Math.max(10, Math.min(95, Math.round(v.calmScore)))
+    : Math.max(10, Math.min(95, Math.round(50 - (pulse - 72) * 2.2)));
 
   const exprs: Record<string, number> = v.expressions || {
     neutral: 70,
@@ -116,56 +121,102 @@ export function sortFromVitals(v: VitalsInput, forcedTeam?: Team): CardProfile {
   if (forcedTeam) {
     team = forcedTeam;
   } else {
-    let thorScore = 0;
-    let doomScore = 0;
+    let thorPoints = 0;
+    let doomPoints = 0;
+    let strangePoints = 0;
 
-    if (rmssd >= 40) thorScore += 35;
-    else doomScore += 35;
+    // 1. Pulse Rate Dynamics (Median resting human baseline = 72 BPM)
+    // Elevated pulse = sympathetic tactical alertness (DOOM)
+    // Low/steady pulse = parasympathetic athletic composure (THOR)
+    if (pulse >= 75) {
+      doomPoints += 32;
+    } else if (pulse <= 68) {
+      thorPoints += 32;
+    } else {
+      // 69-74 BPM: Mid-band
+      thorPoints += 16;
+      doomPoints += 16;
+    }
 
-    if (pulse >= 55 && pulse <= 75) thorScore += 25;
-    else doomScore += 25;
+    // 2. Respiration Cadence (Normal = 12-16 / min)
+    if (breathing >= 16) {
+      doomPoints += 26; // Rapid tactical calculation
+    } else if (breathing <= 13) {
+      thorPoints += 26; // Deep diaphragmatic calm
+    } else {
+      thorPoints += 13;
+      doomPoints += 13;
+    }
 
-    if (breathing >= 10 && breathing <= 16) thorScore += 20;
-    else doomScore += 20;
+    // 3. Heart Rate Variability (RMSSD) & Autonomic Stress
+    if (rmssd >= 48 && stress <= 88) {
+      thorPoints += 24; // High parasympathetic resilience
+    } else if (rmssd <= 38 || stress >= 105) {
+      doomPoints += 24; // High tactical vigilance & focus
+    } else {
+      thorPoints += 12;
+      doomPoints += 12;
+    }
 
-    if (stress < 105) thorScore += 20;
-    else doomScore += 20;
+    // 4. Facial Expression & Gaze Composure
+    const expressionTension = exprs.focus || (100 - calm);
+    if (expressionTension >= 52) {
+      doomPoints += 18; // Focused brow furrow, analytical scrutiny
+    } else {
+      thorPoints += 18; // Resolute composure, relaxed jaw
+    }
 
-    team = thorScore >= doomScore ? 'thor' : 'doom';
+    // Check for rare natural draft into Strange (Astral Transcendence)
+    if (calm >= 80 && breathing <= 12 && Math.abs(pulse - 70) <= 3) {
+      strangePoints += 45;
+    }
+
+    if (strangePoints > thorPoints && strangePoints > doomPoints) {
+      team = 'strange';
+    } else if (doomPoints > thorPoints) {
+      team = 'doom';
+    } else if (thorPoints > doomPoints) {
+      team = 'thor';
+    } else {
+      team = expressionTension > 50 ? 'doom' : 'thor';
+    }
   }
 
   let rarity: Rarity = 'RARE';
-  if (calm >= 80 || stress > 160 || rmssd > 55) {
+  if (calm >= 80 || stress > 150 || rmssd > 55 || team === 'strange') {
     rarity = 'LEGENDARY FOIL';
-  } else if (calm >= 65 || stress > 130 || rmssd > 45) {
+  } else if (calm >= 65 || stress > 120 || rmssd > 45) {
     rarity = 'ULTRA-RARE';
   }
 
+  // Stats tailored by archetype
   const agility = team === 'thor'
     ? Math.min(99, Math.round(75 + (rmssd / 90) * 24))
     : team === 'doom'
-      ? Math.min(99, Math.round(60 + (pulse / 120) * 25))
-      : Math.min(99, Math.round(70 + (calm / 100) * 28));
+      ? Math.min(99, Math.round(62 + (pulse / 120) * 25))
+      : Math.min(99, Math.round(82 + (calm / 100) * 16)); // AST (Astral Energy)
 
   const endurance = team === 'thor'
     ? Math.min(99, Math.round(82 + (16 - Math.abs(breathing - 13)) * 1.2))
     : team === 'doom'
-      ? Math.min(99, Math.round(65 + (stress / 200) * 22))
-      : Math.min(99, Math.round(75 + (rmssd / 80) * 20));
+      ? Math.min(99, Math.round(68 + (stress / 200) * 22))
+      : Math.min(99, Math.round(88 + (rmssd / 80) * 11)); // MYS (Mystic Sorcery)
 
   const focus = team === 'thor'
     ? Math.min(99, Math.round(65 + (rmssd / 80) * 22))
     : team === 'doom'
-      ? Math.min(99, Math.round(84 + (stress / 180) * 15))
-      : Math.min(99, Math.round(86 + (calm / 100) * 13));
+      ? Math.min(99, Math.round(86 + (stress / 180) * 13))
+      : Math.min(99, Math.round(92 + (calm / 100) * 7));  // GEO (Sacred Geometry)
 
   const willpower = team === 'thor'
     ? Math.min(99, Math.round(78 + (calm / 100) * 20))
     : team === 'doom'
       ? Math.min(99, Math.round(88 + ((100 - calm) / 100) * 11))
-      : Math.min(99, Math.round(90 + (calm / 100) * 9));
+      : Math.min(99, Math.round(94 + (calm / 100) * 5));  // CHR (Chrono Stability)
 
-  const powerRating = Math.round(agility * 2.2 + endurance * 2.6 + focus * 2.4 + willpower * 2.8);
+  const powerRating = team === 'strange'
+    ? Math.round(agility * 2.3 + endurance * 2.5 + focus * 2.7 + willpower * 2.9)
+    : Math.round(agility * 2.2 + endurance * 2.6 + focus * 2.4 + willpower * 2.8);
 
   const titles = team === 'thor' ? THOR_TITLES : team === 'doom' ? DOOM_TITLES : STRANGE_TITLES;
   const quotes = team === 'thor' ? THOR_QUOTES : team === 'doom' ? DOOM_QUOTES : STRANGE_QUOTES;
@@ -202,10 +253,10 @@ export function sortFromVitals(v: VitalsInput, forcedTeam?: Team): CardProfile {
     cardNumber: `#${cardNum} / 100`,
     edition: '1ST EDITION - COMICS GROUP',
     biometrics: {
-      pulse: Math.round(pulse),
-      breathing: Math.round(breathing),
-      rmssd: Math.round(rmssd),
-      stressIndex: Math.round(stress),
+      pulse,
+      breathing,
+      rmssd,
+      stressIndex: stress,
       calmScore: calm,
       equilibrium,
       expressions: exprs
@@ -214,26 +265,54 @@ export function sortFromVitals(v: VitalsInput, forcedTeam?: Team): CardProfile {
 }
 
 export function sortFromInquiry(answers: InquiryInput): CardProfile {
-  const sum = answers.q1 + answers.q2 + answers.q3 + answers.q4;
-  const isThor = sum < 2.5;
+  const choices = [answers.q1, answers.q2, answers.q3, answers.q4];
+  let thorVotes = 0;
+  let doomVotes = 0;
+  let strangeVotes = 0;
 
-  const pseudoVitals: VitalsInput = isThor
+  for (const c of choices) {
+    if (c === 0) thorVotes++;
+    else if (c === 1) doomVotes++;
+    else if (c === 2) strangeVotes++;
+  }
+
+  let selectedTeam: Team = 'thor';
+  if (strangeVotes >= 2) {
+    selectedTeam = 'strange';
+  } else if (doomVotes > thorVotes) {
+    selectedTeam = 'doom';
+  } else if (thorVotes > doomVotes) {
+    selectedTeam = 'thor';
+  } else {
+    // Tie-breaker
+    selectedTeam = choices[3] === 1 ? 'doom' : choices[3] === 2 ? 'strange' : 'thor';
+  }
+
+  const pseudoVitals: VitalsInput = selectedTeam === 'thor'
     ? {
-        pulseRate: 68 + Math.round(Math.random() * 8),
-        rmssd: 52 + Math.round(Math.random() * 18),
-        breathingRate: 13 + Math.round(Math.random() * 3),
-        stressIndex: 75 + Math.round(Math.random() * 25),
+        pulseRate: 66 + Math.round(Math.random() * 6),
+        rmssd: 54 + Math.round(Math.random() * 16),
+        breathingRate: 12 + Math.round(Math.random() * 2),
+        stressIndex: 72 + Math.round(Math.random() * 20),
         calmScore: 78
       }
-    : {
-        pulseRate: 84 + Math.round(Math.random() * 12),
-        rmssd: 31 + Math.round(Math.random() * 8),
-        breathingRate: 19 + Math.round(Math.random() * 4),
-        stressIndex: 145 + Math.round(Math.random() * 40),
-        calmScore: 35
-      };
+    : selectedTeam === 'doom'
+      ? {
+          pulseRate: 82 + Math.round(Math.random() * 10),
+          rmssd: 32 + Math.round(Math.random() * 8),
+          breathingRate: 18 + Math.round(Math.random() * 3),
+          stressIndex: 140 + Math.round(Math.random() * 35),
+          calmScore: 32
+        }
+      : {
+          pulseRate: 70 + Math.round(Math.random() * 4),
+          rmssd: 62 + Math.round(Math.random() * 14),
+          breathingRate: 11 + Math.round(Math.random() * 2),
+          stressIndex: 65 + Math.round(Math.random() * 15),
+          calmScore: 88
+        };
 
-  return sortFromVitals(pseudoVitals);
+  return sortFromVitals(pseudoVitals, selectedTeam);
 }
 
 export function sortStrangeReading(v: VitalsInput): CardProfile {

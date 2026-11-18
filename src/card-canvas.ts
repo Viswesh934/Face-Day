@@ -19,10 +19,10 @@ export class CardCanvasRenderer {
     const isDoom = profile.team === 'doom';
 
     // Palette Configuration
-    const primaryColor = isThor ? '#FFCC00' : isDoom ? '#00E676' : '#FF9800';
-    const secondaryColor = isThor ? '#00E5FF' : isDoom ? '#ECEFF1' : '#FFD54F';
-    const midBg = isThor ? '#153C68' : isDoom ? '#154B2A' : '#3F1663';
-    const darkBg = isThor ? '#0A1C30' : isDoom ? '#0A2515' : '#1E0A30';
+    const primaryColor = isThor ? '#FFCC00' : isDoom ? '#00E676' : '#FFAB00';
+    const secondaryColor = isThor ? '#00E5FF' : isDoom ? '#ECEFF1' : '#00E676'; // Time Stone Emerald for Strange
+    const midBg = isThor ? '#153C68' : isDoom ? '#154B2A' : '#2A0845'; // Cosmic Astral Violet
+    const darkBg = isThor ? '#0A1C30' : isDoom ? '#0A2515' : '#120024'; // Kamar-Taj Midnight Indigo
 
     // 1. Inked Outer Bleed
     ctx.fillStyle = '#111116';
@@ -140,9 +140,26 @@ export class CardCanvasRenderer {
     // Character Silhouette / Emblem
     ctx.fillStyle = '#111116';
     ctx.fillRect(boxX + 10, boxY + 74, boxW - 20, boxH - 82);
-    ctx.fillStyle = primary;
-    ctx.font = '900 16px "Bangers", sans-serif';
-    ctx.fillText(profile.team.toUpperCase().slice(0, 4), boxX + boxW / 2, boxY + 112);
+    if (profile.team === 'strange') {
+      // Draw Seal of the Vishanti
+      const vcx = boxX + boxW / 2;
+      const vcy = boxY + 115;
+      ctx.strokeStyle = '#FFD54F';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(vcx, vcy, 18, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(vcx - 13, vcy - 13);
+      ctx.quadraticCurveTo(vcx, vcy, vcx + 13, vcy + 13);
+      ctx.moveTo(vcx + 13, vcy - 13);
+      ctx.quadraticCurveTo(vcx, vcy, vcx - 13, vcy + 13);
+      ctx.stroke();
+    } else {
+      ctx.fillStyle = primary;
+      ctx.font = '900 16px "Bangers", sans-serif';
+      ctx.fillText(profile.team.toUpperCase().slice(0, 4), boxX + boxW / 2, boxY + 112);
+    }
   }
 
   private drawComicsCodeSeal(ctx: CanvasRenderingContext2D) {
@@ -333,48 +350,195 @@ export class CardCanvasRenderer {
     const cx = this.width / 2;
     const cy = 485;
 
-    // Eye of Agamotto Astral Mandalas (Sleek, balanced proportions)
-    ctx.strokeStyle = primary;
-    ctx.lineWidth = 4;
-    for (let r = 50; r <= 130; r += 35) {
+    // 1. Astral Mirror Dimension Shards (Prismatic Crystalline Planes)
+    ctx.save();
+    ctx.strokeStyle = 'rgba(233, 30, 99, 0.4)';
+    ctx.lineWidth = 2.5;
+    const shardAngles = [0.3, 0.9, 1.8, 2.5, 3.4, 4.2, 5.1, 5.8];
+    for (const a of shardAngles) {
       ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(a) * 360, cy + Math.sin(a) * 340);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // 2. Cloak of Levitation Inked Silhouette (Pointed High Collar)
+    ctx.save();
+    ctx.fillStyle = '#8B0000'; // Deep Kamar-Taj Crimson
+    ctx.strokeStyle = '#111116';
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(cx - 180, cy + 180);
+    ctx.lineTo(cx - 140, cy - 20); // Left collar peak
+    ctx.quadraticCurveTo(cx - 70, cy + 50, cx, cy + 90);
+    ctx.quadraticCurveTo(cx + 70, cy + 50, cx + 140, cy - 20); // Right collar peak
+    ctx.lineTo(cx + 180, cy + 180);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Collar Gold Trim Piping
+    ctx.strokeStyle = primary;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(cx - 140, cy - 20);
+    ctx.quadraticCurveTo(cx - 70, cy + 50, cx, cy + 90);
+    ctx.quadraticCurveTo(cx + 70, cy + 50, cx + 140, cy - 20);
+    ctx.stroke();
+    ctx.restore();
+
+    // 3. Eldritch Tao Mandala (Sling-Ring Sacred Geometry)
+    ctx.save();
+    // Outer Runic Circle
+    ctx.strokeStyle = primary;
+    ctx.lineWidth = 3.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 140, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // 12 Runic / Sanskrit Tick Glyphs
+    ctx.lineWidth = 4;
+    for (let i = 0; i < 12; i++) {
+      const angle = (i / 12) * Math.PI * 2;
+      const x1 = cx + Math.cos(angle) * 132;
+      const y1 = cy + Math.sin(angle) * 132;
+      const x2 = cx + Math.cos(angle) * 148;
+      const y2 = cy + Math.sin(angle) * 148;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
       ctx.stroke();
     }
 
-    // Glowing Eye of Agamotto Center
-    ctx.fillStyle = '#E65100';
+    // Interlocking Sacred Squares (Octagram)
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = '#FFA000';
+    for (const rot of [0, Math.PI / 4]) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(rot);
+      ctx.strokeRect(-90, -90, 180, 180);
+      ctx.restore();
+    }
+
+    // Inner Concentric Spark Circle
+    ctx.strokeStyle = '#FFE082';
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.ellipse(cx, cy, 75, 44, 0, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 95, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Sling-Ring Orange Spark Bursts
+    ctx.fillStyle = '#FF9100';
+    for (let i = 0; i < 20; i++) {
+      const spkAngle = (i / 20) * Math.PI * 2 + 0.1;
+      const r = 142 + (i % 3) * 6;
+      ctx.beginPath();
+      ctx.arc(cx + Math.cos(spkAngle) * r, cy + Math.sin(spkAngle) * r, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    // 4. The Eye of Agamotto Talisman Centerpiece
+    ctx.save();
+    // Outer Bronze-Gold Casing
+    ctx.fillStyle = '#FFA000';
+    ctx.strokeStyle = '#111116';
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, 82, 50, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = '#FFD54F';
+    // Talisman Horn Curves (Left & Right points)
+    ctx.fillStyle = '#FFB300';
     ctx.beginPath();
-    ctx.arc(cx, cy, 30, 0, Math.PI * 2);
+    ctx.moveTo(cx - 82, cy);
+    ctx.quadraticCurveTo(cx - 96, cy - 18, cx - 105, cy - 8);
+    ctx.quadraticCurveTo(cx - 94, cy + 12, cx - 74, cy + 22);
+    ctx.closePath();
     ctx.fill();
     ctx.stroke();
 
+    ctx.beginPath();
+    ctx.moveTo(cx + 82, cy);
+    ctx.quadraticCurveTo(cx + 96, cy - 18, cx + 105, cy - 8);
+    ctx.quadraticCurveTo(cx + 94, cy + 12, cx + 74, cy + 22);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Inner Bronze Eyelids
+    ctx.fillStyle = '#8D5B4C';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, 66, 38, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // RADIANT TIME STONE EMERALD (The Glowing Heart of Agamotto)
+    const emeraldGrad = ctx.createRadialGradient(cx, cy, 4, cx, cy, 34);
+    emeraldGrad.addColorStop(0, '#FFFFFF');
+    emeraldGrad.addColorStop(0.35, '#00E676'); // Vivid Emerald
+    emeraldGrad.addColorStop(0.8, '#00A844');
+    emeraldGrad.addColorStop(1, '#004D20');
+
+    ctx.fillStyle = emeraldGrad;
+    ctx.strokeStyle = '#111116';
+    ctx.lineWidth = 3.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 32, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Time Stone Ray Flares
+    ctx.strokeStyle = 'rgba(0, 230, 118, 0.6)';
+    ctx.lineWidth = 2;
+    for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(a) * 44, cy + Math.sin(a) * 44);
+      ctx.stroke();
+    }
+
+    // Piercing Slit Pupil of Agamotto
     ctx.fillStyle = '#111116';
     ctx.beginPath();
-    ctx.ellipse(cx, cy, 12, 25, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx, cy, 7, 24, 0, 0, Math.PI * 2);
     ctx.fill();
+
+    // Specular Highlight
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.arc(cx - 9, cy - 9, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
   }
 
   private drawStoryBlurbs(ctx: CanvasRenderingContext2D, profile: CardProfile, primary: string) {
+    const isStrange = profile.team === 'strange';
     // Action Starburst (Left)
     const starX = 135;
     const starY = 790;
-    this.drawComicBurst(ctx, starX, starY, 75, '#FFEB3B');
+    this.drawComicBurst(ctx, starX, starY, 75, isStrange ? '#FFAB00' : '#FFEB3B');
 
     ctx.fillStyle = '#111116';
     ctx.font = '900 16px "Bangers", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('STATUS:', starX, starY - 14);
-    ctx.fillText('OFFICIAL', starX, starY + 2);
-    ctx.fillStyle = '#D32F2F';
-    ctx.font = '900 17px "Bangers", sans-serif';
-    ctx.fillText('DRAFTED!', starX, starY + 22);
+    if (isStrange) {
+      ctx.fillText('SORCERER', starX, starY - 14);
+      ctx.fillText('SUPREME', starX, starY + 2);
+      ctx.fillStyle = '#C62828';
+      ctx.font = '900 17px "Bangers", sans-serif';
+      ctx.fillText('AWAKENED!', starX, starY + 22);
+    } else {
+      ctx.fillText('STATUS:', starX, starY - 14);
+      ctx.fillText('OFFICIAL', starX, starY + 2);
+      ctx.fillStyle = '#D32F2F';
+      ctx.font = '900 17px "Bangers", sans-serif';
+      ctx.fillText('DRAFTED!', starX, starY + 22);
+    }
 
     // Right Narrative Comic Story Box (Clean & Generous Spacing)
     const boxX = 245;
@@ -416,6 +580,7 @@ export class CardCanvasRenderer {
   }
 
   private drawBiometricRibbon(ctx: CanvasRenderingContext2D, profile: CardProfile, primary: string) {
+    const isStrange = profile.team === 'strange';
     const barY = 890;
     const barW = this.width - 48;
     const barH = 92;
@@ -427,13 +592,21 @@ export class CardCanvasRenderer {
     ctx.strokeRect(24, barY, barW, barH);
 
     const bio = profile.biometrics;
-    const statsList = [
-      { label: 'PULSE', val: `${bio.pulse} BPM` },
-      { label: 'HRV', val: `${bio.rmssd} MS` },
-      { label: 'RESPIRATION', val: `${bio.breathing} /M` },
-      { label: 'EQUILIBRIUM', val: bio.equilibrium.slice(0, 14).toUpperCase() },
-      { label: 'POWER LEVEL', val: `${profile.powerRating}` }
-    ];
+    const statsList = isStrange
+      ? [
+          { label: 'ASTRAL PULSE', val: `${bio.pulse} BPM` },
+          { label: 'TIME DRIFT', val: `${bio.rmssd} MS` },
+          { label: 'RESPIRATION', val: `${bio.breathing} /M` },
+          { label: 'EQUILIBRIUM', val: 'KAMAR-TAJ' },
+          { label: 'SORCERER LVL', val: `${profile.powerRating}` }
+        ]
+      : [
+          { label: 'PULSE', val: `${bio.pulse} BPM` },
+          { label: 'HRV', val: `${bio.rmssd} MS` },
+          { label: 'RESPIRATION', val: `${bio.breathing} /M` },
+          { label: 'EQUILIBRIUM', val: bio.equilibrium.slice(0, 14).toUpperCase() },
+          { label: 'POWER LEVEL', val: `${profile.powerRating}` }
+        ];
 
     const colW = barW / statsList.length;
     statsList.forEach((st, idx) => {

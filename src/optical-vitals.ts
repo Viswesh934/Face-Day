@@ -160,15 +160,15 @@ export class OpticalVitalsScanner {
     // Synthesize real-time comic face mesh points aligned with the camera reticle
     const landmarks = this.generateTargetLandmarks(chromSignal);
 
-    // Compute expression and autonomic calm score
-    const calmScore = Math.max(10, Math.min(95, Math.round(100 - (this.lastPulseBpm - 58) * 0.85)));
+    // Compute expression and autonomic calm score (Centered at 50 for 72 BPM)
+    const calmScore = Math.max(10, Math.min(95, Math.round(50 - (this.lastPulseBpm - 72) * 2.2)));
     const expressionTension = Math.max(0, Math.min(100, 100 - calmScore));
-    const primaryExpression = calmScore >= 60 ? 'Resolute Calm' : 'Tactical Focus';
+    const primaryExpression = calmScore >= 52 ? 'Resolute Calm' : 'Tactical Alertness';
 
     let guidanceText = 'TARGET LOCKED: HOLD STEADY';
     if (elapsedSec < 3) {
       guidanceText = 'CALIBRATING OPTICAL CADENCE...';
-    } else if (calmScore >= 60) {
+    } else if (calmScore >= 52) {
       guidanceText = 'ASGARDIAN CADENCE DETECTED: RESILIENT';
     } else {
       guidanceText = 'LATVERIAN FOCUS DETECTED: ACUTE';

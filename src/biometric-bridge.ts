@@ -16,6 +16,7 @@ export interface UnifiedVitals {
   landmarks?: Point2D[] | null;
   primaryExpression?: string;
   expressions?: Record<string, number> | null;
+  waveformY?: number;
 }
 
 export class BiometricBridge {
@@ -201,7 +202,8 @@ export class BiometricBridge {
           calmScore: opt.calmScore,
           guidanceText: opt.guidanceText,
           landmarks: opt.landmarks,
-          primaryExpression: opt.primaryExpression
+          primaryExpression: opt.primaryExpression,
+          waveformY: opt.waveformY
         };
         if (this.onUpdate) this.onUpdate(uv);
         if (this.onGuidance && opt.guidanceText) this.onGuidance(opt.guidanceText);

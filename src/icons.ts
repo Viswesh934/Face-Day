@@ -41,6 +41,17 @@ export const icons = {
     </svg>
   `,
 
+  // Seal of the Vishanti (Doctor Strange Sanctorum Window)
+  vishanti: `
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-svg">
+      <circle cx="24" cy="24" r="20" fill="#2A0845" stroke="#111116" stroke-width="3"/>
+      <circle cx="24" cy="24" r="16" fill="none" stroke="#FFAB00" stroke-width="2.5"/>
+      <path d="M12 12C20 20 24 24 36 36M36 12C28 20 24 24 12 36" stroke="#FFD54F" stroke-width="3" stroke-linecap="round"/>
+      <path d="M10 24C18 20 30 20 38 24M24 10C20 18 20 30 24 38" stroke="#00E676" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="24" cy="24" r="3.5" fill="#FFAB00" stroke="#111116" stroke-width="1.5"/>
+    </svg>
+  `,
+
   // Multiverse Portal Vortex Icon
   portal: `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">

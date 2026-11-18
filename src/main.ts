@@ -9,6 +9,7 @@ import { sortFromVitals, sortFromInquiry, sortStrangeReading, CardProfile } from
 import { cardRenderer } from './card-canvas';
 import { deckVault } from './card-deck';
 import { statDashboard } from './stat-dashboard';
+import { faceReadingHeatMap } from './heat-map';
 
 // DOM Element References
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -73,6 +74,7 @@ const elements = {
   verdictTeamName: $('verdict-team-name'),
   verdictSubtext: $('verdict-subtext'),
   cardCanvasMount: $('card-canvas-mount'),
+  heatmapMount: $('heatmap-mount'),
   statDossierMount: $('stat-dossier-mount'),
   btnDownloadCard: $('btn-download-card'),
   btnDownloadIcon: $('btn-download-icon'),
@@ -433,6 +435,15 @@ function revealVerdict(profile: CardProfile) {
   canvas.className = 'card-canvas-display';
   elements.cardCanvasMount.innerHTML = '';
   elements.cardCanvasMount.appendChild(canvas);
+
+  // Render Strange Reading Heat Map if Strange Reading mode
+  if (profile.team === 'strange') {
+    faceReadingHeatMap.render(profile, elements.heatmapMount);
+    elements.heatmapMount.style.display = 'flex';
+  } else {
+    elements.heatmapMount.innerHTML = '';
+    elements.heatmapMount.style.display = 'none';
+  }
 
   // Render Biometric Stat Dashboard
   statDashboard.render(profile, elements.statDossierMount);

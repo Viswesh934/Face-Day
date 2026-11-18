@@ -28,10 +28,10 @@ export interface CardProfile {
   archetype: string;
   rarity: Rarity;
   stats: {
-    agility: number;    // AGI / Astral Calm
-    endurance: number;  // END / Cosmic Stamina
-    focus: number;      // FOC / Arcane Focus
-    willpower: number;  // WIL / Mystic Will
+    agility: number;    // AGI
+    endurance: number;  // END
+    focus: number;      // FOC
+    willpower: number;  // WIL
   };
   powerRating: number;
   flavorQuote: string;
@@ -75,25 +75,26 @@ const STRANGE_TITLES = [
   'Architect of Dimensional Will'
 ];
 
+// Witty, humorous comic quotes (Zero prompt bleeding!)
 const THOR_QUOTES = [
-  'Let the thunder shake the mountains—my spirit stands unbroken!',
-  'True strength is not wrath; it is the calm eye within the tempest.',
-  'By Odin’s beard, we charge toward the dawn without hesitation!',
-  'The hammer answers only those whose hearts beat steady and true.'
+  '100% Certified Worthy! Mjolnir approves your heart rate, but Odin is definitely concerned about your sleep schedule.',
+  'Stamina so absurdly high, you could run across the Bifrost just because you left your phone charger on Midgard.',
+  'Pulse steady enough to chug Asgardian mead in the middle of a lightning tempest without spilling a drop.',
+  'Heart rate so calm, Thor legitimately thought you were taking a power nap during the final battle of Ragnarok.'
 ];
 
 const DOOM_QUOTES = [
-  'Destiny does not favor the meek. It bends before absolute tactical will.',
-  'Emotions are fractures in armor. Precision is victory.',
-  'Doom bows to no storm. The elements themselves shall submit.',
-  'Where others see chaos, Doom enforces eternal iron order.'
+  'Doctor Doom approves your cold, calculating pulse. You are now officially authorized to conquer your inbox.',
+  'Stress index off the charts! Doom is prescribing three cups of soothing Latverian chamomile tea immediately.',
+  'With this level of tactical tension, you don’t just fight battles—you micromanage your enemies into submission.',
+  'Calculated every single variable in the multiverse. Still spent twenty minutes looking for your sunglasses.'
 ];
 
 const STRANGE_QUOTES = [
-  'Beyond the flesh lies the true cadence of the cosmos.',
-  'Calm in the mind, infinite in the astral realm.',
-  'The mirror does not reflect vanity; it reveals the stillness of the soul.',
-  'He who masters his breath commands the flow of mystic dimensions.'
+  'The Astral Mirror reveals: Your third eye is wide open, but your physical eyes are screaming for a cup of coffee.',
+  'Face reading complete: 85% cosmic wisdom, 15% thinking intensely about what to eat for dinner.',
+  'Your brow furrow suggests deep multidimensional meditation... or you just remembered you forgot to lock the front door.',
+  'The Eye of Agamotto has gazed upon your cheeks. Verdict: Dangerously unbothered by the chaos of reality.'
 ];
 
 export function sortFromVitals(v: VitalsInput, forcedTeam?: Team): CardProfile {
@@ -113,7 +114,6 @@ export function sortFromVitals(v: VitalsInput, forcedTeam?: Team): CardProfile {
   if (forcedTeam) {
     team = forcedTeam;
   } else {
-    // Normal Thor vs Doom sorting
     let thorScore = 0;
     let doomScore = 0;
 
@@ -132,7 +132,6 @@ export function sortFromVitals(v: VitalsInput, forcedTeam?: Team): CardProfile {
     team = thorScore >= doomScore ? 'thor' : 'doom';
   }
 
-  // Rarity calculation
   let rarity: Rarity = 'RARE';
   if (calm >= 80 || stress > 160 || rmssd > 55) {
     rarity = 'LEGENDARY FOIL';
@@ -140,7 +139,6 @@ export function sortFromVitals(v: VitalsInput, forcedTeam?: Team): CardProfile {
     rarity = 'ULTRA-RARE';
   }
 
-  // RPG Attributes
   const agility = team === 'thor'
     ? Math.min(99, Math.round(75 + (rmssd / 90) * 24))
     : team === 'doom'

@@ -771,8 +771,8 @@ body {
 /* Card 3D Wrap & Comic Cover Presentation */
 .card-3d-wrap {
   perspective: 1000px;
-  width: 440px;
-  max-width: 92vw;
+  width: 480px;
+  max-width: 94vw;
   cursor: pointer;
 }
 
@@ -1039,3 +1039,179 @@ body {
   color: #666670;
   font-weight: 600;
 }
+
+/* STRANGE READING: ASTRAL FACIAL HEAT MAP & DISCLAIMER */
+.heatmap-panel-box {
+  width: 100%;
+  max-width: 860px;
+  background: #0E1322;
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  box-shadow: 8px 8px 0 var(--ink);
+  padding: 24px 28px;
+  margin-top: 16px;
+  color: #FFFFFF;
+}
+
+.heatmap-header {
+  border-bottom: 3px solid #232B45;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.heatmap-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 30px;
+  letter-spacing: 1.5px;
+  color: #FF9800;
+  text-shadow: 2px 2px 0 var(--ink);
+  line-height: 1.1;
+}
+
+.heatmap-sub {
+  font-size: 12px;
+  font-weight: 800;
+  color: #00E5FF;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+.heatmap-body-layout {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+}
+
+@media (max-width: 768px) {
+  .heatmap-body-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.heatmap-canvas-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #060810;
+  padding: 14px;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 var(--ink);
+  flex-shrink: 0;
+}
+
+.thermal-canvas {
+  border-radius: 8px;
+  border: 2px solid #232B45;
+  max-width: 100%;
+  height: auto;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.thermal-legend-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #A0AABF;
+}
+
+.thermal-gradient-strip {
+  flex: 1;
+  height: 10px;
+  margin: 0 10px;
+  border-radius: 5px;
+  border: 1px solid #232B45;
+  background: linear-gradient(90deg, #00E5FF 0%, #00C853 35%, #FFB300 70%, #FF1744 100%);
+}
+
+.heatmap-features-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  flex: 1;
+}
+
+@media (max-width: 580px) {
+  .heatmap-features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feature-card {
+  background: #161D33;
+  border: 2px solid #2E3856;
+  border-radius: 10px;
+  padding: 12px 14px;
+  text-align: left;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.feature-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.feature-badge {
+  font-family: 'Bangers', sans-serif;
+  font-size: 13px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #FFFFFF;
+  letter-spacing: 0.5px;
+}
+
+.feature-temp {
+  font-family: 'Bangers', sans-serif;
+  font-size: 14px;
+  color: #FFCC00;
+  letter-spacing: 0.5px;
+}
+
+.feature-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0.6px;
+  margin-bottom: 4px;
+}
+
+.feature-desc {
+  font-size: 12px;
+  color: #C5CEE0;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.heatmap-disclaimer-box {
+  margin-top: 20px;
+  background: #FFF3E0;
+  border: 3px solid #E65100;
+  border-radius: 10px;
+  padding: 14px 18px;
+  box-shadow: 4px 4px 0 #E65100;
+  text-align: left;
+}
+
+.disclaimer-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 18px;
+  color: #D84315;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+
+.disclaimer-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #37474F;
+  line-height: 1.5;
+}
+

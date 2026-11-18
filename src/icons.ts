@@ -100,6 +100,52 @@ export const icons = {
     </svg>
   `,
 
+  // Spinning Golden Ratio Orb / Armillary Celestial Sphere
+  spinningOrb: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+      <circle cx="12" cy="12" r="9" stroke="#FFCC00" stroke-width="2.5"/>
+      <ellipse cx="12" cy="12" rx="9" ry="3.5" stroke="#FFA000" stroke-width="2"/>
+      <line x1="12" y1="3" x2="12" y2="21" stroke="#FFCC00" stroke-width="1.8"/>
+      <circle cx="12" cy="12" r="2.5" fill="#FFD54F" stroke="#111116"/>
+    </svg>
+  `,
+
+  // Golden Ratio Proportional Calipers
+  calipers: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+      <path d="M4 4C8 10 10 16 12 21" stroke="#FFB300" stroke-width="2.2"/>
+      <path d="M20 4C16 10 14 16 12 21" stroke="#FFB300" stroke-width="2.2"/>
+      <circle cx="12" cy="21" r="2" fill="#FFCC00" stroke="#111116"/>
+      <line x1="6" y1="9" x2="18" y2="9" stroke="#111116" stroke-width="1.8" stroke-dasharray="2 2"/>
+    </svg>
+  `,
+
+  // Dermal Clarity / Skin Cellular Drop
+  dermal: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+      <path d="M12 3C8 8 5 12 5 16A7 7 0 0 0 19 16C19 12 16 8 12 3Z" fill="#E1F5FE" stroke="#0288D1" stroke-width="2"/>
+      <circle cx="12" cy="15" r="2.5" fill="#4FC3F7"/>
+    </svg>
+  `,
+
+  // Facial Bone Structure Architecture
+  structure: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+      <polygon points="12 2 20 7 18 17 12 22 6 17 4 7 12 2" fill="#FFF8E1" stroke="#FF8F00" stroke-width="2"/>
+      <line x1="12" y1="2" x2="12" y2="22" stroke="#111116" stroke-width="1.5" stroke-dasharray="2 2"/>
+      <line x1="4" y1="7" x2="20" y2="7" stroke="#111116" stroke-width="1.5"/>
+    </svg>
+  `,
+
+  // Eye Iris Luminescence
+  eyeIris: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+      <ellipse cx="12" cy="12" rx="10" ry="6" stroke="#111116" stroke-width="2"/>
+      <circle cx="12" cy="12" r="4" fill="#00E5FF" stroke="#0091EA" stroke-width="1.5"/>
+      <circle cx="12" cy="12" r="1.8" fill="#111116"/>
+    </svg>
+  `,
+
   // Comic Shield
   shield: `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">

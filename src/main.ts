@@ -11,6 +11,7 @@ import { deckVault } from './card-deck';
 import { statDashboard } from './stat-dashboard';
 import { faceReadingHeatMap } from './heat-map';
 import { multiverseNexusPod } from './nexus-pod';
+import { goldenRatioAnalyzer } from './golden-ratio';
 
 // DOM Element References
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -86,10 +87,11 @@ const elements = {
   cardCanvasMount: $('card-canvas-mount'),
   btnTabDossier: $('btn-tab-dossier'),
   btnTabHeatmap: $('btn-tab-heatmap'),
-  btnTabNexus: $('btn-tab-nexus'),
+  btnTabGolden: $('btn-tab-golden'),
+  tabGoldenIcon: $('tab-golden-icon'),
   heatmapMount: $('heatmap-mount'),
   statDossierMount: $('stat-dossier-mount'),
-  nexusMount: $('nexus-mount'),
+  goldenRatioMount: $('golden-ratio-mount'),
   btnDownloadCard: $('btn-download-card'),
   btnDownloadIcon: $('btn-download-icon'),
   btnShareX: $('btn-share-x'),
@@ -166,6 +168,7 @@ function mountIcons() {
 
   elements.btnDownloadIcon.innerHTML = icons.download;
   elements.btnShareIcon.innerHTML = icons.shareX;
+  if (elements.tabGoldenIcon) elements.tabGoldenIcon.innerHTML = icons.spinningOrb;
 }
 
 // Navigation & Phase Transitions
@@ -459,7 +462,7 @@ function revealVerdict(profile: CardProfile) {
   // Render views for the right column
   statDashboard.render(profile, elements.statDossierMount);
   faceReadingHeatMap.render(profile, elements.heatmapMount);
-  multiverseNexusPod.render(elements.nexusMount);
+  goldenRatioAnalyzer.render(profile, elements.goldenRatioMount);
 
   // Set default active tab
   if (profile.team === 'strange') {
@@ -472,18 +475,14 @@ function revealVerdict(profile: CardProfile) {
   setupInteractiveCardTilt(profile);
 }
 
-function switchPhase3Tab(tab: 'dossier' | 'heatmap' | 'nexus') {
+function switchPhase3Tab(tab: 'dossier' | 'heatmap' | 'golden') {
   elements.btnTabDossier.classList.toggle('active', tab === 'dossier');
   elements.btnTabHeatmap.classList.toggle('active', tab === 'heatmap');
-  elements.btnTabNexus.classList.toggle('active', tab === 'nexus');
+  elements.btnTabGolden.classList.toggle('active', tab === 'golden');
 
   elements.statDossierMount.style.display = tab === 'dossier' ? 'block' : 'none';
   elements.heatmapMount.style.display = tab === 'heatmap' ? 'block' : 'none';
-  elements.nexusMount.style.display = tab === 'nexus' ? 'block' : 'none';
-
-  if (tab === 'nexus' && elements.nexusMount) {
-    multiverseNexusPod.render(elements.nexusMount);
-  }
+  elements.goldenRatioMount.style.display = tab === 'golden' ? 'block' : 'none';
 }
 
 function setupInteractiveCardTilt(profile: CardProfile) {
@@ -556,9 +555,9 @@ function initCardActions() {
     switchPhase3Tab('heatmap');
   });
 
-  elements.btnTabNexus.addEventListener('click', () => {
+  elements.btnTabGolden.addEventListener('click', () => {
     sound.playClick();
-    switchPhase3Tab('nexus');
+    switchPhase3Tab('golden');
   });
 
   elements.btnDownloadCard.addEventListener('click', () => {

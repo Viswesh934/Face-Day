@@ -116,7 +116,7 @@ export async function exchangeCode(code, stateData) {
 }
 
 async function run() {
-  console.log('⚡ [Face Day] Presage SmartSpectra MCP Authenticator');
+  console.log('[Face Day] Presage SmartSpectra MCP Authenticator');
   console.log('==================================================');
 
   // 1. Dynamic Client Registration

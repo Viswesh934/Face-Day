@@ -219,7 +219,7 @@ export class MultiverseNexusPod {
     document.body.classList.add('reality-tremor');
     setTimeout(() => document.body.classList.remove('reality-tremor'), 600);
 
-    this.showComicBanner('💥 SNAP! 50% OF REALITY DISINTEGRATED INTO ASH! 💥', '#AB47BC');
+    this.showComicBanner('[SNAP!] 50% OF REALITY DISINTEGRATED INTO ASH!', '#AB47BC');
 
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -274,7 +274,7 @@ export class MultiverseNexusPod {
     sound.playLokiChime();
 
     document.body.classList.add('loki-timeline-aura');
-    this.showComicBanner('🌿 YGGDRASIL BRANCHES WOVEN: SACRED MULTIVERSE TIMELINES ACTIVE! 🌿', '#00C853');
+    this.showComicBanner('[YGGDRASIL] SACRED MULTIVERSE TIMELINES ACTIVE!', '#00C853');
 
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -305,7 +305,7 @@ export class MultiverseNexusPod {
     sound.playPortalWhoosh();
 
     document.body.classList.add('strange-portal-aura');
-    this.showComicBanner('🔮 KAMAR-TAJ PORTAL: DIMENSIONAL BOUNDARIES BREACHED! 🔮', '#E65100');
+    this.showComicBanner('[KAMAR-TAJ] DIMENSIONAL BOUNDARIES BREACHED!', '#E65100');
 
     this.effectTimer = window.setTimeout(() => {
       document.body.classList.remove('strange-portal-aura');
@@ -323,7 +323,7 @@ export class MultiverseNexusPod {
     document.body.classList.add('reality-tremor');
     setTimeout(() => document.body.classList.remove('reality-tremor'), 800);
 
-    this.showComicBanner('⚡ BIFROST STRUCK! ASGARDIAN RAINBOW SURGE DISCHARGED! ⚡', '#00E5FF');
+    this.showComicBanner('[BIFROST] ASGARDIAN RAINBOW SURGE DISCHARGED!', '#00E5FF');
 
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -357,7 +357,7 @@ export class MultiverseNexusPod {
 
     document.body.classList.add('chaos-hex-aura');
     document.body.classList.add('chaos-reality-warped');
-    this.showComicBanner('🔮 CHAOS MAGIC UNLEASHED: REALITY REWRITTEN BY SCARLET WITCH! 🔮', '#D50000');
+    this.showComicBanner('[CHAOS MAGIC] REALITY REWRITTEN BY SCARLET WITCH!', '#D50000');
 
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -389,7 +389,7 @@ export class MultiverseNexusPod {
     sound.playSpiderGlitch();
 
     document.body.classList.add('spider-glitch-active');
-    this.showComicBanner('🕷️ MULTIVERSE GLITCH: DIMENSIONAL DE-SYNCHRONIZATION DETECTED! 🕷️', '#00E5FF');
+    this.showComicBanner('[GLITCH] DIMENSIONAL DE-SYNCHRONIZATION DETECTED!', '#00E5FF');
 
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -420,7 +420,7 @@ export class MultiverseNexusPod {
     sound.playSingularity();
 
     document.body.classList.add('singularity-active');
-    this.showComicBanner('🌀 COSMIC SINGULARITY: GRAVITATIONAL LENSING EVENT HORIZON! 🌀', '#7C4DFF');
+    this.showComicBanner('[SINGULARITY] GRAVITATIONAL LENSING EVENT HORIZON!', '#7C4DFF');
 
     const w = window.innerWidth;
     const h = window.innerHeight;

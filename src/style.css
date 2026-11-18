@@ -36,119 +36,6 @@ body {
   background-size: 24px 24px;
 }
 
-/* MARVEL-STYLE COMIC FLIPBOOK INTRO LOADER */
-.marvel-loader-backdrop {
-  position: fixed;
-  inset: 0;
-  background: #080406;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.45s ease, visibility 0.45s ease;
-  overflow: hidden;
-}
-
-.marvel-loader-backdrop.fade-out {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.marvel-logo-box {
-  background: #E23636;
-  border: 4px solid #FFFFFF;
-  box-shadow: 0 0 50px rgba(226, 54, 54, 0.7), 8px 8px 0 #111116;
-  padding: 16px 36px 12px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  animation: logoZoom 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-.marvel-flipbook-container {
-  position: absolute;
-  inset: 0;
-  opacity: 0.35;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.flip-panel {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(
-    45deg,
-    #111116,
-    #111116 10px,
-    #FFFFFF 10px,
-    #FFFFFF 20px
-  );
-  animation: pageFlip 0.12s linear infinite;
-}
-
-@keyframes pageFlip {
-  0% { transform: scale(1) rotate(0deg); opacity: 0.7; filter: grayscale(1); }
-  50% { transform: scale(1.04) rotate(0.8deg); opacity: 0.35; filter: contrast(1.6); }
-  100% { transform: scale(0.97) rotate(-0.8deg); opacity: 0.85; filter: sepia(0.6); }
-}
-
-@keyframes logoZoom {
-  0% { transform: scale(0.7); opacity: 0; }
-  25% { transform: scale(1.03); opacity: 1; }
-  80% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(1.1); opacity: 0.95; }
-}
-
-.marvel-logo-title {
-  font-family: 'Bangers', sans-serif;
-  font-size: 76px;
-  letter-spacing: 4px;
-  color: #FFFFFF;
-  text-shadow: 3px 3px 0 #111116;
-  line-height: 0.9;
-  position: relative;
-  z-index: 2;
-}
-
-.marvel-logo-sub {
-  font-family: 'Bangers', sans-serif;
-  font-size: 16px;
-  letter-spacing: 6px;
-  color: #FFFFFF;
-  background: #111116;
-  padding: 3px 12px;
-  margin-top: 8px;
-  display: inline-block;
-  position: relative;
-  z-index: 2;
-}
-
-.marvel-skip-btn {
-  position: absolute;
-  bottom: 32px;
-  font-family: 'Bangers', sans-serif;
-  font-size: 15px;
-  letter-spacing: 1.5px;
-  color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  padding: 6px 18px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.marvel-skip-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
-}
-
 /* App Header Nav */
 .comic-nav {
   display: flex;
@@ -609,50 +496,97 @@ body {
   transition: all 0.2s ease;
 }
 
-.camera-lens-strip {
+.dynamic-resonance-strip {
   display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin: 10px 18px 6px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  margin: 10px 18px 8px;
+  padding: 6px 14px;
+  background: #151821;
+  border: 3px solid #111116;
+  border-radius: 8px;
+  box-shadow: 3px 3px 0 #111116;
 }
 
-.lens-btn {
-  background: #1C1E24;
-  color: #ECEFF1;
-  border: 2px solid #2B2F38;
-  border-radius: 6px;
-  padding: 4px 10px;
+.resonance-tag-thor,
+.resonance-tag-doom {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-family: 'Bangers', sans-serif;
-  font-size: 13px;
+  font-size: 15px;
   letter-spacing: 0.8px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  box-shadow: 2px 2px 0 #111116;
 }
 
-.lens-btn:hover {
-  transform: translateY(-1px);
-  border-color: #00E5FF;
+.resonance-tag-thor {
   color: #00E5FF;
 }
 
-.lens-btn.active {
-  background: #00E5FF;
-  color: #111116;
-  border-color: #111116;
-  box-shadow: 2px 2px 0 #111116;
+.resonance-tag-doom {
+  color: #00E676;
+}
+
+.resonance-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.resonance-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.resonance-pct {
+  font-family: 'Courier New', monospace;
   font-weight: 900;
+  font-size: 13px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.lens-btn[data-lens="astral"].active {
-  background: #FFAB00;
-  color: #111116;
+.resonance-track-wrap {
+  position: relative;
+  flex: 1;
+  height: 14px;
+  background: #0B0E14;
+  border: 2px solid #111116;
+  border-radius: 10px;
+  overflow: visible;
+  display: flex;
 }
 
-.lens-btn[data-lens="doom"].active {
-  background: #00E676;
-  color: #111116;
+.resonance-track-fill-thor {
+  height: 100%;
+  background: linear-gradient(90deg, #FFCC00, #00E5FF);
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px 0 0 8px;
+}
+
+.resonance-track-fill-doom {
+  height: 100%;
+  background: linear-gradient(90deg, #00E676, #00C853);
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 8px 8px 0;
+}
+
+.resonance-track-needle {
+  position: absolute;
+  top: -4px;
+  width: 6px;
+  height: 22px;
+  background: #FFFFFF;
+  border: 2px solid #111116;
+  border-radius: 3px;
+  box-shadow: 0 0 8px #FFFFFF;
+  transform: translateX(-50%);
+  transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
 }
 
 .hud-stage {
@@ -2718,242 +2652,3 @@ body {
   display: flex;
   justify-content: space-between;
 }
-
-/* ==================================================== */
-/* CLASH ARCADE DUEL MINIGAME MODAL                     */
-/* ==================================================== */
-.clash-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(17, 17, 22, 0.88);
-  backdrop-filter: blur(5px);
-  z-index: 9998;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-
-.clash-game-box {
-  background: #FFFFFF;
-  border: 4px solid #111116;
-  border-radius: 14px;
-  max-width: 660px;
-  width: 100%;
-  box-shadow: 8px 8px 0 #111116;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.clash-header {
-  background: #111116;
-  color: #FFFFFF;
-  padding: 12px 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 3px solid #111116;
-}
-
-.clash-tag-pill {
-  font-family: 'Bangers', sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.8px;
-  background: #FF5252;
-  color: #FFFFFF;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.clash-title {
-  font-family: 'Bangers', sans-serif;
-  font-size: 22px;
-  letter-spacing: 0.8px;
-  color: var(--thor-gold);
-  margin: 0;
-}
-
-.clash-close-btn {
-  background: none;
-  border: none;
-  color: #FFFFFF;
-  font-size: 26px;
-  cursor: pointer;
-}
-
-.clash-faction-select-bar {
-  background: #F5F5F5;
-  border-bottom: 2px solid #111116;
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-family: 'Bangers', sans-serif;
-  font-size: 13px;
-}
-
-.clash-pick-btn {
-  background: #FFFFFF;
-  border: 2px solid #111116;
-  border-radius: 6px;
-  padding: 4px 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Bangers', sans-serif;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.clash-pick-btn.active[data-faction="thor"] {
-  background: var(--thor-gold);
-  box-shadow: 2px 2px 0 #111116;
-}
-
-.clash-pick-btn.active[data-faction="doom"] {
-  background: var(--doom-emerald);
-  box-shadow: 2px 2px 0 #111116;
-}
-
-.clash-pick-icon {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-}
-
-.clash-arena-stage {
-  padding: 20px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #0E1726;
-  color: #FFFFFF;
-  position: relative;
-  overflow: hidden;
-}
-
-.clash-fighter {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 90px;
-  text-align: center;
-}
-
-.clash-fighter-icon {
-  width: 58px;
-  height: 58px;
-  border: 3px solid #111116;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 3px 3px 0 #000000;
-  margin-bottom: 6px;
-}
-
-.clash-fighter-thor .clash-fighter-icon {
-  background: var(--thor-gold);
-}
-
-.clash-fighter-doom .clash-fighter-icon {
-  background: var(--doom-emerald);
-}
-
-.clash-fighter-name {
-  font-family: 'Bangers', sans-serif;
-  font-size: 16px;
-  letter-spacing: 0.8px;
-}
-
-.clash-fighter-stats {
-  font-size: 10px;
-  font-weight: 800;
-  color: #90A4AE;
-}
-
-.clash-center-nexus {
-  flex: 1;
-  margin: 0 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.clash-timer-badge {
-  font-family: 'Bangers', sans-serif;
-  font-size: 26px;
-  color: #FF5252;
-  margin-bottom: 6px;
-}
-
-.clash-beam-container {
-  width: 100%;
-  height: 24px;
-  background: #111116;
-  border: 2.5px solid #FFFFFF;
-  border-radius: 12px;
-  display: flex;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 0 16px rgba(0, 229, 255, 0.4);
-}
-
-.clash-beam-fill-thor {
-  height: 100%;
-  background: linear-gradient(90deg, #FFCC00, #00E5FF);
-  transition: width 0.1s linear;
-}
-
-.clash-beam-fill-doom {
-  height: 100%;
-  background: linear-gradient(90deg, #ECEFF1, #00C853);
-  transition: width 0.1s linear;
-}
-
-.clash-sparks-core {
-  position: absolute;
-  top: 0;
-  width: 10px;
-  height: 100%;
-  background: #FFFFFF;
-  box-shadow: 0 0 12px #FFFFFF, 0 0 24px #00E5FF;
-  transform: translateX(-50%);
-  transition: left 0.1s linear;
-}
-
-.clash-burst-callout {
-  font-family: 'Bangers', sans-serif;
-  font-size: 22px;
-  color: var(--thor-gold);
-  margin-top: 8px;
-  letter-spacing: 1px;
-  text-shadow: 2px 2px 0 #111116;
-}
-
-.clash-actions-bar {
-  padding: 16px;
-  background: #FFFFFF;
-  text-align: center;
-}
-
-.clash-strike-btn {
-  width: 100%;
-  padding: 14px 20px;
-  font-size: 24px !important;
-  letter-spacing: 1.5px;
-}
-
-.clash-footer-hint {
-  background: #F5F5F5;
-  border-top: 1.5px solid #111116;
-  padding: 8px 16px;
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #555555;
-  text-align: center;
-}
-

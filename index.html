@@ -8,18 +8,6 @@
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 <body>
-  <!-- Marvel-Style Cinematic Flipbook Intro Loader -->
-  <div id="marvel-intro-loader" class="marvel-loader-backdrop">
-    <div class="marvel-logo-box">
-      <div class="marvel-flipbook-container">
-        <div class="flip-panel"></div>
-      </div>
-      <div class="marvel-logo-title">FACE DAY</div>
-      <div class="marvel-logo-sub">COMIC BATTLEGROUND</div>
-    </div>
-    <button id="btn-skip-marvel" class="marvel-skip-btn">ENTER BATTLEGROUND &rarr;</button>
-  </div>
-
   <!-- Comic Header Navigation -->
   <header class="comic-nav">
     <div class="nav-brand">
@@ -32,8 +20,9 @@
       <div id="bridge-status-pill" class="bridge-status-pill" title="Live Measurement Engine Status">
         <span class="bridge-dot" id="bridge-dot"></span>
       </div>
-      <button id="btn-open-diagnostics" class="comic-btn comic-btn-sm" title="Presage API & Edge Health Diagnostics">
-        <span>⚡ PRESAGE API</span>
+      <button id="btn-open-diagnostics" class="comic-btn comic-btn-sm" title="Presage API &amp; Edge Health Diagnostics">
+        <span id="nav-diag-icon"></span>
+        <span>PRESAGE API</span>
       </button>
       <button id="btn-sound" class="comic-btn comic-btn-sm" title="Toggle Sound">
         <span id="sound-icon"></span>
@@ -81,11 +70,8 @@
           </div>
 
           <div class="hero-card-footer">
-            <button id="btn-toggle-hero-faction" class="comic-btn comic-btn-sm" style="flex: 1;">
+            <button id="btn-toggle-hero-faction" class="comic-btn comic-btn-sm" style="width: 100%;">
               <span>FLIP FACTION (THOR &harr; DOOM)</span>
-            </button>
-            <button id="btn-launch-clash-game" class="comic-btn comic-btn-gold comic-btn-sm" style="flex: 1.2;">
-              <span>⚡ PLAY MJOLNIR VS DOOM CLASH</span>
             </button>
           </div>
         </div>
@@ -144,17 +130,23 @@
           </div>
         </div>
 
-        <!-- Comic Lens Mode Switcher Strip -->
-        <div class="camera-lens-strip">
-          <button type="button" class="lens-btn active" data-lens="storm" id="lens-btn-storm">
-            <span>⚡ STORMCADENCE</span>
-          </button>
-          <button type="button" class="lens-btn" data-lens="astral" id="lens-btn-astral">
-            <span>👁️ ASTRAL TAO</span>
-          </button>
-          <button type="button" class="lens-btn" data-lens="doom" id="lens-btn-doom">
-            <span>🛡️ DOOMSCAN</span>
-          </button>
+        <!-- Dynamic Real-Time Comic Resonance Bar -->
+        <div class="dynamic-resonance-strip">
+          <div class="resonance-tag-thor">
+            <span class="resonance-icon" id="hud-thor-icon"></span>
+            <span class="resonance-name">THOR</span>
+            <span class="resonance-pct" id="hud-thor-pct">50%</span>
+          </div>
+          <div class="resonance-track-wrap">
+            <div class="resonance-track-fill-thor" id="hud-resonance-fill-thor" style="width: 50%;"></div>
+            <div class="resonance-track-fill-doom" id="hud-resonance-fill-doom" style="width: 50%;"></div>
+            <div class="resonance-track-needle" id="hud-resonance-needle" style="left: 50%;"></div>
+          </div>
+          <div class="resonance-tag-doom">
+            <span class="resonance-pct" id="hud-doom-pct">50%</span>
+            <span class="resonance-name">DOOM</span>
+            <span class="resonance-icon" id="hud-doom-icon"></span>
+          </div>
         </div>
 
         <div class="hud-guidance-banner" id="hud-guidance-banner">
@@ -281,7 +273,7 @@
               <span>BIOMETRIC DOSSIER</span>
             </button>
             <button id="btn-tab-heatmap" class="phase3-tab-btn">
-              <span>ASTRAL FACE HEAT MAP</span>
+              <span>CHROMATIC FACE RADAR</span>
             </button>
             <button id="btn-tab-golden" class="phase3-tab-btn">
               <span>GRD</span>

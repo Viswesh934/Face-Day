@@ -26,13 +26,17 @@ export default defineConfig({
         server.middlewares.use('/api/presage-probe', async (req, res) => {
           const url = new URL(req.url || '', 'http://127.0.0.1:5173');
           const targetUrl = url.searchParams.get('url') || 'https://physiology.presagetech.com/';
+          const apiKey = process.env.SMARTSPECTRA_API_KEY || process.env.VITE_SMARTSPECTRA_API_KEY || '';
           const start = Date.now();
           try {
+            const reqHeaders: Record<string, string> = {
+              'User-Agent': 'FaceDay-Edge-Proxy/1.0'
+            };
+            if (apiKey) {
+              reqHeaders['x-api-key'] = apiKey;
+            }
             const upstream = await fetch(targetUrl, {
-              headers: {
-                'x-api-key': 'T7qZxpQWBs8fzHjhWg2088UAoG1yWxOq9AUXShxp',
-                'User-Agent': 'FaceDay-Edge-Proxy/1.0'
-              }
+              headers: reqHeaders
             });
             const latencyMs = Date.now() - start;
             const text = await upstream.text();

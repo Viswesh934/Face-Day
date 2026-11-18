@@ -26,17 +26,21 @@ export default {
     // Edge Health & Proxy Route: Bypasses browser CORS for Presage API diagnostic probes
     if (url.pathname === '/api/presage-probe') {
       const targetParam = url.searchParams.get('url') || 'https://physiology.presagetech.com/';
-      const apiKey = request.headers.get('x-api-key') || env.SMARTSPECTRA_API_KEY || 'T7qZxpQWBs8fzHjhWg2088UAoG1yWxOq9AUXShxp';
+      const apiKey = env.SMARTSPECTRA_API_KEY || request.headers.get('x-api-key') || '';
 
       const start = Date.now();
       try {
+        const headers: Record<string, string> = {
+          'Accept': '*/*',
+          'User-Agent': 'FaceDay-Edge-Proxy/1.0'
+        };
+        if (apiKey) {
+          headers['x-api-key'] = apiKey;
+        }
+
         const upstream = await fetch(targetParam, {
           method: request.method === 'POST' ? 'POST' : 'GET',
-          headers: {
-            'x-api-key': apiKey,
-            'Accept': '*/*',
-            'User-Agent': 'FaceDay-Edge-Proxy/1.0'
-          },
+          headers,
           body: request.method === 'POST' ? await request.text() : undefined
         });
 

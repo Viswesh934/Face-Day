@@ -5,7 +5,7 @@ import confetti from 'canvas-confetti';
 import { icons } from './icons';
 import { sound } from './sound-engine';
 import { BiometricBridge, UnifiedVitals } from './biometric-bridge';
-import { sortFromVitals, sortFromInquiry, sortStrangeReading, CardProfile } from './sorting-engine';
+import { sortFromVitals, sortFromInquiry, CardProfile } from './sorting-engine';
 import { cardRenderer } from './card-canvas';
 import { deckVault } from './card-deck';
 import { statDashboard } from './stat-dashboard';
@@ -13,7 +13,6 @@ import { faceReadingHeatMap } from './heat-map';
 import { multiverseNexusPod } from './nexus-pod';
 import { goldenRatioAnalyzer } from './golden-ratio';
 import { presageDiagnostics } from './presage-diagnostics';
-import { clashMinigame } from './clash-minigame';
 
 // DOM Element References
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -28,6 +27,7 @@ const elements = {
   btnOpenVault: $('btn-open-vault'),
   vaultCountBadge: $('vault-count-badge'),
   btnOpenDiagnostics: $('btn-open-diagnostics'),
+  navDiagIcon: $('nav-diag-icon'),
 
   // Phase Panels
   phase1: $('phase-1'),
@@ -43,7 +43,6 @@ const elements = {
   heroCardDesc: $('hero-card-desc'),
   heroCardStatsRow: $('hero-card-stats-row'),
   btnToggleHeroFaction: $('btn-toggle-hero-faction'),
-  btnLaunchClashGame: $('btn-launch-clash-game'),
   choiceCameraIcon: $('choice-camera-icon'),
   choiceInquiryIcon: $('choice-inquiry-icon'),
   btnStartCameraFlow: $('btn-start-camera-flow'),
@@ -55,17 +54,13 @@ const elements = {
   bridgeDot: $('bridge-dot'),
   bridgeStatusLabel: $('bridge-status-label'),
 
-  // Marvel Intro Loader
-  marvelIntroLoader: $('marvel-intro-loader'),
-  btnSkipMarvel: $('btn-skip-marvel'),
-
   // Consent Modal
   modalConsent: $('modal-consent'),
   btnCloseConsent: $('btn-close-consent'),
   btnDeclineConsent: $('btn-decline-consent'),
   btnAcceptConsent: $('btn-accept-consent'),
 
-  // Phase 2A Camera HUD & Lens System
+  // Phase 2A Camera HUD & Dynamic Resonance System
   hudCrosshairIcon: $('hud-crosshair-icon'),
   cameraPreview: $('camera-preview') as HTMLVideoElement,
   faceMeshCanvas: $('face-mesh-canvas') as HTMLCanvasElement,
@@ -77,9 +72,13 @@ const elements = {
   hudCalmVal: $('hud-calm-val'),
   hudExprVal: $('hud-expr-val'),
   btnCancelTrial: $('btn-cancel-trial'),
-  lensBtnStorm: $('lens-btn-storm'),
-  lensBtnAstral: $('lens-btn-astral'),
-  lensBtnDoom: $('lens-btn-doom'),
+  hudThorIcon: $('hud-thor-icon'),
+  hudDoomIcon: $('hud-doom-icon'),
+  hudThorPct: $('hud-thor-pct'),
+  hudDoomPct: $('hud-doom-pct'),
+  hudResonanceFillThor: $('hud-resonance-fill-thor'),
+  hudResonanceFillDoom: $('hud-resonance-fill-doom'),
+  hudResonanceNeedle: $('hud-resonance-needle'),
   oscPulseDot: $('osc-pulse-dot'),
   oscPulseBpm: $('osc-pulse-bpm'),
   reticleOval: $('reticle-oval'),
@@ -120,11 +119,10 @@ const elements = {
 // Global App State
 const bridge = new BiometricBridge();
 let currentProfile: CardProfile | null = null;
-let activeTrialMode: 'worthiness' | 'strange' = 'worthiness';
-let activeCameraLens: 'storm' | 'astral' | 'doom' = 'storm';
+let liveThorResonance = 50;
 const cardiacBuffer: number[] = new Array(100).fill(0);
 
-// Inquiry Quiz State (Three Balanced Archetypes: 0=Thor, 1=Doom, 2=Strange)
+// Inquiry Quiz State (Tactical 2-Way Scenarios: 0=Thor, 1=Doom)
 interface QuizQuestion {
   prompt: string;
   options: { label: string; score: number }[];
@@ -135,32 +133,28 @@ const INQUIRY_QUESTIONS: QuizQuestion[] = [
     prompt: 'A cosmic fracture splits the horizon. How do you respond?',
     options: [
       { label: 'Raise Mjolnir, brace your boots, and charge headfirst into the storm!', score: 0 },
-      { label: 'Calculate the fracture vector and subordinate the energy under Latverian will.', score: 1 },
-      { label: 'Weave a Kamar-Taj sling-ring mandala and bend the rift into the mirror dimension.', score: 2 }
+      { label: 'Calculate the fracture vector and subordinate the energy under Latverian will.', score: 1 }
     ]
   },
   {
     prompt: 'A battle descends into utter chaos. What is your decisive instinct?',
     options: [
       { label: 'Rally the vanguard with an unyielding Asgardian war cry!', score: 0 },
-      { label: 'Impose cold order through tactical surveillance and ruthless counter-strikes.', score: 1 },
-      { label: 'Consult the Eye of Agamotto to view 14 million outcomes and strike the true path.', score: 2 }
+      { label: 'Impose cold order through tactical surveillance and ruthless counter-strikes.', score: 1 }
     ]
   },
   {
     prompt: 'What fuels your greatest triumphs?',
     options: [
       { label: 'Unshakable physical endurance, heart, and steady rhythmic breath.', score: 0 },
-      { label: 'Supreme analytical foresight, calculated leverage, and sovereign discipline.', score: 1 },
-      { label: 'Mastery over sacred geometry, dimensional equilibrium, and cosmic calm.', score: 2 }
+      { label: 'Supreme analytical foresight, calculated leverage, and sovereign discipline.', score: 1 }
     ]
   },
   {
     prompt: 'You stand before the Sanctum of Legends. Which relic calls to your soul?',
     options: [
       { label: 'The War Hammer Mjolnir, humming with stellar lightning.', score: 0 },
-      { label: 'The Titanium Iron Mask, radiating unbending authority.', score: 1 },
-      { label: 'The Eye of Agamotto Amulet, glowing with the emerald Time Stone.', score: 2 }
+      { label: 'The Titanium Iron Mask, radiating unbending authority.', score: 1 }
     ]
   }
 ];
@@ -174,11 +168,14 @@ function mountIcons() {
   if (elements.navMask) elements.navMask.innerHTML = icons.mask;
   if (elements.soundIcon) elements.soundIcon.innerHTML = icons.soundOn;
   if (elements.vaultIcon) elements.vaultIcon.innerHTML = icons.deck;
+  if (elements.navDiagIcon) elements.navDiagIcon.innerHTML = icons.crosshair;
 
   if (elements.heroCardEmblem) elements.heroCardEmblem.innerHTML = icons.hammer;
   if (elements.choiceCameraIcon) elements.choiceCameraIcon.innerHTML = icons.camera;
   if (elements.choiceInquiryIcon) elements.choiceInquiryIcon.innerHTML = icons.inquiry;
   if (elements.hudCrosshairIcon) elements.hudCrosshairIcon.innerHTML = icons.crosshair;
+  if (elements.hudThorIcon) elements.hudThorIcon.innerHTML = icons.hammer;
+  if (elements.hudDoomIcon) elements.hudDoomIcon.innerHTML = icons.mask;
 
   if (elements.btnDownloadIcon) elements.btnDownloadIcon.innerHTML = icons.download;
   if (elements.btnShareIcon) elements.btnShareIcon.innerHTML = icons.shareX;
@@ -210,7 +207,6 @@ function initSoundControls() {
 function initCameraFlow() {
   elements.btnStartCameraFlow?.addEventListener('click', () => {
     sound.playClick();
-    activeTrialMode = 'worthiness';
     elements.modalConsent.style.display = 'flex';
   });
 
@@ -232,37 +228,6 @@ function initCameraFlow() {
     sound.playClick();
     bridge.stopTrial();
     showPhase('phase-1');
-  });
-}
-
-function setupLensSwitcher() {
-  const lensBtns = [
-    { el: elements.lensBtnStorm, mode: 'storm' as const },
-    { el: elements.lensBtnAstral, mode: 'astral' as const },
-    { el: elements.lensBtnDoom, mode: 'doom' as const }
-  ];
-
-  lensBtns.forEach(({ el, mode }) => {
-    if (!el) return;
-    el.addEventListener('click', () => {
-      sound.playClick();
-      lensBtns.forEach(({ el: b }) => b?.classList.remove('active'));
-      el.classList.add('active');
-      activeCameraLens = mode;
-
-      if (elements.reticleOval) {
-        elements.reticleOval.style.borderColor = mode === 'storm'
-          ? '#00E5FF'
-          : mode === 'astral'
-            ? '#FFAB00'
-            : '#00E676';
-        elements.reticleOval.style.boxShadow = mode === 'storm'
-          ? '0 0 18px rgba(0, 229, 255, 0.4)'
-          : mode === 'astral'
-            ? '0 0 18px rgba(255, 171, 0, 0.4)'
-            : '0 0 18px rgba(0, 230, 118, 0.4)';
-      }
-    });
   });
 }
 
@@ -294,11 +259,7 @@ function drawCardiacOscilloscope(waveformY: number, pulseBpm: number) {
   ctx.lineTo(w, midY);
   ctx.stroke();
 
-  const waveColor = activeCameraLens === 'storm'
-    ? '#00E5FF'
-    : activeCameraLens === 'astral'
-      ? '#FFAB00'
-      : '#00E676';
+  const waveColor = liveThorResonance >= 50 ? '#00E5FF' : '#00E676';
 
   ctx.strokeStyle = waveColor;
   ctx.lineWidth = 2.5;
@@ -350,38 +311,13 @@ function drawFaceMesh(landmarks: { x: number; y: number }[] | null | undefined, 
   const w = canvas.width;
   const h = canvas.height;
 
-  if (activeCameraLens === 'astral') {
-    // ASTRAL TAO LENS: Kamar-Taj Sling-Ring Tao Mandalas & Third Eye
-    const foreheadX = (landmarks[0]?.x ?? 0.5) * w;
-    const foreheadY = ((landmarks[0]?.y ?? 0.35) - 0.08) * h;
-
-    const now = performance.now() * 0.002;
-    ctx.save();
-    ctx.translate(foreheadX, foreheadY);
-    ctx.rotate(now);
-    ctx.strokeStyle = '#FFAB00';
+  if (liveThorResonance >= 50) {
+    // STORMCADENCE: Asgardian Electric Cyan Lightning Arcs
+    ctx.strokeStyle = '#00E5FF';
     ctx.lineWidth = 2.5;
-    ctx.shadowColor = '#FF9100';
+    ctx.shadowColor = '#00E5FF';
     ctx.shadowBlur = 10;
-    ctx.beginPath();
-    ctx.arc(0, 0, 36, 0, Math.PI * 2);
-    ctx.stroke();
 
-    for (let k = 0; k < 8; k++) {
-      const a = (k / 8) * Math.PI * 2;
-      ctx.beginPath();
-      ctx.moveTo(Math.cos(a) * 30, Math.sin(a) * 30);
-      ctx.lineTo(Math.cos(a) * 42, Math.sin(a) * 42);
-      ctx.stroke();
-    }
-    ctx.fillStyle = '#00E676';
-    ctx.beginPath();
-    ctx.arc(0, 0, 6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    ctx.strokeStyle = 'rgba(255, 171, 0, 0.7)';
-    ctx.lineWidth = 2;
     ctx.beginPath();
     for (let i = 0; i < landmarks.length; i++) {
       const px = landmarks[i].x * w;
@@ -391,7 +327,8 @@ function drawFaceMesh(landmarks: { x: number; y: number }[] | null | undefined, 
     }
     ctx.stroke();
 
-    ctx.fillStyle = '#FFD54F';
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#FFCC00';
     for (let i = 0; i < landmarks.length; i++) {
       const px = landmarks[i].x * w;
       const py = landmarks[i].y * h;
@@ -399,9 +336,8 @@ function drawFaceMesh(landmarks: { x: number; y: number }[] | null | undefined, 
       ctx.arc(px, py, 3, 0, Math.PI * 2);
       ctx.fill();
     }
-
-  } else if (activeCameraLens === 'doom') {
-    // DOOMSCAN LENS: Latverian Tactical Titanium Green Wireframe
+  } else {
+    // DOOMSCAN: Latverian Tactical Titanium Green Wireframe
     ctx.strokeStyle = '#00E676';
     ctx.lineWidth = 2;
     ctx.shadowColor = '#00E676';
@@ -430,39 +366,12 @@ function drawFaceMesh(landmarks: { x: number; y: number }[] | null | undefined, 
       ctx.strokeStyle = 'rgba(0, 230, 118, 0.7)';
       ctx.strokeRect(cx - 15, cy - 15, 30, 30);
     }
-
-  } else {
-    // STORMCADENCE LENS: Asgardian Electric Cyan Lightning Arcs
-    ctx.strokeStyle = '#00E5FF';
-    ctx.lineWidth = 2.5;
-    ctx.shadowColor = '#00E5FF';
-    ctx.shadowBlur = 10;
-
-    ctx.beginPath();
-    for (let i = 0; i < landmarks.length; i++) {
-      const px = landmarks[i].x * w;
-      const py = landmarks[i].y * h;
-      if (i === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
-    }
-    ctx.stroke();
-
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = '#FFCC00';
-    for (let i = 0; i < landmarks.length; i++) {
-      const px = landmarks[i].x * w;
-      const py = landmarks[i].y * h;
-      ctx.beginPath();
-      ctx.arc(px, py, 3, 0, Math.PI * 2);
-      ctx.fill();
-    }
   }
 }
 
 async function startCameraTrial() {
   showPhase('phase-2-camera');
   sound.playClick();
-  setupLensSwitcher();
 
   elements.countdownTimer.textContent = '30';
   elements.hudPulseVal.innerHTML = '-- <span style="font-size: 16px;">BPM</span>';
@@ -470,11 +379,6 @@ async function startCameraTrial() {
   elements.hudCalmVal.textContent = 'STABILIZING';
   elements.hudExprVal.textContent = 'CALIBRATING';
   elements.hudGuidanceBanner.textContent = 'CALIBRATING OPTICAL CADENCE...';
-
-  // If entering from Strange Reading button, auto-activate astral lens
-  if (activeTrialMode === 'strange') {
-    elements.lensBtnAstral?.click();
-  }
 
   let lastVitals: UnifiedVitals = {
     source: 'browser-camera',
@@ -495,10 +399,31 @@ async function startCameraTrial() {
     elements.hudPulseVal.innerHTML = `${v.pulseBpm} <span style="font-size: 16px;">BPM</span>`;
     elements.hudBreathVal.innerHTML = `${v.breathingRate} <span style="font-size: 16px;">/MIN</span>`;
 
-    // Dynamic Autonomic Tone Display
-    if (activeCameraLens === 'astral' || activeTrialMode === 'strange') {
-      elements.hudCalmVal.textContent = 'ASTRAL RESONANCE';
-    } else if (v.calmScore >= 52) {
+    // Real-Time Dynamic Faction Resonance
+    const pulse = v.pulseBpm || 72;
+    const calm = v.calmScore !== undefined ? v.calmScore : Math.max(10, Math.min(95, Math.round(50 - (pulse - 72) * 2.2)));
+    const thorScore = Math.max(10, Math.min(90, Math.round(50 + (72 - pulse) * 1.6 + (calm - 50) * 0.35)));
+    const doomScore = 100 - thorScore;
+    liveThorResonance = thorScore;
+
+    if (elements.hudThorPct) elements.hudThorPct.textContent = `${thorScore}%`;
+    if (elements.hudDoomPct) elements.hudDoomPct.textContent = `${doomScore}%`;
+    if (elements.hudResonanceFillThor) elements.hudResonanceFillThor.style.width = `${thorScore}%`;
+    if (elements.hudResonanceFillDoom) elements.hudResonanceFillDoom.style.width = `${doomScore}%`;
+    if (elements.hudResonanceNeedle) elements.hudResonanceNeedle.style.left = `${thorScore}%`;
+
+    // Dynamic Reticle Oval
+    if (elements.reticleOval) {
+      if (thorScore >= 50) {
+        elements.reticleOval.style.borderColor = '#00E5FF';
+        elements.reticleOval.style.boxShadow = '0 0 20px rgba(0, 229, 255, 0.45)';
+      } else {
+        elements.reticleOval.style.borderColor = '#00E676';
+        elements.reticleOval.style.boxShadow = '0 0 20px rgba(0, 230, 118, 0.45)';
+      }
+    }
+
+    if (thorScore >= 50) {
       elements.hudCalmVal.textContent = 'ASGARDIAN CALM';
     } else {
       elements.hudCalmVal.textContent = 'LATVERIAN FOCUS';
@@ -506,42 +431,31 @@ async function startCameraTrial() {
 
     elements.hudExprVal.textContent = (v.primaryExpression || 'RESOLUTE').toUpperCase();
 
-    // Dynamic Comic Narrator Voice
+    // Dynamic Comic Narrator Guidance
     if (v.remaining > 27) {
       elements.hudGuidanceBanner.textContent = 'CALIBRATING OPTICAL CADENCE...';
-    } else if (activeCameraLens === 'astral') {
-      elements.hudGuidanceBanner.textContent = 'THE EYE OF AGAMOTTO PIERCES THE ASTRAL VEIL';
-    } else if (v.calmScore >= 52) {
+    } else if (thorScore >= 50) {
       elements.hudGuidanceBanner.textContent = 'ASGARDIAN RESILIENT EQUILIBRIUM: WORTHY';
     } else {
       elements.hudGuidanceBanner.textContent = 'LATVERIAN TACTICAL SCRUTINY: ACUTE FOCUS';
     }
 
     // Render live face mesh overlay & cardiac oscilloscope
-    drawFaceMesh(v.landmarks, v.calmScore);
+    drawFaceMesh(v.landmarks, calm);
     drawCardiacOscilloscope(v.waveformY || 0, v.pulseBpm);
   };
 
   bridge.onComplete = (finalV: UnifiedVitals) => {
     bridge.stopTrial();
     const vitalsToUse = finalV || lastVitals;
-    const profile = activeTrialMode === 'strange'
-      ? sortStrangeReading({
-          pulseRate: vitalsToUse.pulseBpm,
-          breathingRate: vitalsToUse.breathingRate,
-          rmssd: vitalsToUse.rmssd,
-          stressIndex: vitalsToUse.stressIndex,
-          calmScore: vitalsToUse.calmScore,
-          expressions: vitalsToUse.expressions
-        })
-      : sortFromVitals({
-          pulseRate: vitalsToUse.pulseBpm,
-          breathingRate: vitalsToUse.breathingRate,
-          rmssd: vitalsToUse.rmssd,
-          stressIndex: vitalsToUse.stressIndex,
-          calmScore: vitalsToUse.calmScore,
-          expressions: vitalsToUse.expressions
-        });
+    const profile = sortFromVitals({
+      pulseRate: vitalsToUse.pulseBpm,
+      breathingRate: vitalsToUse.breathingRate,
+      rmssd: vitalsToUse.rmssd,
+      stressIndex: vitalsToUse.stressIndex,
+      calmScore: vitalsToUse.calmScore,
+      expressions: vitalsToUse.expressions
+    });
     revealVerdict(profile);
   };
 
@@ -618,7 +532,6 @@ function revealVerdict(profile: CardProfile) {
 
   // Trigger Team Audio & Banner
   const isThor = profile.team === 'thor';
-  const isDoom = profile.team === 'doom';
 
   if (isThor) {
     sound.playThunder();
@@ -627,20 +540,13 @@ function revealVerdict(profile: CardProfile) {
     elements.verdictTeamName.textContent = 'THE HAMMER CALLS YOU: YOU ARE WORTHY!';
     elements.verdictTeamName.className = 'verdict-title thor-theme';
     elements.verdictSubtext.textContent = `WHOSOEVER HOLDS THIS HAMMER SHALL POSSESS THE POWER // ${profile.archetype.toUpperCase()}`;
-  } else if (isDoom) {
+  } else {
     sound.playDoomClank();
     elements.verdictTagPill.textContent = '★ AUTHORIZED BY DOOM ★';
     elements.verdictTagPill.style.color = '#00E676';
     elements.verdictTeamName.textContent = 'THE MASK CLAIMS YOU: HELL ANSWERS TO YOU!';
     elements.verdictTeamName.className = 'verdict-title doom-theme';
     elements.verdictSubtext.textContent = `HELL ANSWERS TO YOUR UNYIELDING COMMAND // ${profile.archetype.toUpperCase()}`;
-  } else {
-    sound.playFanfare();
-    elements.verdictTagPill.textContent = '★ ASTRAL MIRROR DECREE ★';
-    elements.verdictTagPill.style.color = '#FF9800';
-    elements.verdictTeamName.textContent = 'THE ASTRAL MIRROR HAS DECREED!';
-    elements.verdictTeamName.className = 'verdict-title strange-theme';
-    elements.verdictSubtext.textContent = `ASTRAL NATURE UNLOCKED ACROSS DIMENSIONS // ${profile.archetype.toUpperCase()}`;
   }
 
   // Sound fanfare and card whoosh
@@ -656,9 +562,7 @@ function revealVerdict(profile: CardProfile) {
     origin: { y: 0.6 },
     colors: isThor 
       ? ['#FFCC00', '#00E5FF', '#111116'] 
-      : isDoom 
-        ? ['#00C853', '#D4D8DD', '#111116'] 
-        : ['#E65100', '#FFD54F', '#111116']
+      : ['#00C853', '#D4D8DD', '#111116']
   });
 
   // Render Comic Book Cover Page to Canvas & Mount
@@ -673,11 +577,7 @@ function revealVerdict(profile: CardProfile) {
   goldenRatioAnalyzer.render(profile, elements.goldenRatioMount);
 
   // Set default active tab
-  if (profile.team === 'strange') {
-    switchPhase3Tab('heatmap');
-  } else {
-    switchPhase3Tab('dossier');
-  }
+  switchPhase3Tab('dossier');
 
   // Setup interactive 3D tilt and battle cry on card
   setupInteractiveCardTilt(profile);
@@ -703,12 +603,9 @@ function setupInteractiveCardTilt(profile: CardProfile) {
     if (profile.team === 'thor') {
       canvas.style.outline = '3px solid #FFCC00';
       canvas.style.boxShadow = '0 0 35px rgba(0, 229, 255, 0.45), 8px 12px 0 #111116';
-    } else if (profile.team === 'doom') {
+    } else {
       canvas.style.outline = '3px solid #00E676';
       canvas.style.boxShadow = '0 0 35px rgba(0, 230, 118, 0.45), 8px 12px 0 #111116';
-    } else {
-      canvas.style.outline = '3px solid #FF9800';
-      canvas.style.boxShadow = '0 0 35px rgba(255, 152, 0, 0.45), 8px 12px 0 #111116';
     }
   }
 
@@ -743,10 +640,8 @@ function setupInteractiveCardTilt(profile: CardProfile) {
   wrap.onclick = () => {
     if (profile.team === 'thor') {
       sound.playThunder();
-    } else if (profile.team === 'doom') {
-      sound.playDoomClank();
     } else {
-      sound.playFanfare();
+      sound.playDoomClank();
     }
   };
 }
@@ -836,9 +731,8 @@ function renderVaultList() {
 
   cards.forEach((card) => {
     const isThor = card.team === 'thor';
-    const isDoom = card.team === 'doom';
-    const emblemBg = isThor ? 'var(--thor-gold)' : isDoom ? 'var(--doom-emerald)' : '#FFAB00';
-    const emblemIcon = isThor ? icons.hammer : isDoom ? icons.mask : icons.vishanti;
+    const emblemBg = isThor ? 'var(--thor-gold)' : 'var(--doom-emerald)';
+    const emblemIcon = isThor ? icons.hammer : icons.mask;
 
     const item = document.createElement('div');
     item.className = 'vault-item';
@@ -873,33 +767,7 @@ function renderVaultList() {
   });
 }
 
-// Marvel Intro Loader
-function initMarvelIntroLoader() {
-  const loader = elements.marvelIntroLoader;
-  if (!loader) return;
-
-  // Sound: rapid page-turn flutter
-  setTimeout(() => {
-    sound.playPageFlutter();
-  }, 200);
-
-  const dismiss = () => {
-    loader.classList.add('fade-out');
-    setTimeout(() => {
-      loader.style.display = 'none';
-    }, 500);
-  };
-
-  elements.btnSkipMarvel?.addEventListener('click', () => {
-    sound.playClick();
-    dismiss();
-  });
-
-  // Auto-dismiss after 2.4s
-  setTimeout(dismiss, 2400);
-}
-
-// Single Dynamic Hero Card & Arcade Interactions
+// Single Dynamic Hero Card Interactions
 function initSingleHeroCard() {
   let currentHeroFaction: 'thor' | 'doom' = 'thor';
 
@@ -962,17 +830,6 @@ function initSingleHeroCard() {
     toggleFaction();
   });
 
-  // Launch Clash Minigame
-  elements.btnLaunchClashGame?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    sound.playClick();
-    clashMinigame.show();
-  });
-
-  clashMinigame.onGameComplete = (winnerProfile) => {
-    revealVerdict(winnerProfile);
-  };
-
   // Live Presage API Diagnostics
   elements.btnOpenDiagnostics?.addEventListener('click', () => {
     sound.playClick();
@@ -1005,7 +862,6 @@ function initBridgeStatus() {
 function bootstrap() {
   mountIcons();
   initBridgeStatus();
-  initMarvelIntroLoader();
   initSingleHeroCard();
   initSoundControls();
   initCameraFlow();

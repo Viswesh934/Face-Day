@@ -3,6 +3,28 @@
 // 100% On-Device execution with strict 30-Second Credit Guard
 
 import { WebSocketServer } from 'ws';
+import { existsSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// Auto-load .env file from root or local runner dir
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const envCandidates = [
+  resolve(process.cwd(), '.env'),
+  resolve(__dirname, '../.env'),
+  resolve(__dirname, '.env')
+];
+
+for (const envPath of envCandidates) {
+  if (existsSync(envPath)) {
+    try {
+      process.loadEnvFile(envPath);
+      break;
+    } catch {
+      // Ignore if parsing fails
+    }
+  }
+}
 
 const PORT = process.env.BRIDGE_PORT ? parseInt(process.env.BRIDGE_PORT) : 8765;
 const wss = new WebSocketServer({ port: PORT });

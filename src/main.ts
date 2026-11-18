@@ -12,8 +12,6 @@ import { statDashboard } from './stat-dashboard';
 import { faceReadingHeatMap } from './heat-map';
 import { multiverseNexusPod } from './nexus-pod';
 import { goldenRatioAnalyzer } from './golden-ratio';
-import { presageDiagnostics } from './presage-diagnostics';
-
 // DOM Element References
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 
@@ -21,13 +19,13 @@ const elements = {
   // Navigation
   navHammer: $('nav-hammer-icon'),
   navMask: $('nav-mask-icon'),
+  btnNavWarbid: $('btn-nav-warbid'),
+  navWarbidIcon: $('nav-warbid-icon'),
   soundIcon: $('sound-icon'),
   vaultIcon: $('vault-icon'),
   btnSound: $('btn-sound'),
   btnOpenVault: $('btn-open-vault'),
   vaultCountBadge: $('vault-count-badge'),
-  btnOpenDiagnostics: $('btn-open-diagnostics'),
-  navDiagIcon: $('nav-diag-icon'),
 
   // Phase Panels
   phase1: $('phase-1'),
@@ -35,14 +33,12 @@ const elements = {
   phase2Inquiry: $('phase-2-inquiry'),
   phase3: $('phase-3'),
 
-  // Phase 1 Single Hero Card & Gate
-  singleHeroCard: $('single-hero-card'),
-  heroCardEmblem: $('hero-card-emblem'),
-  heroCardBurst: $('hero-card-burst'),
-  heroCardTitle: $('hero-card-title'),
-  heroCardDesc: $('hero-card-desc'),
-  heroCardStatsRow: $('hero-card-stats-row'),
-  btnToggleHeroFaction: $('btn-toggle-hero-faction'),
+  // Phase 1 Compact Duel & Gate
+  heroThorIcon: $('hero-thor-icon'),
+  heroDoomIcon: $('hero-doom-icon'),
+  duelThorCard: $('duel-thor-card'),
+  duelDoomCard: $('duel-doom-card'),
+  duelVsBurst: $('duel-vs-burst'),
   choiceCameraIcon: $('choice-camera-icon'),
   choiceInquiryIcon: $('choice-inquiry-icon'),
   btnStartCameraFlow: $('btn-start-camera-flow'),
@@ -166,11 +162,12 @@ const inquiryAnswers: number[] = [];
 function mountIcons() {
   if (elements.navHammer) elements.navHammer.innerHTML = icons.hammer;
   if (elements.navMask) elements.navMask.innerHTML = icons.mask;
+  if (elements.navWarbidIcon) elements.navWarbidIcon.innerHTML = icons.capShield;
   if (elements.soundIcon) elements.soundIcon.innerHTML = icons.soundOn;
   if (elements.vaultIcon) elements.vaultIcon.innerHTML = icons.deck;
-  if (elements.navDiagIcon) elements.navDiagIcon.innerHTML = icons.crosshair;
 
-  if (elements.heroCardEmblem) elements.heroCardEmblem.innerHTML = icons.hammer;
+  if (elements.heroThorIcon) elements.heroThorIcon.innerHTML = icons.hammer;
+  if (elements.heroDoomIcon) elements.heroDoomIcon.innerHTML = icons.mask;
   if (elements.choiceCameraIcon) elements.choiceCameraIcon.innerHTML = icons.camera;
   if (elements.choiceInquiryIcon) elements.choiceInquiryIcon.innerHTML = icons.inquiry;
   if (elements.hudCrosshairIcon) elements.hudCrosshairIcon.innerHTML = icons.crosshair;
@@ -767,73 +764,24 @@ function renderVaultList() {
   });
 }
 
-// Single Dynamic Hero Card Interactions
-function initSingleHeroCard() {
-  let currentHeroFaction: 'thor' | 'doom' = 'thor';
+// Compact Duel Interactions & Warbid Nav
+function initDuelShowcase() {
+  elements.duelThorCard?.addEventListener('click', () => {
+    sound.playThunder();
+  });
 
-  const updateCardUi = () => {
-    if (!elements.singleHeroCard) return;
-    if (currentHeroFaction === 'thor') {
-      elements.singleHeroCard.className = 'single-hero-card thor-mode';
-      if (elements.heroCardEmblem) elements.heroCardEmblem.innerHTML = icons.hammer;
-      if (elements.heroCardBurst) elements.heroCardBurst.textContent = 'WORTHY';
-      if (elements.heroCardTitle) elements.heroCardTitle.textContent = 'TEAM THOR // THE WAR HAMMER';
-      if (elements.heroCardDesc) {
-        elements.heroCardDesc.textContent = 'High parasympathetic tone, resilient heart rate equilibrium, and deep diaphragmatic breath draft you into the Asgardian Vanguard.';
-      }
-      if (elements.heroCardStatsRow) {
-        elements.heroCardStatsRow.innerHTML = `
-          <div class="hero-stat-pill"><span>AGI</span> <strong>92</strong></div>
-          <div class="hero-stat-pill"><span>END</span> <strong>95</strong></div>
-          <div class="hero-stat-pill"><span>FOC</span> <strong>88</strong></div>
-          <div class="hero-stat-pill"><span>WIL</span> <strong>94</strong></div>
-          <div class="hero-stat-pill power-pill"><span>PWR</span> <strong>940</strong></div>
-        `;
-      }
-    } else {
-      elements.singleHeroCard.className = 'single-hero-card doom-mode';
-      if (elements.heroCardEmblem) elements.heroCardEmblem.innerHTML = icons.mask;
-      if (elements.heroCardBurst) elements.heroCardBurst.textContent = 'SUBMIT';
-      if (elements.heroCardTitle) elements.heroCardTitle.textContent = 'TEAM DOOM // THE TITANIUM MASK';
-      if (elements.heroCardDesc) {
-        elements.heroCardDesc.textContent = 'Acute sympathetic focus, elevated tactical alertness, and unwavering calculated willpower draft you to Doctor Doom.';
-      }
-      if (elements.heroCardStatsRow) {
-        elements.heroCardStatsRow.innerHTML = `
-          <div class="hero-stat-pill"><span>AGI</span> <strong>86</strong></div>
-          <div class="hero-stat-pill"><span>END</span> <strong>89</strong></div>
-          <div class="hero-stat-pill"><span>FOC</span> <strong>98</strong></div>
-          <div class="hero-stat-pill"><span>WIL</span> <strong>99</strong></div>
-          <div class="hero-stat-pill power-pill"><span>PWR</span> <strong>955</strong></div>
-        `;
-      }
-    }
-  };
+  elements.duelDoomCard?.addEventListener('click', () => {
+    sound.playDoomClank();
+  });
 
-  updateCardUi();
-
-  const toggleFaction = () => {
+  elements.duelVsBurst?.addEventListener('click', () => {
     sound.playClick();
-    currentHeroFaction = currentHeroFaction === 'thor' ? 'doom' : 'thor';
-    updateCardUi();
-    if (currentHeroFaction === 'thor') sound.playThunder();
-    else sound.playDoomClank();
-  };
+  });
 
-  elements.btnToggleHeroFaction?.addEventListener('click', (e) => {
+  // Top Nav Warbid Console Trigger
+  elements.btnNavWarbid?.addEventListener('click', (e) => {
     e.stopPropagation();
-    toggleFaction();
-  });
-
-  elements.singleHeroCard?.addEventListener('click', (e) => {
-    if ((e.target as HTMLElement).closest('button')) return;
-    toggleFaction();
-  });
-
-  // Live Presage API Diagnostics
-  elements.btnOpenDiagnostics?.addEventListener('click', () => {
-    sound.playClick();
-    presageDiagnostics.show();
+    multiverseNexusPod.toggleMenu();
   });
 }
 
@@ -862,7 +810,7 @@ function initBridgeStatus() {
 function bootstrap() {
   mountIcons();
   initBridgeStatus();
-  initSingleHeroCard();
+  initDuelShowcase();
   initSoundControls();
   initCameraFlow();
   initInquiryFlow();

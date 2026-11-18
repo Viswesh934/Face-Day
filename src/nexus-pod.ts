@@ -90,7 +90,7 @@ export class MultiverseNexusPod {
     // Click outside to close menu
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
-      if (this.isMenuOpen && !target.closest('#multiverse-floating-pod')) {
+      if (this.isMenuOpen && !target.closest('#multiverse-floating-pod') && !target.closest('#btn-nav-warbid')) {
         this.closeMenu();
       }
     });

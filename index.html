@@ -20,9 +20,9 @@
       <div id="bridge-status-pill" class="bridge-status-pill" title="Live Measurement Engine Status">
         <span class="bridge-dot" id="bridge-dot"></span>
       </div>
-      <button id="btn-open-diagnostics" class="comic-btn comic-btn-sm" title="Presage API &amp; Edge Health Diagnostics">
-        <span id="nav-diag-icon"></span>
-        <span>PRESAGE API</span>
+      <button id="btn-nav-warbid" class="comic-btn comic-btn-sm comic-btn-warbid" title="Warbid Reality Console (7 Cosmic Modes)">
+        <span id="nav-warbid-icon"></span>
+        <span>WARBID</span>
       </button>
       <button id="btn-sound" class="comic-btn comic-btn-sm" title="Toggle Sound">
         <span id="sound-icon"></span>
@@ -40,39 +40,27 @@
     <!-- PHASE 1: THE CHOICE & GATE COVER               -->
     <!-- ============================================== -->
     <section id="phase-1" class="phase-panel active">
-      <!-- Single Dynamic Interactive Hero Card -->
-      <div class="splash-hero single-hero-section">
-        <div class="single-hero-card" id="single-hero-card" title="Tap to flip faction between Thor &amp; Doom!">
-          <div class="hero-card-header">
-            <span class="hero-card-tag" id="hero-card-tag">OFFICIAL FACTION SHOWCASE</span>
-            <span class="hero-card-edition">SERIES 1 // FOIL</span>
-          </div>
-
-          <div class="hero-card-body">
-            <div class="hero-card-emblem-wrap">
-              <div class="hero-card-emblem" id="hero-card-emblem"></div>
-              <div class="hero-card-burst-badge" id="hero-card-burst">WORTHY</div>
-            </div>
-
-            <div class="hero-card-info">
-              <h2 class="hero-card-title" id="hero-card-title">TEAM THOR // THE WAR HAMMER</h2>
-              <p class="hero-card-desc" id="hero-card-desc">
-                High parasympathetic tone, resilient heart rate equilibrium, and deep diaphragmatic breath draft you into the Asgardian Vanguard.
-              </p>
-              <div class="hero-card-stats-row" id="hero-card-stats-row">
-                <div class="hero-stat-pill"><span>AGI</span> <strong>92</strong></div>
-                <div class="hero-stat-pill"><span>END</span> <strong>95</strong></div>
-                <div class="hero-stat-pill"><span>FOC</span> <strong>88</strong></div>
-                <div class="hero-stat-pill"><span>WIL</span> <strong>94</strong></div>
-                <div class="hero-stat-pill power-pill"><span>PWR</span> <strong>940</strong></div>
-              </div>
+      <!-- Compact Interactive Faction Showcase -->
+      <div class="splash-hero compact-hero">
+        <div class="hero-compact-duel">
+          <div id="duel-thor-card" class="duel-faction-pill duel-thor" title="Click to summon Asgardian Thunder!">
+            <div class="duel-icon-circle" id="hero-thor-icon"></div>
+            <div class="duel-info">
+              <div class="duel-name">TEAM THOR</div>
+              <div class="duel-sub">THE ASGARDIAN VANGUARD &bull; HIGH EQUILIBRIUM</div>
             </div>
           </div>
 
-          <div class="hero-card-footer">
-            <button id="btn-toggle-hero-faction" class="comic-btn comic-btn-sm" style="width: 100%;">
-              <span>FLIP FACTION (THOR &harr; DOOM)</span>
-            </button>
+          <div class="duel-vs-badge" id="duel-vs-burst" title="The War of Micro-Signals">
+            <span>VS</span>
+          </div>
+
+          <div id="duel-doom-card" class="duel-faction-pill duel-doom" title="Click to summon Latverian Steel!">
+            <div class="duel-icon-circle" id="hero-doom-icon"></div>
+            <div class="duel-info">
+              <div class="duel-name">TEAM DOOM</div>
+              <div class="duel-sub">THE LATVERIAN OVERSEER &bull; ACUTE TACTICAL WILL</div>
+            </div>
           </div>
         </div>
       </div>

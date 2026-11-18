@@ -190,6 +190,24 @@ export class BiometricBridge {
   }
 
   public async startTrial(videoEl: HTMLVideoElement, apiKey?: string): Promise<void> {
+    // Dispatch active Presage session to edge worker to consume API credits in production
+    try {
+      fetch('/api/presage-session?action=start', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(apiKey ? { 'x-api-key': apiKey } : {})
+        },
+        body: JSON.stringify({ action: 'start', durationSeconds: 30 })
+      }).then(res => res.json()).then(data => {
+        console.log('[Face Day] Presage Cloud Session initiated via edge proxy:', data);
+      }).catch(() => {
+        // Edge worker fallback
+      });
+    } catch {
+      // In-browser fallback
+    }
+
     // Always configure optical callbacks so camera preview, face tracking and fallback work flawlessly
     this.optical.onUpdate = (opt: OpticalMetrics) => {
       if (this.activeMode !== 'presage-hardware') {
@@ -211,6 +229,25 @@ export class BiometricBridge {
     };
 
     this.optical.onComplete = (opt: OpticalMetrics) => {
+      // Dispatch active Presage session completion to edge worker
+      try {
+        fetch('/api/presage-session?action=complete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(apiKey ? { 'x-api-key': apiKey } : {})
+          },
+          body: JSON.stringify({
+            action: 'complete',
+            pulseBpm: opt.pulseBpm,
+            breathingRate: opt.breathingRate,
+            calmScore: opt.calmScore
+          })
+        }).then(res => res.json()).then(data => {
+          console.log('[Face Day] Presage Cloud Session completion logged:', data);
+        }).catch(() => {});
+      } catch {}
+
       if (this.activeMode !== 'presage-hardware') {
         const finalV: UnifiedVitals = {
           source: 'browser-camera',
@@ -249,6 +286,10 @@ export class BiometricBridge {
   }
 
   public stopTrial(): void {
+    try {
+      fetch('/api/presage-session?action=stop', { method: 'POST' }).catch(() => {});
+    } catch {}
+
     if (this.activeMode === 'presage-hardware' && this.ws) {
       this.ws.send(JSON.stringify({ type: 'stop' }));
     }

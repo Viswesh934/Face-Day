@@ -43,6 +43,7 @@ const elements = {
   btnStartCameraFlow: $('btn-start-camera-flow'),
   btnStartStrangeFlow: $('btn-start-strange-flow'),
   btnStartInquiryFlow: $('btn-start-inquiry-flow'),
+  phase1NexusMount: $('phase1-nexus-mount'),
 
   // Live Bridge / Engine Indicator
   bridgeStatusPill: $('bridge-status-pill'),
@@ -479,6 +480,10 @@ function switchPhase3Tab(tab: 'dossier' | 'heatmap' | 'nexus') {
   elements.statDossierMount.style.display = tab === 'dossier' ? 'block' : 'none';
   elements.heatmapMount.style.display = tab === 'heatmap' ? 'block' : 'none';
   elements.nexusMount.style.display = tab === 'nexus' ? 'block' : 'none';
+
+  if (tab === 'nexus' && elements.nexusMount) {
+    multiverseNexusPod.render(elements.nexusMount);
+  }
 }
 
 function setupInteractiveCardTilt(profile: CardProfile) {
@@ -731,6 +736,9 @@ function bootstrap() {
   initCardActions();
   initVaultModal();
   updateVaultBadge();
+
+  // Initialize Compact Floating Multiverse Nexus Pod (Docked on Right)
+  multiverseNexusPod.init();
 }
 
 window.addEventListener('DOMContentLoaded', bootstrap);

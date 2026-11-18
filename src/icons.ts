@@ -41,6 +41,37 @@ export const icons = {
     </svg>
   `,
 
+  // Multiverse Portal Vortex Icon
+  portal: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+      <circle cx="12" cy="12" r="9" stroke="#111116"/>
+      <path d="M12 3a9 9 0 0 1 9 9" stroke="#E65100" stroke-width="2.5"/>
+      <path d="M12 7a5 5 0 0 1 5 5" stroke="#FFB300" stroke-width="2"/>
+      <circle cx="12" cy="12" r="2.5" fill="#111116"/>
+    </svg>
+  `,
+
+  // Thanos Infinity Gauntlet / Snap Icon
+  snap: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+      <path d="M6 11V6a2 2 0 0 1 4 0v5" stroke="#AB47BC" stroke-width="2.2"/>
+      <path d="M10 10V4a2 2 0 0 1 4 0v6" stroke="#AB47BC" stroke-width="2.2"/>
+      <path d="M14 9V6a2 2 0 0 1 4 0v7" stroke="#AB47BC" stroke-width="2.2"/>
+      <path d="M18 13v-2a2 2 0 0 1 4 0v5a7 7 0 0 1-7 7h-2a7 7 0 0 1-5-2.2L4 16.5a1.5 1.5 0 0 1 2.3-1.9L8 16" fill="#F3E5F5" stroke="#111116"/>
+      <circle cx="13" cy="16" r="1.5" fill="#FFD600"/>
+    </svg>
+  `,
+
+  // Loki Yggdrasil Tree / Temporal Branch Icon
+  lokiTree: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+      <path d="M12 22v-8" stroke="#00C853" stroke-width="3"/>
+      <path d="M12 14c-3-2-6-5-6-9 4 0 7 2 6 9z" fill="#E8F5E9" stroke="#00C853"/>
+      <path d="M12 14c3-2 6-5 6-9-4 0-7 2-6 9z" fill="#E8F5E9" stroke="#00C853"/>
+      <circle cx="12" cy="4" r="2" fill="#FFD54F" stroke="#00C853"/>
+    </svg>
+  `,
+
   // Comic Shield
   shield: `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">

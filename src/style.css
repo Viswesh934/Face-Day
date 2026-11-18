@@ -432,7 +432,7 @@ body {
   border-radius: 16px;
   background: #FFFFFF;
   box-shadow: 6px 6px 0 var(--ink);
-  padding: 18px 22px;
+  padding: 18px 20px;
   text-align: center;
 }
 
@@ -1383,187 +1383,311 @@ body {
 }
 
 /* ==================================================== */
-/* MULTIVERSE NEXUS POD (CIRCULAR COSMIC SELECTOR)      */
+/* COMPACT FLOATING MULTIVERSE NEXUS POD (RIGHT EDGE)   */
+/* Small circular controller affecting the WHOLE page!  */
 /* ==================================================== */
-.nexus-pod-box {
-  width: 100%;
-  background: #FFFFFF;
-  border: 4px solid var(--ink);
-  border-radius: 16px;
-  box-shadow: 6px 6px 0 var(--ink);
-  padding: 16px 20px;
-  margin-top: 0;
-  color: #111116;
-}
-
-.nexus-header {
-  border-bottom: 3px solid var(--ink);
-  padding-bottom: 8px;
-  margin-bottom: 14px;
-  text-align: left;
-}
-
-.nexus-title {
-  font-family: 'Bangers', sans-serif;
-  font-size: 26px;
-  letter-spacing: 1.5px;
-  color: #111116;
-  text-shadow: 2px 2px 0 #AB47BC;
-  line-height: 1.1;
-}
-
-.nexus-sub {
-  font-size: 12px;
-  font-weight: 800;
-  color: #8E24AA;
-  letter-spacing: 1px;
-  margin-top: 2px;
-}
-
-.nexus-core-layout {
-  display: flex;
-  gap: 18px;
-  align-items: stretch;
-}
-
-@media (max-width: 768px) {
-  .nexus-core-layout {
-    flex-direction: column;
-    align-items: center;
-  }
-}
-
-.nexus-chamber-wrap {
+.multiverse-floating-pod {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #FAF8F2;
-  padding: 12px;
-  border: 3px solid var(--ink);
-  border-radius: 12px;
-  box-shadow: 3px 3px 0 var(--ink);
-  flex-shrink: 0;
-}
-
-.nexus-radial-ring {
-  position: relative;
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid var(--ink);
-  box-shadow: 0 0 16px rgba(171, 71, 188, 0.35);
-  background: #060810;
-}
-
-.nexus-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.nexus-controls-col {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 10px;
-  flex: 1;
-  min-width: 0;
-}
-
-.nexus-selector-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 8px;
+  user-select: none;
 }
 
-@media (max-width: 580px) {
-  .nexus-selector-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 640px) {
+  .multiverse-floating-pod {
+    right: 10px;
+    top: 55%;
+    transform: translateY(-50%) scale(0.9);
   }
 }
 
-.nexus-dial-btn {
-  font-family: 'Bangers', sans-serif;
-  font-size: 14px;
-  letter-spacing: 0.8px;
-  padding: 10px 10px;
+/* 4 Circular Satellite Mode Selector Nodes */
+.pod-orbital-cluster {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.pod-node-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
   border: 2.5px solid var(--ink);
-  border-radius: 8px;
   background: #FFFFFF;
   color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--ink);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+  padding: 0;
+  position: relative;
+}
+
+.pod-node-label {
+  font-family: 'Bangers', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  line-height: 1;
+}
+
+.pod-node-btn:hover {
+  transform: scale(1.15) translateX(-2px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.pod-node-btn.node-thanos.active {
+  background: #8E24AA;
+  color: #FFFFFF;
+  border-color: var(--ink);
+  box-shadow: 0 0 10px rgba(171, 71, 188, 0.6), 2px 2px 0 var(--ink);
+}
+
+.pod-node-btn.node-loki.active {
+  background: #00C853;
+  color: #FFFFFF;
+  border-color: var(--ink);
+  box-shadow: 0 0 10px rgba(0, 230, 118, 0.6), 2px 2px 0 var(--ink);
+}
+
+.pod-node-btn.node-strange.active {
+  background: #E65100;
+  color: #FFFFFF;
+  border-color: var(--ink);
+  box-shadow: 0 0 10px rgba(255, 109, 0, 0.6), 2px 2px 0 var(--ink);
+}
+
+.pod-node-btn.node-bifrost.active {
+  background: #0091EA;
+  color: #FFFFFF;
+  border-color: var(--ink);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6), 2px 2px 0 var(--ink);
+}
+
+/* Small Main Circular Core Trigger */
+.pod-main-core {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 3.5px solid var(--ink);
+  background: #FFFFFF;
+  box-shadow: 3.5px 3.5px 0 var(--ink), 0 0 16px rgba(171, 71, 188, 0.4);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: 2.5px 2.5px 0 var(--ink);
-  transition: transform 0.08s ease, background 0.1s ease, color 0.1s ease;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  overflow: visible;
+  padding: 0;
 }
 
-.nexus-dial-btn:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 3.5px 3.5px 0 var(--ink);
-  background: #FFF9C4;
+.pod-main-core:hover {
+  transform: scale(1.12);
+  box-shadow: 4px 4px 0 var(--ink), 0 0 24px rgba(255, 204, 0, 0.8);
 }
 
-.nexus-dial-btn.active {
+.pod-main-core:active {
+  transform: scale(0.96);
+  box-shadow: 1.5px 1.5px 0 var(--ink);
+}
+
+.pod-core-glyph {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.pod-core-glyph svg {
+  width: 100%;
+  height: 100%;
+}
+
+.pod-core-halo {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px dashed rgba(17, 17, 22, 0.4);
+  animation: podSpin 10s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes podSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.pod-main-core.mode-thanos {
+  background: #F3E5F5;
+  box-shadow: 3.5px 3.5px 0 var(--ink), 0 0 18px rgba(171, 71, 188, 0.6);
+}
+
+.pod-main-core.mode-loki {
+  background: #E8F5E9;
+  box-shadow: 3.5px 3.5px 0 var(--ink), 0 0 18px rgba(0, 230, 118, 0.6);
+}
+
+.pod-main-core.mode-strange {
+  background: #FFF3E0;
+  box-shadow: 3.5px 3.5px 0 var(--ink), 0 0 18px rgba(255, 109, 0, 0.6);
+}
+
+.pod-main-core.mode-bifrost {
+  background: #E0F7FA;
+  box-shadow: 3.5px 3.5px 0 var(--ink), 0 0 18px rgba(0, 229, 255, 0.6);
+}
+
+.pod-core-tag {
+  font-family: 'Bangers', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.8px;
   background: var(--ink);
   color: #FFFFFF;
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 var(--ink);
+  padding: 3px 8px;
+  border-radius: 4px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+  text-align: center;
 }
 
-.dial-node-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 1.5px solid var(--ink);
-  display: inline-block;
-  flex-shrink: 0;
+/* ==================================================== */
+/* FULL-PAGE COSMIC REALITY EFFECTS                     */
+/* ==================================================== */
+
+/* Full-Screen Canvas Overlay */
+.multiverse-fx-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9997;
 }
 
-.nexus-lore-card {
-  background: #FAF8F2;
-  border: 2.5px solid var(--ink);
-  border-radius: 10px;
-  padding: 12px 14px;
-  box-shadow: 3px 3px 0 var(--ink);
-  text-align: left;
+/* Screen Flash Overlay */
+.multiverse-fx-flash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
-.lore-header {
+.multiverse-fx-flash.flash-white.active {
+  background: rgba(255, 255, 255, 0.95);
+  opacity: 1;
+}
+
+.multiverse-fx-flash.flash-emerald.active {
+  background: rgba(0, 230, 118, 0.45);
+  opacity: 1;
+}
+
+/* Thanos Snap: Ash Disintegration on 50% of the page! */
+.thanos-dusted {
+  filter: grayscale(100%) contrast(1.4) blur(1.5px) !important;
+  opacity: 0.12 !important;
+  transform: translateY(-16px) rotate(-1.5deg) scale(0.96) !important;
+  transition: filter 1.8s ease, opacity 1.8s ease, transform 1.8s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  pointer-events: none !important;
+}
+
+/* Apocalyptic Screen Tremor */
+.reality-tremor {
+  animation: realityShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes realityShake {
+  10%, 90% { transform: translate3d(-3px, 1px, 0); }
+  20%, 80% { transform: translate3d(4px, -2px, 0); }
+  30%, 50%, 70% { transform: translate3d(-5px, 3px, 0); }
+  40%, 60% { transform: translate3d(5px, -3px, 0); }
+}
+
+/* Ambient Cosmic Page Auras */
+.loki-timeline-aura {
+  box-shadow: inset 0 0 100px rgba(0, 230, 118, 0.35);
+  transition: box-shadow 0.8s ease;
+}
+
+.strange-portal-aura {
+  box-shadow: inset 0 0 100px rgba(255, 109, 0, 0.35);
+  transition: box-shadow 0.8s ease;
+}
+
+.bifrost-surge-active {
+  box-shadow: inset 0 0 120px rgba(0, 229, 255, 0.45);
+  transition: box-shadow 0.6s ease;
+}
+
+/* Full-Screen Comic Reality Action Banner */
+.multiverse-comic-banner {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  z-index: 10000;
+  background: #111116;
+  color: #FFFFFF;
   font-family: 'Bangers', sans-serif;
-  font-size: 16px;
-  letter-spacing: 1px;
-  margin-bottom: 4px;
+  font-size: 19px;
+  letter-spacing: 1.5px;
+  padding: 10px 24px;
+  border: 3.5px solid #FFCC00;
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 #111116, 0 0 25px rgba(255, 204, 0, 0.5);
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-align: center;
+  max-width: 90vw;
 }
 
-.lore-quote {
+.multiverse-comic-banner.slide-in {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Phase 3 Helper Callout */
+.phase3-nexus-callout {
+  background: #FFFFFF;
+  border: 3.5px solid var(--ink);
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 4px 4px 0 var(--ink);
+  text-align: center;
+}
+
+.phase3-nexus-callout .callout-badge {
+  font-family: 'Bangers', sans-serif;
   font-size: 13px;
-  font-weight: 700;
-  color: #111116;
-  line-height: 1.4;
+  letter-spacing: 1px;
+  color: #8E24AA;
   margin-bottom: 6px;
 }
 
-.lore-meta {
-  font-family: monospace;
-  font-size: 11px;
-  font-weight: 800;
-  color: #616161;
-  letter-spacing: 0.5px;
+.phase3-nexus-callout .callout-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 22px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
 }
 
-.nexus-compact-footnote {
-  margin-top: 10px;
-  background: #F3E5F5;
-  border: 2px solid #8E24AA;
-  border-radius: 6px;
-  padding: 5px 10px;
-  font-family: 'Bangers', sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.8px;
-  color: #6A1B9A;
-  text-align: center;
+.phase3-nexus-callout .callout-desc {
+  font-size: 13px;
+  font-weight: 700;
+  color: #424242;
+  line-height: 1.5;
 }
 

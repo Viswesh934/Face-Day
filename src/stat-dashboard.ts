@@ -15,7 +15,7 @@ export class StatDashboard {
       <div class="stat-dossier-box">
         <div class="dossier-header">
           <div class="dossier-title-tag">PHYSIOLOGICAL TELEMETRY DOSSIER</div>
-          <div class="dossier-sub-id">RECORD ID: ${profile.id} &bull; PRESAGE SMARTSPECTRA ENGINE</div>
+          <div class="dossier-sub-id">RECORD ID: ${profile.id} &bull; TACTICAL BIOMETRIC DOSSIER</div>
         </div>
 
         <div class="dossier-grid">
@@ -86,7 +86,7 @@ export class StatDashboard {
             <div class="dossier-summary-stat">
               <span class="dossier-summary-badge" style="background: ${accentColor};">${profile.teamName}</span>
               <p style="font-weight: 700; margin-top: 8px;">EQUILIBRIUM: ${bio.equilibrium.toUpperCase()}</p>
-              <p style="font-size: 13px; color: #4A4A52; margin-top: 4px;">
+              <p style="font-size: 13px; color: #111116; font-weight: 700; margin-top: 4px;">
                 ${isThor 
                   ? 'High HRV resilient equilibrium & rhythmic breathing drafted this profile to Team Thor (The Vanguard).'
                   : isDoom 

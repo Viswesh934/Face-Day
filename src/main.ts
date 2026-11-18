@@ -76,9 +76,14 @@ const elements = {
   inquiryOptionsContainer: $('inquiry-options-container'),
 
   // Phase 3 Verdict & Card
+  verdictTagPill: $('verdict-tag-pill'),
   verdictTeamName: $('verdict-team-name'),
   verdictSubtext: $('verdict-subtext'),
+  cardWrapInteractive: $('card-wrap-interactive'),
+  cardGlare: $('card-glare'),
   cardCanvasMount: $('card-canvas-mount'),
+  btnTabDossier: $('btn-tab-dossier'),
+  btnTabHeatmap: $('btn-tab-heatmap'),
   heatmapMount: $('heatmap-mount'),
   statDossierMount: $('stat-dossier-mount'),
   btnDownloadCard: $('btn-download-card'),
@@ -402,19 +407,25 @@ function revealVerdict(profile: CardProfile) {
 
   if (isThor) {
     sound.playThunder();
-    elements.verdictTeamName.textContent = 'THE HAMMER HAS CHOSEN!';
-    elements.verdictTeamName.style.textShadow = '3px 3px 0 var(--thor-gold)';
-    elements.verdictSubtext.textContent = `DRAFTED INTO TEAM THOR AS "${profile.archetype.toUpperCase()}"`;
+    elements.verdictTagPill.textContent = '★ 100% CERTIFIED WORTHY ★';
+    elements.verdictTagPill.style.color = '#FFCC00';
+    elements.verdictTeamName.textContent = 'THE HAMMER CALLS YOU: YOU ARE WORTHY!';
+    elements.verdictTeamName.className = 'verdict-title thor-theme';
+    elements.verdictSubtext.textContent = `WHOSOEVER HOLDS THIS HAMMER SHALL POSSESS THE POWER // ${profile.archetype.toUpperCase()}`;
   } else if (isDoom) {
     sound.playDoomClank();
-    elements.verdictTeamName.textContent = 'DOOM DEMANDS YOUR ALLEGIANCE!';
-    elements.verdictTeamName.style.textShadow = '3px 3px 0 var(--doom-emerald)';
-    elements.verdictSubtext.textContent = `DRAFTED INTO TEAM DOOM AS "${profile.archetype.toUpperCase()}"`;
+    elements.verdictTagPill.textContent = '★ AUTHORIZED BY DOOM ★';
+    elements.verdictTagPill.style.color = '#00E676';
+    elements.verdictTeamName.textContent = 'THE MASK CLAIMS YOU: HELL ANSWERS TO YOU!';
+    elements.verdictTeamName.className = 'verdict-title doom-theme';
+    elements.verdictSubtext.textContent = `HELL ANSWERS TO YOUR UNYIELDING COMMAND // ${profile.archetype.toUpperCase()}`;
   } else {
     sound.playFanfare();
+    elements.verdictTagPill.textContent = '★ ASTRAL MIRROR DECREE ★';
+    elements.verdictTagPill.style.color = '#FF9800';
     elements.verdictTeamName.textContent = 'THE ASTRAL MIRROR HAS DECREED!';
-    elements.verdictTeamName.style.textShadow = '3px 3px 0 var(--strange-amber)';
-    elements.verdictSubtext.textContent = `MINTED AS "${profile.archetype.toUpperCase()}"`;
+    elements.verdictTeamName.className = 'verdict-title strange-theme';
+    elements.verdictSubtext.textContent = `ASTRAL NATURE UNLOCKED ACROSS DIMENSIONS // ${profile.archetype.toUpperCase()}`;
   }
 
   // Sound fanfare and card whoosh
@@ -441,21 +452,105 @@ function revealVerdict(profile: CardProfile) {
   elements.cardCanvasMount.innerHTML = '';
   elements.cardCanvasMount.appendChild(canvas);
 
-  // Render Strange Reading Heat Map if Strange Reading mode
+  // Render both views for the dossier column
+  statDashboard.render(profile, elements.statDossierMount);
+  faceReadingHeatMap.render(profile, elements.heatmapMount);
+
+  // Set default active tab
   if (profile.team === 'strange') {
-    faceReadingHeatMap.render(profile, elements.heatmapMount);
-    elements.heatmapMount.style.display = 'flex';
+    switchPhase3Tab('heatmap');
   } else {
-    elements.heatmapMount.innerHTML = '';
-    elements.heatmapMount.style.display = 'none';
+    switchPhase3Tab('dossier');
   }
 
-  // Render Biometric Stat Dashboard
-  statDashboard.render(profile, elements.statDossierMount);
+  // Setup interactive 3D tilt and battle cry on card
+  setupInteractiveCardTilt(profile);
+}
+
+function switchPhase3Tab(tab: 'dossier' | 'heatmap') {
+  if (tab === 'dossier') {
+    elements.btnTabDossier.classList.add('active');
+    elements.btnTabHeatmap.classList.remove('active');
+    elements.statDossierMount.style.display = 'block';
+    elements.heatmapMount.style.display = 'none';
+  } else {
+    elements.btnTabHeatmap.classList.add('active');
+    elements.btnTabDossier.classList.remove('active');
+    elements.heatmapMount.style.display = 'block';
+    elements.statDossierMount.style.display = 'none';
+  }
+}
+
+function setupInteractiveCardTilt(profile: CardProfile) {
+  const wrap = elements.cardWrapInteractive;
+  const glare = elements.cardGlare;
+  if (!wrap) return;
+
+  const canvas = wrap.querySelector('.card-canvas-display') as HTMLElement;
+  if (canvas) {
+    if (profile.team === 'thor') {
+      canvas.style.outline = '3px solid #FFCC00';
+      canvas.style.boxShadow = '0 0 35px rgba(0, 229, 255, 0.45), 8px 12px 0 #111116';
+    } else if (profile.team === 'doom') {
+      canvas.style.outline = '3px solid #00E676';
+      canvas.style.boxShadow = '0 0 35px rgba(0, 230, 118, 0.45), 8px 12px 0 #111116';
+    } else {
+      canvas.style.outline = '3px solid #FF9800';
+      canvas.style.boxShadow = '0 0 35px rgba(255, 152, 0, 0.45), 8px 12px 0 #111116';
+    }
+  }
+
+  wrap.onmousemove = (e: MouseEvent) => {
+    const rect = wrap.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const rotX = ((y - cy) / cy) * -14;
+    const rotY = ((x - cx) / cx) * 14;
+
+    const canvas = wrap.querySelector('.card-canvas-display') as HTMLElement;
+    if (canvas) {
+      canvas.style.transform = `rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale(1.03)`;
+    }
+
+    if (glare) {
+      const px = ((x / rect.width) * 100).toFixed(1);
+      const py = ((y / rect.height) * 100).toFixed(1);
+      glare.style.background = `radial-gradient(circle at ${px}% ${py}%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 204, 0, 0.25) 35%, rgba(0, 229, 255, 0.18) 65%, transparent 85%)`;
+    }
+  };
+
+  wrap.onmouseleave = () => {
+    const canvas = wrap.querySelector('.card-canvas-display') as HTMLElement;
+    if (canvas) {
+      canvas.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+    }
+  };
+
+  wrap.onclick = () => {
+    if (profile.team === 'thor') {
+      sound.playThunder();
+    } else if (profile.team === 'doom') {
+      sound.playDoomClank();
+    } else {
+      sound.playFanfare();
+    }
+  };
 }
 
 // Actions Toolbar
 function initCardActions() {
+  elements.btnTabDossier.addEventListener('click', () => {
+    sound.playClick();
+    switchPhase3Tab('dossier');
+  });
+
+  elements.btnTabHeatmap.addEventListener('click', () => {
+    sound.playClick();
+    switchPhase3Tab('heatmap');
+  });
+
   elements.btnDownloadCard.addEventListener('click', () => {
     sound.playClick();
     if (currentProfile) {
@@ -514,7 +609,7 @@ function renderVaultList() {
 
   if (cards.length === 0) {
     elements.vaultDeckContainer.innerHTML = `
-      <div style="text-align: center; padding: 40px 20px; color: #777;">
+      <div style="text-align: center; padding: 40px 20px; color: #111116; font-weight: 700;">
         <p style="font-family: 'Bangers'; font-size: 20px;">NO CARDS IN VAULT YET</p>
         <p style="font-size: 13px;">Complete a trial to mint your first collectible card.</p>
       </div>

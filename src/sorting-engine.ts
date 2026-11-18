@@ -75,26 +75,28 @@ const STRANGE_TITLES = [
   'Architect of Dimensional Will'
 ];
 
-// Witty, humorous comic quotes (Zero prompt bleeding!)
+// Witty, iconic comic quotes (Zero prompt bleeding!)
 const THOR_QUOTES = [
-  '100% Certified Worthy! Mjolnir approves your heart rate, but Odin is definitely concerned about your sleep schedule.',
-  'Stamina so absurdly high, you could run across the Bifrost just because you left your phone charger on Midgard.',
-  'Pulse steady enough to chug Asgardian mead in the middle of a lightning tempest without spilling a drop.',
+  'The hammer calls you—and you are worthy! Whosoever holds this hammer shall possess the power of Thor.',
+  '100% Certified Worthy! The hammer calls you, Mjolnir ignites the storm, but Odin is definitely concerned about your sleep schedule.',
+  'The Asgardian war hammer answers your resolute pulse. You are worthy to lead the charge across the Bifrost.',
+  'Stamina so absurdly high, you could sprint across the Bifrost just because you left your phone charger on Midgard.',
   'Heart rate so calm, Thor legitimately thought you were taking a power nap during the final battle of Ragnarok.'
 ];
 
 const DOOM_QUOTES = [
-  'Doctor Doom approves your cold, calculating pulse. You are now officially authorized to conquer your inbox.',
+  'The titanium mask claims you—and hell itself answers to your command! Bow before the supreme sovereign of Latveria.',
+  'Hell answers to you! Doctor Doom approves your cold, calculating pulse. You are now officially authorized to conquer your inbox.',
+  'With this level of tactical tension, even the underworld obeys your calculation. Still spent twenty minutes looking for your sunglasses.',
   'Stress index off the charts! Doom is prescribing three cups of soothing Latverian chamomile tea immediately.',
-  'With this level of tactical tension, you don’t just fight battles—you micromanage your enemies into submission.',
-  'Calculated every single variable in the multiverse. Still spent twenty minutes looking for your sunglasses.'
+  'You don’t just fight battles—you micromanage your enemies and the laws of physics into submission.'
 ];
 
 const STRANGE_QUOTES = [
-  'The Astral Mirror reveals: Your third eye is wide open, but your physical eyes are screaming for a cup of coffee.',
-  'Face reading complete: 85% cosmic wisdom, 15% thinking intensely about what to eat for dinner.',
-  'Your brow furrow suggests deep multidimensional meditation... or you just remembered you forgot to lock the front door.',
-  'The Eye of Agamotto has gazed upon your cheeks. Verdict: Dangerously unbothered by the chaos of reality.'
+  'The Astral Mirror reveals your mystic nature! 85% cosmic wisdom, 15% thinking intensely about what to eat for dinner.',
+  'The Eye of Agamotto has gazed upon your cheeks. Verdict: Dangerously unbothered by the chaos of reality.',
+  'Your third eye is wide open across dimensions, but your physical eyes are screaming for a cup of coffee.',
+  'Your brow furrow suggests deep multidimensional meditation... or you just remembered you forgot to lock the front door.'
 ];
 
 export function sortFromVitals(v: VitalsInput, forcedTeam?: Team): CardProfile {

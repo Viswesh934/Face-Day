@@ -189,6 +189,44 @@ export class BiometricBridge {
   }
 
   public async startTrial(videoEl: HTMLVideoElement, apiKey?: string): Promise<void> {
+    // Always configure optical callbacks so camera preview, face tracking and fallback work flawlessly
+    this.optical.onUpdate = (opt: OpticalMetrics) => {
+      if (this.activeMode !== 'presage-hardware') {
+        const uv: UnifiedVitals = {
+          source: 'browser-camera',
+          elapsed: opt.elapsedSeconds,
+          remaining: opt.remainingSeconds,
+          pulseBpm: opt.pulseBpm,
+          breathingRate: opt.breathingRate,
+          calmScore: opt.calmScore,
+          guidanceText: opt.guidanceText,
+          landmarks: opt.landmarks,
+          primaryExpression: opt.primaryExpression
+        };
+        if (this.onUpdate) this.onUpdate(uv);
+        if (this.onGuidance && opt.guidanceText) this.onGuidance(opt.guidanceText);
+      }
+    };
+
+    this.optical.onComplete = (opt: OpticalMetrics) => {
+      if (this.activeMode !== 'presage-hardware') {
+        const finalV: UnifiedVitals = {
+          source: 'browser-camera',
+          elapsed: 30,
+          remaining: 0,
+          pulseBpm: opt.pulseBpm,
+          breathingRate: opt.breathingRate,
+          calmScore: opt.calmScore,
+          primaryExpression: opt.primaryExpression
+        };
+        if (this.onComplete) this.onComplete(finalV);
+      }
+    };
+
+    this.optical.onError = (err) => {
+      if (this.onError) this.onError(err);
+    };
+
     if (this.isWsConnected && this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.activeMode = 'presage-hardware';
       this.ws.send(JSON.stringify({ type: 'start', apiKey }));
@@ -204,39 +242,6 @@ export class BiometricBridge {
     } else {
       // In-browser optical camera trial
       this.activeMode = 'browser-camera';
-      this.optical.onUpdate = (opt: OpticalMetrics) => {
-        const uv: UnifiedVitals = {
-          source: 'browser-camera',
-          elapsed: opt.elapsedSeconds,
-          remaining: opt.remainingSeconds,
-          pulseBpm: opt.pulseBpm,
-          breathingRate: opt.breathingRate,
-          calmScore: opt.calmScore,
-          guidanceText: opt.guidanceText,
-          landmarks: opt.landmarks,
-          primaryExpression: opt.primaryExpression
-        };
-        if (this.onUpdate) this.onUpdate(uv);
-        if (this.onGuidance && opt.guidanceText) this.onGuidance(opt.guidanceText);
-      };
-
-      this.optical.onComplete = (opt: OpticalMetrics) => {
-        const finalV: UnifiedVitals = {
-          source: 'browser-camera',
-          elapsed: 30,
-          remaining: 0,
-          pulseBpm: opt.pulseBpm,
-          breathingRate: opt.breathingRate,
-          calmScore: opt.calmScore,
-          primaryExpression: opt.primaryExpression
-        };
-        if (this.onComplete) this.onComplete(finalV);
-      };
-
-      this.optical.onError = (err) => {
-        if (this.onError) this.onError(err);
-      };
-
       await this.optical.start(videoEl);
     }
   }

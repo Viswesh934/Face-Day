@@ -198,42 +198,58 @@
     <!-- PHASE 3: THE DECREE & TRADING CARD REVEAL      -->
     <!-- ============================================== -->
     <section id="phase-3" class="phase-panel">
-      <div class="verdict-banner">
-        <h2 class="verdict-title" id="verdict-team-name">THE DECREE IS CAST!</h2>
-        <p class="verdict-subtitle" id="verdict-subtext">A NEW COLLECTIBLE CARD HAS BEEN MINTED</p>
+      <!-- High-Contrast Comic Title Header Card -->
+      <div class="verdict-banner-box">
+        <div class="verdict-tag-pill" id="verdict-tag-pill">OFFICIAL VERDICT</div>
+        <h2 class="verdict-title" id="verdict-team-name">THE HAMMER CALLS YOU: YOU ARE WORTHY!</h2>
+        <div class="verdict-subtext-pill" id="verdict-subtext">A NEW COLLECTIBLE CARD HAS BEEN MINTED</div>
+      </div>
+
+      <!-- Top Action Strip (Zero Scroll: Actions and Socials Above the Fold) -->
+      <div class="phase3-top-actions-strip">
+        <div class="actions-buttons-cluster">
+          <button id="btn-download-card" class="comic-btn comic-btn-gold">
+            <span id="btn-download-icon"></span>
+            <span>DOWNLOAD CARD (PNG)</span>
+          </button>
+          <button id="btn-share-x" class="comic-btn comic-btn-dark">
+            <span id="btn-share-icon"></span>
+            <span>SHARE ON X</span>
+          </button>
+          <button id="btn-play-again" class="comic-btn">
+            <span>AGAIN</span>
+          </button>
+        </div>
+        <div class="card-hint-badge">★ HOVER &amp; TILT CARD • CLICK FOR BATTLE CRY ★</div>
       </div>
 
       <div class="phase3-layout-duel">
-        <!-- Left Column: 3D Comic Book Cover & Quick Actions -->
+        <!-- Left Column: 3D Comic Book Cover -->
         <div class="phase3-card-col">
-          <div class="card-3d-wrap" id="card-wrap-interactive">
+          <div class="card-3d-wrap" id="card-wrap-interactive" title="Click to trigger battle cry!">
+            <div class="card-glare" id="card-glare"></div>
             <div id="card-canvas-mount">
               <!-- Canvas is inserted here -->
             </div>
-          </div>
-
-          <div class="card-actions-toolbar">
-            <button id="btn-download-card" class="comic-btn comic-btn-gold">
-              <span id="btn-download-icon"></span>
-              <span>DOWNLOAD</span>
-            </button>
-            <button id="btn-share-x" class="comic-btn comic-btn-dark">
-              <span id="btn-share-icon"></span>
-              <span>POST TO X</span>
-            </button>
-            <button id="btn-play-again" class="comic-btn">
-              <span>AGAIN</span>
-            </button>
           </div>
         </div>
 
         <!-- Right Column: Biometric Telemetry & Astral Heat Map -->
         <div class="phase3-dossier-col">
-          <!-- Strange Reading Thermal Heat Map Mount -->
-          <div id="heatmap-mount"></div>
+          <div class="phase3-tab-bar">
+            <button id="btn-tab-dossier" class="phase3-tab-btn active">
+              <span>BIOMETRIC DOSSIER</span>
+            </button>
+            <button id="btn-tab-heatmap" class="phase3-tab-btn">
+              <span>ASTRAL FACE HEAT MAP</span>
+            </button>
+          </div>
 
           <!-- Biometric Stat Dashboard Mount -->
           <div id="stat-dossier-mount"></div>
+
+          <!-- Strange Reading Thermal Heat Map Mount -->
+          <div id="heatmap-mount" style="display: none;"></div>
         </div>
       </div>
     </section>

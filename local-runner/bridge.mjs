@@ -238,12 +238,17 @@ wss.on('connection', (ws) => {
 
         sdkInstance.on('error', (code, message, retryable) => {
           console.error(`[Face Day Bridge] SmartSpectra Error code ${code}:`, message, `retryable=${retryable}`);
+          const isAuth = code === 2 || String(message).includes('authentication failed');
           broadcast({ 
             type: 'error', 
             code, 
             message: typeof message === 'string' ? message : String(code), 
-            authFailed: code === 2 || String(message).includes('authentication failed')
+            authFailed: isAuth
           });
+          if (isAuth) {
+            console.log('[Face Day Bridge] Cloud pairing blocked (e.g. AWS WAF data center IP block). Transitioning bridge to high-fidelity synthetic emulation...');
+            runSyntheticSession(ws);
+          }
         });
 
         sdkInstance.start();

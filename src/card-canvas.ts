@@ -19,31 +19,38 @@ export class CardCanvasRenderer {
     const isDoom = profile.team === 'doom';
 
     // Palette Configuration
-    const primaryColor = isThor ? '#FFCC00' : isDoom ? '#00C853' : '#FF9800';
-    const secondaryColor = isThor ? '#00E5FF' : isDoom ? '#D4D8DD' : '#FFD54F';
-    const darkBg = isThor ? '#060F1A' : isDoom ? '#07160C' : '#14081E';
+    const primaryColor = isThor ? '#FFCC00' : isDoom ? '#00E676' : '#FF9800';
+    const secondaryColor = isThor ? '#00E5FF' : isDoom ? '#ECEFF1' : '#FFD54F';
+    const midBg = isThor ? '#153C68' : isDoom ? '#154B2A' : '#3F1663';
+    const darkBg = isThor ? '#0A1C30' : isDoom ? '#0A2515' : '#1E0A30';
 
-    // 1. Aged Vintage Newsprint Outer Bleed
+    // 1. Inked Outer Bleed
     ctx.fillStyle = '#111116';
     ctx.fillRect(0, 0, this.width, this.height);
 
     // 2. Comic Page Inset (Aged Paper Edge)
     ctx.fillStyle = '#FDFBF7';
-    ctx.fillRect(10, 10, this.width - 20, this.height - 20);
+    ctx.fillRect(8, 8, this.width - 16, this.height - 16);
 
-    // 3. Cover Background Scene
-    const bgGrad = ctx.createLinearGradient(14, 14, 14, this.height - 28);
+    // Inked inner border
+    ctx.strokeStyle = '#111116';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(14, 14, this.width - 28, this.height - 28);
+
+    // 3. Vibrant Cover Background Scene (Rich Comic Atmosphere)
+    const bgGrad = ctx.createLinearGradient(16, 16, 16, this.height - 32);
     bgGrad.addColorStop(0, darkBg);
-    bgGrad.addColorStop(0.65, darkBg);
-    bgGrad.addColorStop(1, '#020508');
+    bgGrad.addColorStop(0.35, midBg);
+    bgGrad.addColorStop(0.7, darkBg);
+    bgGrad.addColorStop(1, '#050D17');
     ctx.fillStyle = bgGrad;
-    ctx.fillRect(14, 14, this.width - 28, this.height - 28);
+    ctx.fillRect(16, 16, this.width - 32, this.height - 32);
 
     // Ben-Day Halftone Dot Overlay
-    this.drawHalftoneGrid(ctx, 14, 14, this.width - 28, this.height - 28, `${primaryColor}22`);
+    this.drawHalftoneGrid(ctx, 16, 16, this.width - 32, this.height - 32, `${primaryColor}33`);
 
     // Dynamic Comic Speed Lines from Center
-    this.drawSpeedLines(ctx, this.width / 2, 490);
+    this.drawSpeedLines(ctx, this.width / 2, 490, `${primaryColor}38`);
 
     // 4. Hero Action Scene Illustration (Upper-Mid Section)
     if (isThor) {
@@ -178,25 +185,26 @@ export class CardCanvasRenderer {
     ctx.textAlign = 'center';
 
     let mainTitle = 'THE MIGHTY THOR';
-    let subBanner = 'THE ASGARDIAN WAR HAMMER!';
+    let subBanner = 'THE HAMMER CALLS YOU: YOU ARE WORTHY!';
     if (profile.team === 'doom') {
       mainTitle = 'THE WRATH OF DOOM';
-      subBanner = 'THE TITANIUM IRON MASK!';
+      subBanner = 'THE MASK CLAIMS YOU: HELL ANSWERS TO YOU!';
     } else if (profile.team === 'strange') {
       mainTitle = 'STRANGE TALES';
-      subBanner = 'MASTER OF THE ASTRAL MIRROR!';
+      subBanner = 'THE ASTRAL MIRROR REVEALS YOUR NATURE!';
     }
 
-    // Top Sub-Banner Ribbon
+    // Top Sub-Banner Ribbon (Generous width to fit epic text without clipping)
+    const ribbonW = 540;
     ctx.fillStyle = secondary;
-    ctx.fillRect(cx - 240, titleY - 26, 480, 26);
+    ctx.fillRect(cx - ribbonW / 2, titleY - 28, ribbonW, 28);
     ctx.strokeStyle = '#111116';
-    ctx.lineWidth = 2.5;
-    ctx.strokeRect(cx - 240, titleY - 26, 480, 26);
+    ctx.lineWidth = 3;
+    ctx.strokeRect(cx - ribbonW / 2, titleY - 28, ribbonW, 28);
 
     ctx.fillStyle = '#111116';
     ctx.font = '900 16px "Bangers", sans-serif';
-    ctx.fillText(subBanner, cx, titleY - 8);
+    ctx.fillText(subBanner, cx, titleY - 9);
 
     // Giant 3D Block Lettering
     ctx.font = '900 74px "Bangers", "Impact", sans-serif';
@@ -500,14 +508,14 @@ export class CardCanvasRenderer {
     ctx.restore();
   }
 
-  private drawSpeedLines(ctx: CanvasRenderingContext2D, cx: number, cy: number) {
+  private drawSpeedLines(ctx: CanvasRenderingContext2D, cx: number, cy: number, color = 'rgba(255, 255, 255, 0.18)') {
     ctx.save();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
     for (let a = 0; a < Math.PI * 2; a += Math.PI / 16) {
       ctx.beginPath();
       ctx.moveTo(cx, cy);
-      ctx.lineTo(cx + Math.cos(a) * 600, cy + Math.sin(a) * 600);
+      ctx.lineTo(cx + Math.cos(a) * 620, cy + Math.sin(a) * 620);
       ctx.stroke();
     }
     ctx.restore();

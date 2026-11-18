@@ -100,6 +100,22 @@ export const icons = {
     </svg>
   `,
 
+  // Captain America Vibranium Circular Shield (Warbid Logo)
+  capShield: `
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-svg cap-shield-svg">
+      <!-- Outer Red Ring -->
+      <circle cx="24" cy="24" r="22" fill="#D50000" stroke="#111116" stroke-width="2.5"/>
+      <!-- Outer White/Silver Ring -->
+      <circle cx="24" cy="24" r="16.5" fill="#FFFFFF" stroke="#111116" stroke-width="2"/>
+      <!-- Inner Red Ring -->
+      <circle cx="24" cy="24" r="11" fill="#D50000" stroke="#111116" stroke-width="2"/>
+      <!-- Blue Star Core -->
+      <circle cx="24" cy="24" r="6.8" fill="#1565C0" stroke="#111116" stroke-width="1.8"/>
+      <!-- Central Silver Star -->
+      <polygon points="24,18.5 25.4,22.4 29.5,22.4 26.2,24.8 27.5,28.7 24,26.2 20.5,28.7 21.8,24.8 18.5,22.4 22.6,22.4" fill="#FFFFFF" stroke="#111116" stroke-width="0.8"/>
+    </svg>
+  `,
+
   // Spinning Golden Ratio Orb / Armillary Celestial Sphere
   spinningOrb: `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">

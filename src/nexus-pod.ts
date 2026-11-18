@@ -57,9 +57,9 @@ export class MultiverseNexusPod {
     if (container) {
       container.innerHTML = `
         <div class="phase3-nexus-callout">
-          <div class="callout-badge">★ MULTIVERSE NEXUS ACTIVE ★</div>
+          <div class="callout-badge">★ WARBID CONSOLE ACTIVE ★</div>
           <h3 class="callout-title">COSMIC SELECTOR DOCKED ON RIGHT</h3>
-          <p class="callout-desc">Click the floating circular Nexus Pod on the right edge of your screen to open the 7-mode reality warp menu!</p>
+          <p class="callout-desc">Click the Captain America shield Warbid button on the right edge of your screen to open the 7-mode reality warp menu!</p>
         </div>
       `;
     }
@@ -163,29 +163,8 @@ export class MultiverseNexusPod {
     );
     mainCoreBtn.classList.add(`mode-${this.currentMode}`);
 
-    switch (this.currentMode) {
-      case 'thanos':
-        glyphEl.innerHTML = icons.snap;
-        break;
-      case 'loki':
-        glyphEl.innerHTML = icons.lokiTree;
-        break;
-      case 'strange':
-        glyphEl.innerHTML = icons.strange;
-        break;
-      case 'bifrost':
-        glyphEl.innerHTML = icons.bolt;
-        break;
-      case 'hex':
-        glyphEl.innerHTML = icons.hex;
-        break;
-      case 'glitch':
-        glyphEl.innerHTML = icons.spiderGlitch;
-        break;
-      case 'vortex':
-        glyphEl.innerHTML = icons.vortex;
-        break;
-    }
+    // Set Captain America Vibranium Shield as the permanent Warbid centerpiece emblem!
+    glyphEl.innerHTML = icons.capShield;
   }
 
   public triggerCosmicEvent(): void {

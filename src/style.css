@@ -1382,3 +1382,188 @@ body {
   text-align: center;
 }
 
+/* ==================================================== */
+/* MULTIVERSE NEXUS POD (CIRCULAR COSMIC SELECTOR)      */
+/* ==================================================== */
+.nexus-pod-box {
+  width: 100%;
+  background: #FFFFFF;
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  box-shadow: 6px 6px 0 var(--ink);
+  padding: 16px 20px;
+  margin-top: 0;
+  color: #111116;
+}
+
+.nexus-header {
+  border-bottom: 3px solid var(--ink);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.nexus-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 26px;
+  letter-spacing: 1.5px;
+  color: #111116;
+  text-shadow: 2px 2px 0 #AB47BC;
+  line-height: 1.1;
+}
+
+.nexus-sub {
+  font-size: 12px;
+  font-weight: 800;
+  color: #8E24AA;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+.nexus-core-layout {
+  display: flex;
+  gap: 18px;
+  align-items: stretch;
+}
+
+@media (max-width: 768px) {
+  .nexus-core-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.nexus-chamber-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #FAF8F2;
+  padding: 12px;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--ink);
+  flex-shrink: 0;
+}
+
+.nexus-radial-ring {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--ink);
+  box-shadow: 0 0 16px rgba(171, 71, 188, 0.35);
+  background: #060810;
+}
+
+.nexus-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.nexus-controls-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.nexus-selector-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+@media (max-width: 580px) {
+  .nexus-selector-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nexus-dial-btn {
+  font-family: 'Bangers', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.8px;
+  padding: 10px 10px;
+  border: 2.5px solid var(--ink);
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 2.5px 2.5px 0 var(--ink);
+  transition: transform 0.08s ease, background 0.1s ease, color 0.1s ease;
+}
+
+.nexus-dial-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3.5px 3.5px 0 var(--ink);
+  background: #FFF9C4;
+}
+
+.nexus-dial-btn.active {
+  background: var(--ink);
+  color: #FFFFFF;
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.dial-node-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.nexus-lore-card {
+  background: #FAF8F2;
+  border: 2.5px solid var(--ink);
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 3px 3px 0 var(--ink);
+  text-align: left;
+}
+
+.lore-header {
+  font-family: 'Bangers', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.lore-quote {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111116;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.lore-meta {
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 800;
+  color: #616161;
+  letter-spacing: 0.5px;
+}
+
+.nexus-compact-footnote {
+  margin-top: 10px;
+  background: #F3E5F5;
+  border: 2px solid #8E24AA;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-family: 'Bangers', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  color: #6A1B9A;
+  text-align: center;
+}
+

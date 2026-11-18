@@ -10,6 +10,7 @@ import { cardRenderer } from './card-canvas';
 import { deckVault } from './card-deck';
 import { statDashboard } from './stat-dashboard';
 import { faceReadingHeatMap } from './heat-map';
+import { multiverseNexusPod } from './nexus-pod';
 
 // DOM Element References
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -84,8 +85,10 @@ const elements = {
   cardCanvasMount: $('card-canvas-mount'),
   btnTabDossier: $('btn-tab-dossier'),
   btnTabHeatmap: $('btn-tab-heatmap'),
+  btnTabNexus: $('btn-tab-nexus'),
   heatmapMount: $('heatmap-mount'),
   statDossierMount: $('stat-dossier-mount'),
+  nexusMount: $('nexus-mount'),
   btnDownloadCard: $('btn-download-card'),
   btnDownloadIcon: $('btn-download-icon'),
   btnShareX: $('btn-share-x'),
@@ -452,9 +455,10 @@ function revealVerdict(profile: CardProfile) {
   elements.cardCanvasMount.innerHTML = '';
   elements.cardCanvasMount.appendChild(canvas);
 
-  // Render both views for the dossier column
+  // Render views for the right column
   statDashboard.render(profile, elements.statDossierMount);
   faceReadingHeatMap.render(profile, elements.heatmapMount);
+  multiverseNexusPod.render(elements.nexusMount);
 
   // Set default active tab
   if (profile.team === 'strange') {
@@ -467,18 +471,14 @@ function revealVerdict(profile: CardProfile) {
   setupInteractiveCardTilt(profile);
 }
 
-function switchPhase3Tab(tab: 'dossier' | 'heatmap') {
-  if (tab === 'dossier') {
-    elements.btnTabDossier.classList.add('active');
-    elements.btnTabHeatmap.classList.remove('active');
-    elements.statDossierMount.style.display = 'block';
-    elements.heatmapMount.style.display = 'none';
-  } else {
-    elements.btnTabHeatmap.classList.add('active');
-    elements.btnTabDossier.classList.remove('active');
-    elements.heatmapMount.style.display = 'block';
-    elements.statDossierMount.style.display = 'none';
-  }
+function switchPhase3Tab(tab: 'dossier' | 'heatmap' | 'nexus') {
+  elements.btnTabDossier.classList.toggle('active', tab === 'dossier');
+  elements.btnTabHeatmap.classList.toggle('active', tab === 'heatmap');
+  elements.btnTabNexus.classList.toggle('active', tab === 'nexus');
+
+  elements.statDossierMount.style.display = tab === 'dossier' ? 'block' : 'none';
+  elements.heatmapMount.style.display = tab === 'heatmap' ? 'block' : 'none';
+  elements.nexusMount.style.display = tab === 'nexus' ? 'block' : 'none';
 }
 
 function setupInteractiveCardTilt(profile: CardProfile) {
@@ -549,6 +549,11 @@ function initCardActions() {
   elements.btnTabHeatmap.addEventListener('click', () => {
     sound.playClick();
     switchPhase3Tab('heatmap');
+  });
+
+  elements.btnTabNexus.addEventListener('click', () => {
+    sound.playClick();
+    switchPhase3Tab('nexus');
   });
 
   elements.btnDownloadCard.addEventListener('click', () => {

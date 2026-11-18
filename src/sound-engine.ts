@@ -219,6 +219,127 @@ class SoundEngine {
       osc.stop(now + 0.4);
     });
   }
+
+  // Doctor Strange Eldritch Portal Spark Whoosh
+  public playPortalWhoosh() {
+    if (this.isMuted) return;
+    this.initCtx();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + 0.25);
+    osc.frequency.exponentialRampToValueAtTime(330, now + 0.5);
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(600, now);
+    filter.frequency.exponentialRampToValueAtTime(2400, now + 0.25);
+    filter.Q.setValueAtTime(6, now);
+
+    gain.gain.setValueAtTime(0.02, now);
+    gain.gain.linearRampToValueAtTime(0.18, now + 0.15);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.5);
+  }
+
+  // Loki Yggdrasil World Tree Multiverse Chime
+  public playLokiChime() {
+    if (this.isMuted) return;
+    this.initCtx();
+    if (!this.ctx) return;
+
+    const freqs = [370, 554, 740, 1108]; // F#4, C#5, F#5, C#6 (Mystic temporal chord)
+    freqs.forEach((freq, idx) => {
+      const now = this.ctx!.currentTime + idx * 0.06;
+      const osc = this.ctx!.createOscillator();
+      const gain = this.ctx!.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+
+      osc.connect(gain);
+      gain.connect(this.ctx!.destination);
+      osc.start(now);
+      osc.stop(now + 0.7);
+    });
+  }
+
+  // Thanos Infinity Gauntlet Cosmic Snap & Dust Sub-Boom
+  public playSnapBoom() {
+    if (this.isMuted) return;
+    this.initCtx();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+
+    // High transient snap click
+    const clickOsc = this.ctx.createOscillator();
+    const clickGain = this.ctx.createGain();
+    clickOsc.type = 'triangle';
+    clickOsc.frequency.setValueAtTime(1400, now);
+    clickOsc.frequency.exponentialRampToValueAtTime(200, now + 0.04);
+    clickGain.gain.setValueAtTime(0.3, now);
+    clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+    clickOsc.connect(clickGain);
+    clickGain.connect(this.ctx.destination);
+    clickOsc.start(now);
+    clickOsc.stop(now + 0.04);
+
+    // Deep apocalyptic 40Hz sub-bass shockwave
+    const subOsc = this.ctx.createOscillator();
+    const subGain = this.ctx.createGain();
+    subOsc.type = 'sine';
+    subOsc.frequency.setValueAtTime(90, now);
+    subOsc.frequency.exponentialRampToValueAtTime(28, now + 0.8);
+    subGain.gain.setValueAtTime(0.45, now);
+    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+    subOsc.connect(subGain);
+    subGain.connect(this.ctx.destination);
+    subOsc.start(now);
+    subOsc.stop(now + 0.8);
+  }
+
+  // Thor's Bifrost Teleport Surge
+  public playBifrostBeam() {
+    if (this.isMuted) return;
+    this.initCtx();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(120, now);
+    osc.frequency.exponentialRampToValueAtTime(800, now + 0.3);
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(300, now);
+    filter.frequency.exponentialRampToValueAtTime(3000, now + 0.3);
+
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.6);
+  }
 }
 
 export const sound = new SoundEngine();

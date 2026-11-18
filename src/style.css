@@ -29,15 +29,29 @@ body {
   color: #111116;
   min-height: 100vh;
   overflow-x: hidden;
-  /* Retro Comic Battleground: Deep Ben-Day Halftone Newsprint + Dual Faction Clash */
-  background: 
-    radial-gradient(circle, rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px),
-    radial-gradient(circle at 12% 25%, rgba(0, 229, 255, 0.35) 0%, transparent 48%),
-    radial-gradient(circle at 25% 75%, rgba(255, 204, 0, 0.28) 0%, transparent 42%),
-    radial-gradient(circle at 88% 25%, rgba(0, 230, 118, 0.32) 0%, transparent 48%),
-    radial-gradient(circle at 75% 75%, rgba(0, 200, 83, 0.25) 0%, transparent 42%),
-    linear-gradient(135deg, #0A1424 0%, #102138 42%, #0E291D 58%, #081B12 100%);
-  background-size: 18px 18px, auto, auto, auto, auto, auto;
+  /* Spider-Man Marvel Comic Aesthetic: Spidey Crimson, Web Cobalt, Ben-Day Halftone & Web-Lattice */
+  background-color: #080B14;
+  background-image: 
+    /* 1. Ben-Day Halftone Print Dot Screen */
+    radial-gradient(circle, rgba(255, 255, 255, 0.11) 1.5px, transparent 1.5px),
+    /* 2. Spider-Man Geometric Web-Lattice (Diagonal Strands) */
+    linear-gradient(60deg, rgba(226, 54, 54, 0.07) 1px, transparent 1px),
+    linear-gradient(-60deg, rgba(21, 101, 192, 0.07) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    /* 3. Spiderweb Concentric Radials radiating from top */
+    radial-gradient(circle at 50% -10%, transparent 180px, rgba(255, 255, 255, 0.04) 181px, transparent 183px, transparent 320px, rgba(255, 255, 255, 0.035) 321px, transparent 323px, transparent 480px, rgba(255, 255, 255, 0.03) 481px, transparent 483px, transparent 660px, rgba(255, 255, 255, 0.025) 661px, transparent 663px),
+    /* 4. Iconic Spider-Man Crimson Red Flare (Upper-Left) */
+    radial-gradient(circle at 14% 18%, rgba(226, 54, 54, 0.45) 0%, rgba(183, 28, 28, 0.25) 30%, transparent 55%),
+    /* 5. Iconic Spider-Man Web Cobalt Blue Flare (Upper-Right) */
+    radial-gradient(circle at 86% 22%, rgba(21, 101, 192, 0.45) 0%, rgba(13, 71, 161, 0.25) 32%, transparent 55%),
+    /* 6. Spidey Web-Shooter Lower Flares (Deep Blue & Rich Crimson) */
+    radial-gradient(circle at 18% 85%, rgba(13, 71, 161, 0.38) 0%, transparent 48%),
+    radial-gradient(circle at 82% 82%, rgba(211, 47, 47, 0.38) 0%, transparent 48%),
+    /* 7. Center Comic Spotlight */
+    radial-gradient(circle at 50% 50%, rgba(255, 204, 0, 0.12) 0%, transparent 60%),
+    /* 8. Deep Inked Marvel Comic Gradient Base */
+    linear-gradient(155deg, #16070B 0%, #0B101C 48%, #050811 100%);
+  background-size: 16px 16px, 60px 104px, 60px 104px, 100% 60px, 100% 100%, auto, auto, auto, auto, auto, auto;
   background-attachment: fixed;
 }
 
@@ -186,11 +200,13 @@ body {
 .brand-badge {
   font-family: 'Bangers', sans-serif;
   font-size: 13px;
-  letter-spacing: 1px;
-  background: var(--ink);
+  letter-spacing: 1.2px;
+  background: #E23636;
   color: #FFFFFF;
+  border: 1.5px solid var(--ink);
   padding: 3px 8px;
   border-radius: 4px;
+  box-shadow: 2px 2px 0 var(--ink);
 }
 
 .nav-controls {

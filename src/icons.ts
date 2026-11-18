@@ -116,13 +116,13 @@ export const icons = {
     </svg>
   `,
 
-  // Spinning Golden Ratio Orb / Armillary Celestial Sphere
+  // Spinning Green Steel Ball / Armillary Celestial Sphere
   spinningOrb: `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
-      <circle cx="12" cy="12" r="9" stroke="#FFCC00" stroke-width="2.5"/>
-      <ellipse cx="12" cy="12" rx="9" ry="3.5" stroke="#FFA000" stroke-width="2"/>
-      <line x1="12" y1="3" x2="12" y2="21" stroke="#FFCC00" stroke-width="1.8"/>
-      <circle cx="12" cy="12" r="2.5" fill="#FFD54F" stroke="#111116"/>
+      <circle cx="12" cy="12" r="9" stroke="#00C853" stroke-width="2.5"/>
+      <ellipse cx="12" cy="12" rx="9" ry="3.5" stroke="#00E676" stroke-width="2"/>
+      <line x1="12" y1="3" x2="12" y2="21" stroke="#00C853" stroke-width="1.8"/>
+      <circle cx="12" cy="12" r="3" fill="#00E676" stroke="#111116"/>
     </svg>
   `,
 

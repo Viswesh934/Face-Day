@@ -157,20 +157,22 @@ export class GoldenRatioAnalyzer {
           </div>
         </div>
 
-        <!-- Spinning Orb & Golden Harmony Hero Score -->
+        <!-- Spinning Green Steel Ball & Golden Harmony Hero Score -->
         <div class="golden-hero-panel">
-          <!-- Animated Spinning Celestial Ball -->
+          <!-- Animated Spinning Green Steel Ball -->
           <div class="spinning-ball-chamber">
             <div class="celestial-orb-wrapper">
-              <div class="orb-core">
+              <div class="orb-core green-steel-ball" title="The Emerald Steel Ball — Proportional Phi Radar">
+                <div class="steel-ball-specular"></div>
+                <div class="steel-ball-groove groove-h"></div>
+                <div class="steel-ball-groove groove-v"></div>
                 <span class="orb-phi-glyph">&Phi;</span>
               </div>
               <div class="orb-ring ring-latitude"></div>
               <div class="orb-ring ring-longitude"></div>
               <div class="orb-ring ring-equator"></div>
-              <div class="orb-particles-glow"></div>
             </div>
-            <div class="orb-caption">LIVE &Phi; HARMONY RADAR</div>
+            <div class="orb-caption">GREEN STEEL BALL &bull; &Phi; RADAR</div>
           </div>
 
           <!-- Hero Ratio Rating Banner -->

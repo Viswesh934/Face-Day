@@ -1407,73 +1407,163 @@ body {
   }
 }
 
-/* 4 Circular Satellite Mode Selector Nodes */
-.pod-orbital-cluster {
+/* Flyout Cosmic Reality Selector Menu (Hidden until pod is clicked) */
+.pod-flyout-menu {
+  position: absolute;
+  right: 76px;
+  top: 50%;
+  transform: translateY(-50%) translateX(16px);
+  width: 290px;
+  background: #FFFFFF;
+  border: 3.5px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 6px 6px 0 var(--ink), 0 0 25px rgba(0, 0, 0, 0.2);
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 10001;
 }
 
-.pod-node-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2.5px solid var(--ink);
-  background: #FFFFFF;
-  color: var(--ink);
+.pod-flyout-menu.flyout-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-50%) translateX(0);
+}
+
+.flyout-header {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 2px 2px 0 var(--ink);
-  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
-  padding: 0;
+  flex-direction: column;
+  border-bottom: 2.5px solid var(--ink);
+  padding-bottom: 6px;
   position: relative;
 }
 
-.pod-node-label {
+.flyout-title {
   font-family: 'Bangers', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.flyout-sub {
+  font-size: 10px;
+  font-weight: 800;
+  color: #7B1FA2;
+  letter-spacing: 0.6px;
+}
+
+.flyout-close-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  background: #FFFFFF;
   font-size: 11px;
-  letter-spacing: 0.5px;
-  display: inline-block;
-  line-height: 1;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow: 1.5px 1.5px 0 var(--ink);
+  transition: transform 0.1s ease;
 }
 
-.pod-node-btn:hover {
-  transform: scale(1.15) translateX(-2px);
+.flyout-close-btn:hover {
+  transform: scale(1.15);
+  background: #FFEBEE;
+}
+
+.flyout-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.pod-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 2px solid var(--ink);
+  background: #FAF8F2;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 2px 2px 0 var(--ink);
+  transition: transform 0.08s ease, background 0.08s ease, box-shadow 0.08s ease;
+  width: 100%;
+}
+
+.pod-menu-item:hover {
+  transform: translate(-1.5px, -1.5px);
   box-shadow: 3px 3px 0 var(--ink);
+  background: #FFF9C4;
 }
 
-.pod-node-btn.node-thanos.active {
-  background: #8E24AA;
-  color: #FFFFFF;
+.pod-menu-item:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.pod-menu-item.active {
   border-color: var(--ink);
-  box-shadow: 0 0 10px rgba(171, 71, 188, 0.6), 2px 2px 0 var(--ink);
+  background: #F3E5F5;
+  box-shadow: 2px 2px 0 var(--ink);
 }
 
-.pod-node-btn.node-loki.active {
-  background: #00C853;
-  color: #FFFFFF;
-  border-color: var(--ink);
-  box-shadow: 0 0 10px rgba(0, 230, 118, 0.6), 2px 2px 0 var(--ink);
+.item-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  flex-shrink: 0;
 }
 
-.pod-node-btn.node-strange.active {
-  background: #E65100;
-  color: #FFFFFF;
-  border-color: var(--ink);
-  box-shadow: 0 0 10px rgba(255, 109, 0, 0.6), 2px 2px 0 var(--ink);
+.item-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
 }
 
-.pod-node-btn.node-bifrost.active {
-  background: #0091EA;
-  color: #FFFFFF;
-  border-color: var(--ink);
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6), 2px 2px 0 var(--ink);
+.item-name {
+  font-family: 'Bangers', sans-serif;
+  font-size: 13.5px;
+  letter-spacing: 0.8px;
+  color: #111116;
 }
 
-/* Small Main Circular Core Trigger */
+.item-desc {
+  font-size: 10px;
+  font-weight: 700;
+  color: #616161;
+}
+
+.flyout-footer {
+  font-family: 'Bangers', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  color: #6A1B9A;
+  background: #F3E5F5;
+  border: 1.5px solid #8E24AA;
+  border-radius: 5px;
+  padding: 3px 6px;
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* Small Main Circular Core Trigger Button */
 .pod-main-core {
   width: 58px;
   height: 58px;
@@ -1548,6 +1638,21 @@ body {
 .pod-main-core.mode-bifrost {
   background: #E0F7FA;
   box-shadow: 3.5px 3.5px 0 var(--ink), 0 0 18px rgba(0, 229, 255, 0.6);
+}
+
+.pod-main-core.mode-hex {
+  background: #FFEBEE;
+  box-shadow: 3.5px 3.5px 0 var(--ink), 0 0 18px rgba(213, 0, 0, 0.7);
+}
+
+.pod-main-core.mode-glitch {
+  background: #E0F7FA;
+  box-shadow: 3.5px 3.5px 0 var(--ink), 0 0 18px rgba(0, 229, 255, 0.7);
+}
+
+.pod-main-core.mode-vortex {
+  background: #EDE7F6;
+  box-shadow: 3.5px 3.5px 0 var(--ink), 0 0 18px rgba(124, 77, 255, 0.7);
 }
 
 .pod-core-tag {
@@ -1631,6 +1736,45 @@ body {
 .bifrost-surge-active {
   box-shadow: inset 0 0 120px rgba(0, 229, 255, 0.45);
   transition: box-shadow 0.6s ease;
+}
+
+/* Scarlet Witch Chaos Hex Reality Distortion */
+.chaos-hex-aura {
+  box-shadow: inset 0 0 130px rgba(213, 0, 0, 0.45);
+  transition: box-shadow 0.8s ease;
+}
+
+.chaos-reality-warped .choice-box,
+.chaos-reality-warped .splash-hero,
+.chaos-reality-warped .brand-title {
+  animation: chaosHexJitter 0.5s infinite alternate ease-in-out;
+}
+
+@keyframes chaosHexJitter {
+  0% { transform: skewX(-2deg) scale(0.99); filter: drop-shadow(0 0 8px rgba(255, 23, 68, 0.6)); }
+  100% { transform: skewX(2deg) scale(1.01); filter: drop-shadow(0 0 14px rgba(213, 0, 0, 0.85)); }
+}
+
+/* Spider-Verse Chromatic Aberration RGB De-Sync */
+.spider-glitch-active {
+  animation: spiderRgbSplit 0.22s infinite steps(2);
+}
+
+@keyframes spiderRgbSplit {
+  0% { filter: drop-shadow(-4px 0 0 rgba(0, 229, 255, 0.8)) drop-shadow(4px 0 0 rgba(255, 0, 85, 0.8)); }
+  50% { filter: drop-shadow(4px 0 0 rgba(0, 229, 255, 0.8)) drop-shadow(-4px 0 0 rgba(255, 0, 85, 0.8)); }
+  100% { filter: none; }
+}
+
+/* Cosmic Singularity Gravitational Lens */
+.singularity-active {
+  box-shadow: inset 0 0 140px rgba(101, 31, 255, 0.45);
+  transition: box-shadow 0.8s ease;
+}
+
+.singularity-active .choice-box {
+  transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: scale(0.96) rotate(0.8deg);
 }
 
 /* Full-Screen Comic Reality Action Banner */

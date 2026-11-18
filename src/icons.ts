@@ -72,6 +72,34 @@ export const icons = {
     </svg>
   `,
 
+  // Scarlet Witch Chaos Magic Tiara / Hex
+  hex: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+      <path d="M3 8L6 17L12 13L18 17L21 8L16 11L12 5L8 11L3 8Z" fill="#FFEBEE" stroke="#D50000"/>
+      <circle cx="12" cy="11" r="2" fill="#FF1744"/>
+    </svg>
+  `,
+
+  // Spider-Verse Glitch Mask / Emblem
+  spiderGlitch: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+      <ellipse cx="12" cy="12" rx="6" ry="8" fill="#111116" stroke="#00E5FF"/>
+      <path d="M6 7L1 5M6 11L0 11M6 15L1 18M6 18L2 23" stroke="#FF0055" stroke-width="2"/>
+      <path d="M18 7L23 5M18 11L24 11M18 15L23 18M18 18L22 23" stroke="#00E5FF" stroke-width="2"/>
+    </svg>
+  `,
+
+  // Cosmic Singularity / Black Hole Gravitational Vortex
+  vortex: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+      <circle cx="12" cy="12" r="3" fill="#111116" stroke="#7C4DFF" stroke-width="2.5"/>
+      <path d="M12 2A10 10 0 0 1 22 12" stroke="#651FFF" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M12 22A10 10 0 0 1 2 12" stroke="#7C4DFF" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M12 6A6 6 0 0 1 18 12" stroke="#B388FF" stroke-width="2"/>
+      <path d="M12 18A6 6 0 0 1 6 12" stroke="#B388FF" stroke-width="2"/>
+    </svg>
+  `,
+
   // Comic Shield
   shield: `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">

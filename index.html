@@ -323,28 +323,86 @@
   <!-- COMPACT FLOATING CIRCULAR MULTIVERSE NEXUS POD -->
   <!-- ============================================== -->
   <aside id="multiverse-floating-pod" class="multiverse-floating-pod" aria-label="Multiverse Nexus Pod">
-    <!-- Circular Selector Nodes Orbiting on the Right -->
-    <div class="pod-orbital-cluster">
-      <button class="pod-node-btn node-thanos active" data-mode="thanos" title="Thanos Snap: Disintegrate 50% of the page into dust!">
-        <span class="pod-node-dot"></span>
-        <span class="pod-node-label">SNAP</span>
-      </button>
-      <button class="pod-node-btn node-loki" data-mode="loki" title="Loki Multiverse: Weave Yggdrasil timelines across the screen!">
-        <span class="pod-node-dot"></span>
-        <span class="pod-node-label">LOKI</span>
-      </button>
-      <button class="pod-node-btn node-strange" data-mode="strange" title="Strange Portal: Open fiery sling-ring portal on the page!">
-        <span class="pod-node-dot"></span>
-        <span class="pod-node-label">PORTAL</span>
-      </button>
-      <button class="pod-node-btn node-bifrost" data-mode="bifrost" title="Bifrost Surge: Strike reality with rainbow teleport beam!">
-        <span class="pod-node-dot"></span>
-        <span class="pod-node-label">BIFROST</span>
-      </button>
+    <!-- Flyout Cosmic Reality Selector Menu (Hidden until pod is clicked) -->
+    <div class="pod-flyout-menu" id="pod-flyout-menu" style="display: none;">
+      <div class="flyout-header">
+        <div class="flyout-title">MULTIVERSE NEXUS</div>
+        <div class="flyout-sub">CLICK TO WARP REALITY (7 MODES)</div>
+        <button id="btn-close-pod-menu" class="flyout-close-btn" title="Close menu">✕</button>
+      </div>
+
+      <div class="flyout-grid">
+        <!-- Mode 1: Thanos Snap -->
+        <button class="pod-menu-item item-thanos active" data-mode="thanos" title="Thanos Snap: Disintegrate 50% of the page into ash!">
+          <span class="item-dot" style="background: #AB47BC;"></span>
+          <div class="item-text">
+            <span class="item-name">THANOS SNAP</span>
+            <span class="item-desc">50% ash disintegration</span>
+          </div>
+        </button>
+
+        <!-- Mode 2: Loki Timelines -->
+        <button class="pod-menu-item item-loki" data-mode="loki" title="Loki Multiverse: Weave emerald Yggdrasil timelines across the screen!">
+          <span class="item-dot" style="background: #00E676;"></span>
+          <div class="item-text">
+            <span class="item-name">LOKI TIMELINES</span>
+            <span class="item-desc">Yggdrasil world-tree branches</span>
+          </div>
+        </button>
+
+        <!-- Mode 3: Strange Portal -->
+        <button class="pod-menu-item item-strange" data-mode="strange" title="Strange Portal: Open fiery sling-ring portal on the screen!">
+          <span class="item-dot" style="background: #FF6D00;"></span>
+          <div class="item-text">
+            <span class="item-name">STRANGE PORTAL</span>
+            <span class="item-desc">Fiery sling-ring sparks</span>
+          </div>
+        </button>
+
+        <!-- Mode 4: Bifrost Surge -->
+        <button class="pod-menu-item item-bifrost" data-mode="bifrost" title="Bifrost Surge: Strike reality with rainbow teleport beam!">
+          <span class="item-dot" style="background: #00E5FF;"></span>
+          <div class="item-text">
+            <span class="item-name">BIFROST SURGE</span>
+            <span class="item-desc">Asgardian rainbow strike</span>
+          </div>
+        </button>
+
+        <!-- Mode 5: Scarlet Witch Chaos Hex (NEW 1/3) -->
+        <button class="pod-menu-item item-hex" data-mode="hex" title="Chaos Hex: Scarlet Witch crimson chaos magic reality distortion!">
+          <span class="item-dot" style="background: #FF1744;"></span>
+          <div class="item-text">
+            <span class="item-name">CHAOS HEX</span>
+            <span class="item-desc">Scarlet Witch reality warp</span>
+          </div>
+        </button>
+
+        <!-- Mode 6: Spider-Verse Glitch (NEW 2/3) -->
+        <button class="pod-menu-item item-glitch" data-mode="glitch" title="Spider-Verse Glitch: Dimensional RGB chromatic de-sync across the screen!">
+          <span class="item-dot" style="background: #00E5FF; box-shadow: 2px 0 #FF0055;"></span>
+          <div class="item-text">
+            <span class="item-name">SPIDER-GLITCH</span>
+            <span class="item-desc">Multiverse chromatic de-sync</span>
+          </div>
+        </button>
+
+        <!-- Mode 7: Cosmic Singularity (NEW 3/3) -->
+        <button class="pod-menu-item item-vortex" data-mode="vortex" title="Cosmic Singularity: Gravitational black hole lens pulling reality inwards!">
+          <span class="item-dot" style="background: #7C4DFF;"></span>
+          <div class="item-text">
+            <span class="item-name">SINGULARITY</span>
+            <span class="item-desc">Gravitational black hole vortex</span>
+          </div>
+        </button>
+      </div>
+
+      <div class="flyout-footer">
+        ★ AFFECTS ENTIRE SCREEN // REAL-TIME COSMIC PHYSICS ★
+      </div>
     </div>
 
-    <!-- Small Main Circular Core Trigger Button -->
-    <button class="pod-main-core" id="pod-main-core" title="DISCHARGE COSMIC REALITY (Affects whole page!)">
+    <!-- Small Main Circular Core Trigger Button (Click to open menu!) -->
+    <button class="pod-main-core" id="pod-main-core" title="Click to open Multiverse Nexus menu!">
       <div class="pod-core-radar"></div>
       <div class="pod-core-glyph" id="pod-core-glyph"></div>
       <div class="pod-core-halo"></div>

@@ -1,11 +1,18 @@
 // src/nexus-pod.ts
-// Compact Floating Multiverse Nexus Pod — Controls full-page cosmic reality effects!
-// Features Thanos Snap (50% page ash disintegration), Loki Yggdrasil timelines, Doctor Strange fiery portal, and Bifrost surge.
+// Compact Floating Multiverse Nexus Pod — On-Click Menu with 7 Full-Page Marvel Cosmic Effects!
+// Modes:
+// 1. THANOS SNAP (50% page ash disintegration & time stone reversal)
+// 2. LOKI TIMELINES (Full-screen Yggdrasil world-tree branches)
+// 3. STRANGE PORTAL (Giant fiery sling-ring portal & mystic runes)
+// 4. BIFROST SURGE (Asgardian vertical rainbow beam strike)
+// 5. CHAOS HEX (Scarlet Witch reality-warping crimson polygons)
+// 6. SPIDER-GLITCH (Spider-Verse chromatic aberration RGB shift & halftone glitch)
+// 7. SINGULARITY (Cosmic black hole event horizon & gravitational accretion vortex)
 
 import { sound } from './sound-engine';
 import { icons } from './icons';
 
-export type NexusMode = 'thanos' | 'loki' | 'strange' | 'bifrost';
+export type NexusMode = 'thanos' | 'loki' | 'strange' | 'bifrost' | 'hex' | 'glitch' | 'vortex';
 
 interface FullScreenParticle {
   x: number;
@@ -17,6 +24,8 @@ interface FullScreenParticle {
   alpha: number;
   life: number;
   maxLife: number;
+  angle?: number;
+  distance?: number;
 }
 
 export class MultiverseNexusPod {
@@ -29,6 +38,7 @@ export class MultiverseNexusPod {
   private bannerTimer: number | null = null;
   private isEffectActive: boolean = false;
   private portalAngle: number = 0;
+  private isMenuOpen: boolean = false;
 
   public init(): void {
     this.canvas = document.getElementById('multiverse-fx-canvas') as HTMLCanvasElement;
@@ -49,7 +59,7 @@ export class MultiverseNexusPod {
         <div class="phase3-nexus-callout">
           <div class="callout-badge">★ MULTIVERSE NEXUS ACTIVE ★</div>
           <h3 class="callout-title">COSMIC SELECTOR DOCKED ON RIGHT</h3>
-          <p class="callout-desc">Use the floating circular Nexus Pod docked on the right edge of your screen to warp the entire page with Thanos Snap, Loki Timelines, Strange Portal, or Bifrost Surge!</p>
+          <p class="callout-desc">Click the floating circular Nexus Pod on the right edge of your screen to open the 7-mode reality warp menu!</p>
         </div>
       `;
     }
@@ -62,36 +72,79 @@ export class MultiverseNexusPod {
   }
 
   private bindFloatingPodEvents(): void {
-    const podEl = document.getElementById('multiverse-floating-pod');
-    if (!podEl) return;
+    const mainCoreBtn = document.getElementById('pod-main-core');
+    const closeBtn = document.getElementById('btn-close-pod-menu');
 
-    // Orbital Node Buttons
-    const nodeBtns = podEl.querySelectorAll<HTMLButtonElement>('.pod-node-btn');
-    nodeBtns.forEach((btn) => {
+    // Click circular core button to toggle menu!
+    mainCoreBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggleMenu();
+    });
+
+    // Close button inside menu
+    closeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.closeMenu();
+    });
+
+    // Click outside to close menu
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (this.isMenuOpen && !target.closest('#multiverse-floating-pod')) {
+        this.closeMenu();
+      }
+    });
+
+    // Menu item clicks
+    const menuItems = document.querySelectorAll<HTMLButtonElement>('.pod-menu-item');
+    menuItems.forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const mode = btn.dataset.mode as NexusMode;
         if (!mode) return;
         this.setMode(mode);
         this.triggerCosmicEvent();
+        this.closeMenu();
       });
     });
+  }
 
-    // Central Circular Core Button
-    const mainCoreBtn = document.getElementById('pod-main-core');
-    mainCoreBtn?.addEventListener('click', () => {
-      this.triggerCosmicEvent();
-    });
+  public toggleMenu(): void {
+    if (this.isMenuOpen) {
+      this.closeMenu();
+    } else {
+      this.openMenu();
+    }
+  }
+
+  public openMenu(): void {
+    const menuEl = document.getElementById('pod-flyout-menu');
+    if (!menuEl) return;
+    this.isMenuOpen = true;
+    menuEl.style.display = 'flex';
+    // Force reflow
+    void menuEl.offsetWidth;
+    menuEl.classList.add('flyout-open');
+    sound.playClick();
+  }
+
+  public closeMenu(): void {
+    const menuEl = document.getElementById('pod-flyout-menu');
+    if (!menuEl) return;
+    this.isMenuOpen = false;
+    menuEl.classList.remove('flyout-open');
+    setTimeout(() => {
+      if (!this.isMenuOpen) {
+        menuEl.style.display = 'none';
+      }
+    }, 200);
   }
 
   public setMode(mode: NexusMode): void {
     this.currentMode = mode;
 
-    const podEl = document.getElementById('multiverse-floating-pod');
-    if (!podEl) return;
-
-    const nodeBtns = podEl.querySelectorAll<HTMLButtonElement>('.pod-node-btn');
-    nodeBtns.forEach((btn) => {
+    const menuItems = document.querySelectorAll<HTMLButtonElement>('.pod-menu-item');
+    menuItems.forEach((btn) => {
       btn.classList.toggle('active', btn.dataset.mode === mode);
     });
 
@@ -104,7 +157,10 @@ export class MultiverseNexusPod {
     if (!glyphEl || !mainCoreBtn) return;
 
     // Reset mode classes
-    mainCoreBtn.classList.remove('mode-thanos', 'mode-loki', 'mode-strange', 'mode-bifrost');
+    mainCoreBtn.classList.remove(
+      'mode-thanos', 'mode-loki', 'mode-strange', 'mode-bifrost',
+      'mode-hex', 'mode-glitch', 'mode-vortex'
+    );
     mainCoreBtn.classList.add(`mode-${this.currentMode}`);
 
     switch (this.currentMode) {
@@ -119,6 +175,15 @@ export class MultiverseNexusPod {
         break;
       case 'bifrost':
         glyphEl.innerHTML = icons.bolt;
+        break;
+      case 'hex':
+        glyphEl.innerHTML = icons.hex;
+        break;
+      case 'glitch':
+        glyphEl.innerHTML = icons.spiderGlitch;
+        break;
+      case 'vortex':
+        glyphEl.innerHTML = icons.vortex;
         break;
     }
   }
@@ -146,6 +211,15 @@ export class MultiverseNexusPod {
       case 'bifrost':
         this.executeBifrostSurge();
         break;
+      case 'hex':
+        this.executeChaosHex();
+        break;
+      case 'glitch':
+        this.executeSpiderGlitch();
+        break;
+      case 'vortex':
+        this.executeSingularity();
+        break;
     }
 
     this.startParticleLoop();
@@ -157,21 +231,17 @@ export class MultiverseNexusPod {
   private executeThanosSnap(): void {
     sound.playSnapBoom();
 
-    // Flash overlay
     const flashEl = document.getElementById('multiverse-fx-flash');
     if (flashEl) {
       flashEl.className = 'multiverse-fx-flash flash-white active';
       setTimeout(() => flashEl.classList.remove('active'), 500);
     }
 
-    // Screen tremor
     document.body.classList.add('reality-tremor');
     setTimeout(() => document.body.classList.remove('reality-tremor'), 600);
 
-    // Show comic banner
     this.showComicBanner('💥 SNAP! 50% OF REALITY DISINTEGRATED INTO ASH! 💥', '#AB47BC');
 
-    // Spawn 200 ash particles rising and swirling across entire screen
     const w = window.innerWidth;
     const h = window.innerHeight;
     for (let i = 0; i < 220; i++) {
@@ -179,7 +249,7 @@ export class MultiverseNexusPod {
         x: Math.random() * w,
         y: Math.random() * h,
         vx: (Math.random() - 0.5) * 4 + 1.2,
-        vy: -Math.random() * 3.5 - 0.8, // Float upward like cosmic dust
+        vy: -Math.random() * 3.5 - 0.8,
         size: 1.5 + Math.random() * 3.5,
         color: Math.random() > 0.4 ? '#90A4AE' : '#CFD8DC',
         alpha: 0.9,
@@ -188,12 +258,10 @@ export class MultiverseNexusPod {
       });
     }
 
-    // Disintegrate 50% of visible cards on the whole page!
     const targetElements = Array.from(document.querySelectorAll<HTMLElement>(
       '.choice-box, .duel-faction-pill, .brand-badge, .bridge-status-pill, .gate-options, .card-3d-wrap'
     ));
 
-    // Shuffle and pick 50%
     const shuffled = [...targetElements].sort(() => 0.5 - Math.random());
     const dustedTargets = shuffled.slice(0, Math.ceil(targetElements.length * 0.5));
 
@@ -203,9 +271,7 @@ export class MultiverseNexusPod {
       }, idx * 120);
     });
 
-    // Time Stone Reversal after 4.8 seconds
     this.effectTimer = window.setTimeout(() => {
-      // Time stone emerald flash
       sound.playLokiChime();
       if (flashEl) {
         flashEl.className = 'multiverse-fx-flash flash-emerald active';
@@ -231,7 +297,6 @@ export class MultiverseNexusPod {
     document.body.classList.add('loki-timeline-aura');
     this.showComicBanner('🌿 YGGDRASIL BRANCHES WOVEN: SACRED MULTIVERSE TIMELINES ACTIVE! 🌿', '#00C853');
 
-    // Spawn green temporal spark particles
     const w = window.innerWidth;
     const h = window.innerHeight;
     for (let i = 0; i < 120; i++) {
@@ -305,6 +370,109 @@ export class MultiverseNexusPod {
     }, 4500);
   }
 
+  // ====================================================
+  // 5. SCARLET WITCH CHAOS HEX (NEW 1/3): Reality distortion
+  // ====================================================
+  private executeChaosHex(): void {
+    sound.playChaosHex();
+
+    document.body.classList.add('chaos-hex-aura');
+    document.body.classList.add('chaos-reality-warped');
+    this.showComicBanner('🔮 CHAOS MAGIC UNLEASHED: REALITY REWRITTEN BY SCARLET WITCH! 🔮', '#D50000');
+
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    for (let i = 0; i < 160; i++) {
+      this.particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 5,
+        vy: (Math.random() - 0.5) * 5,
+        size: 3 + Math.random() * 5,
+        color: Math.random() > 0.4 ? '#FF1744' : '#D50000',
+        alpha: 0.85,
+        life: 0,
+        maxLife: 90 + Math.random() * 60
+      });
+    }
+
+    this.effectTimer = window.setTimeout(() => {
+      document.body.classList.remove('chaos-hex-aura');
+      document.body.classList.remove('chaos-reality-warped');
+      this.stopEffectAfter(1000);
+    }, 4800);
+  }
+
+  // ====================================================
+  // 6. SPIDER-VERSE GLITCH (NEW 2/3): Chromatic de-sync
+  // ====================================================
+  private executeSpiderGlitch(): void {
+    sound.playSpiderGlitch();
+
+    document.body.classList.add('spider-glitch-active');
+    this.showComicBanner('🕷️ MULTIVERSE GLITCH: DIMENSIONAL DE-SYNCHRONIZATION DETECTED! 🕷️', '#00E5FF');
+
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    for (let i = 0; i < 150; i++) {
+      this.particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 12, // Rapid stutter steps
+        vy: (Math.random() - 0.5) * 4,
+        size: 2 + Math.random() * 4,
+        color: Math.random() > 0.5 ? '#00E5FF' : '#FF0055',
+        alpha: 1,
+        life: 0,
+        maxLife: 40 + Math.random() * 30
+      });
+    }
+
+    this.effectTimer = window.setTimeout(() => {
+      document.body.classList.remove('spider-glitch-active');
+      this.stopEffectAfter(800);
+    }, 4200);
+  }
+
+  // ====================================================
+  // 7. COSMIC SINGULARITY (NEW 3/3): Black hole vortex pull
+  // ====================================================
+  private executeSingularity(): void {
+    sound.playSingularity();
+
+    document.body.classList.add('singularity-active');
+    this.showComicBanner('🌀 COSMIC SINGULARITY: GRAVITATIONAL LENSING EVENT HORIZON! 🌀', '#7C4DFF');
+
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const cx = w / 2;
+    const cy = h / 2;
+
+    // Spawn 180 particles from outer edges spiraling inward
+    for (let i = 0; i < 180; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const dist = Math.min(cx, cy) * 0.85 + Math.random() * 200;
+      this.particles.push({
+        x: cx + Math.cos(a) * dist,
+        y: cy + Math.sin(a) * dist,
+        vx: 0,
+        vy: 0,
+        size: 2 + Math.random() * 3.5,
+        color: Math.random() > 0.5 ? '#B388FF' : '#651FFF',
+        alpha: 0.9,
+        life: 0,
+        maxLife: 120 + Math.random() * 60,
+        angle: a,
+        distance: dist
+      });
+    }
+
+    this.effectTimer = window.setTimeout(() => {
+      document.body.classList.remove('singularity-active');
+      this.stopEffectAfter(1000);
+    }, 5000);
+  }
+
   private stopEffectAfter(ms: number): void {
     setTimeout(() => {
       this.isEffectActive = false;
@@ -346,9 +514,17 @@ export class MultiverseNexusPod {
           case 'bifrost':
             this.drawFullScreenBifrostBeam(ctx, cx, h);
             break;
+          case 'hex':
+            this.drawFullScreenChaosHex(ctx, cx, cy);
+            break;
+          case 'glitch':
+            this.drawFullScreenSpiderGlitch(ctx, w, h);
+            break;
+          case 'vortex':
+            this.drawFullScreenSingularity(ctx, cx, cy);
+            break;
         }
 
-        // Draw and update active particles
         this.updateAndDrawParticles(ctx);
         this.portalAngle += 0.04;
       }
@@ -364,11 +540,10 @@ export class MultiverseNexusPod {
     this.animId = requestAnimationFrame(render);
   }
 
-  // Doctor Strange Giant Fiery Portal on Full Page
+  // Doctor Strange Giant Fiery Portal
   private drawFullScreenStrangePortal(ctx: CanvasRenderingContext2D, cx: number, cy: number): void {
     const portalR = Math.min(cx, cy) * 0.48;
 
-    // Glowing orange rim
     ctx.strokeStyle = '#FFE082';
     ctx.lineWidth = 6;
     ctx.shadowColor = '#FF6D00';
@@ -378,7 +553,6 @@ export class MultiverseNexusPod {
     ctx.stroke();
     ctx.shadowBlur = 0;
 
-    // Spawn whirling sparks from rim
     for (let i = 0; i < 5; i++) {
       const a = this.portalAngle * 3 + Math.random() * Math.PI * 2;
       const r = portalR + (Math.random() - 0.5) * 20;
@@ -400,23 +574,19 @@ export class MultiverseNexusPod {
       });
     }
 
-    // Floating mystic mandala runes
     ctx.strokeStyle = 'rgba(255, 179, 0, 0.45)';
     ctx.lineWidth = 2.5;
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(this.portalAngle * 0.8);
-
-    // Inner square
     const sq = portalR * 0.7;
     ctx.strokeRect(-sq / 2, -sq / 2, sq, sq);
     ctx.rotate(Math.PI / 4);
     ctx.strokeRect(-sq / 2, -sq / 2, sq, sq);
-
     ctx.restore();
   }
 
-  // Loki Emerald Branches Spanning the Entire Page
+  // Loki Emerald Branches
   private drawFullScreenLokiTimelines(ctx: CanvasRenderingContext2D, w: number, h: number): void {
     const branches = 7;
     const time = this.portalAngle * 0.6;
@@ -444,7 +614,6 @@ export class MultiverseNexusPod {
         py += Math.sin(a) * stepLen;
         ctx.lineTo(px, py);
 
-        // Nodes on branches
         if (s % 3 === 0) {
           ctx.fillStyle = '#FFFFFF';
           ctx.fillRect(px - 3, py - 3, 6, 6);
@@ -455,12 +624,10 @@ export class MultiverseNexusPod {
     ctx.shadowBlur = 0;
   }
 
-  // Thor's Bifrost Beam Shooting Down Entire Screen
+  // Thor Bifrost Beam
   private drawFullScreenBifrostBeam(ctx: CanvasRenderingContext2D, cx: number, h: number): void {
     const beamW = 200 + Math.sin(this.portalAngle * 4) * 30;
     const rainbow = ['#FF1744', '#FF9100', '#FFEA00', '#00E676', '#00E5FF', '#2979FF', '#D500F9'];
-
-    // Vertical prismatic rainbow ribbons
     const ribbonW = beamW / rainbow.length;
     const startX = cx - beamW / 2;
 
@@ -471,12 +638,109 @@ export class MultiverseNexusPod {
     }
     ctx.globalAlpha = 1;
 
-    // Center core laser white line
     ctx.fillStyle = '#FFFFFF';
     ctx.shadowColor = '#00E5FF';
     ctx.shadowBlur = 28;
     ctx.fillRect(cx - 8, 0, 16, h);
     ctx.shadowBlur = 0;
+  }
+
+  // Scarlet Witch Chaos Magic Hex Polygons
+  private drawFullScreenChaosHex(ctx: CanvasRenderingContext2D, cx: number, cy: number): void {
+    const rings = 4;
+    ctx.strokeStyle = '#FF1744';
+    ctx.lineWidth = 3;
+    ctx.shadowColor = '#D50000';
+    ctx.shadowBlur = 18;
+
+    for (let r = 1; r <= rings; r++) {
+      const radius = r * 85 + Math.sin(this.portalAngle * 2 + r) * 20;
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(this.portalAngle * (r % 2 === 0 ? 0.7 : -0.7));
+
+      // Draw hexagon
+      ctx.beginPath();
+      for (let s = 0; s < 6; s++) {
+        const a = (s / 6) * Math.PI * 2;
+        const x = Math.cos(a) * radius;
+        const y = Math.sin(a) * radius;
+        if (s === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.stroke();
+      ctx.restore();
+    }
+    ctx.shadowBlur = 0;
+  }
+
+  // Spider-Verse Glitch Scanlines & Chromatic Ribbons
+  private drawFullScreenSpiderGlitch(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+    // Horizontal chromatic glitch ribbons
+    const ribbonCount = 5;
+    for (let i = 0; i < ribbonCount; i++) {
+      const y = ((this.portalAngle * 90 + i * (h / ribbonCount)) % h);
+      const rH = 8 + Math.random() * 24;
+
+      ctx.fillStyle = i % 2 === 0 ? 'rgba(0, 229, 255, 0.28)' : 'rgba(255, 0, 85, 0.28)';
+      ctx.fillRect(0, y, w, rH);
+    }
+
+    // Comic Ben-Day halftone dots overlay
+    ctx.fillStyle = 'rgba(17, 17, 22, 0.08)';
+    const dotSpacing = 32;
+    for (let x = 0; x < w; x += dotSpacing) {
+      for (let y = 0; y < h; y += dotSpacing) {
+        ctx.beginPath();
+        ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  // Cosmic Singularity Accretion Disk Vortex
+  private drawFullScreenSingularity(ctx: CanvasRenderingContext2D, cx: number, cy: number): void {
+    const holeR = 50;
+
+    // Outer swirling accretion disk
+    for (let d = holeR + 15; d < holeR + 180; d += 25) {
+      ctx.strokeStyle = `rgba(124, 77, 255, ${1 - (d - holeR) / 180})`;
+      ctx.lineWidth = 3.5;
+      ctx.shadowColor = '#651FFF';
+      ctx.shadowBlur = 20;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, d, this.portalAngle * 2, this.portalAngle * 2 + Math.PI * 1.5);
+      ctx.stroke();
+    }
+    ctx.shadowBlur = 0;
+
+    // Pitch-black event horizon in center
+    ctx.fillStyle = '#060810';
+    ctx.beginPath();
+    ctx.arc(cx, cy, holeR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Glowing photon sphere ring
+    ctx.strokeStyle = '#B388FF';
+    ctx.lineWidth = 4;
+    ctx.shadowColor = '#7C4DFF';
+    ctx.shadowBlur = 24;
+    ctx.beginPath();
+    ctx.arc(cx, cy, holeR + 2, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Move spiral particles toward black hole
+    for (let p of this.particles) {
+      if (p.distance !== undefined && p.angle !== undefined) {
+        p.distance = Math.max(holeR + 4, p.distance - 2.8);
+        p.angle += 0.04;
+        p.x = cx + Math.cos(p.angle) * p.distance;
+        p.y = cy + Math.sin(p.angle) * p.distance;
+      }
+    }
   }
 
   private updateAndDrawParticles(ctx: CanvasRenderingContext2D): void {
@@ -514,7 +778,6 @@ export class MultiverseNexusPod {
     bannerEl.style.borderColor = accentColor;
     bannerEl.style.display = 'block';
     bannerEl.classList.remove('slide-in');
-    // Force reflow
     void bannerEl.offsetWidth;
     bannerEl.classList.add('slide-in');
 

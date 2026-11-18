@@ -170,7 +170,6 @@ export class GoldenRatioAnalyzer {
               <div class="orb-ring ring-longitude"></div>
               <div class="orb-ring ring-equator"></div>
             </div>
-            <div class="orb-caption">GREEN STEEL BALL &bull; &Phi; RADAR</div>
           </div>
 
           <!-- Hero Ratio Rating Banner -->

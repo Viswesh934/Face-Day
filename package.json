@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "deploy": "wrangler pages deploy dist --project-name=face-day",
     "bridge": "node local-runner/bridge.mjs",
-    "mcp-auth": "node scripts/mcp-auth.mjs"
+    "mcp-auth": "node scripts/mcp-auth.mjs",
+    "postinstall": "node scripts/patch-wrangler.mjs"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4"

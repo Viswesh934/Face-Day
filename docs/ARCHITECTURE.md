@@ -40,8 +40,9 @@
   - `breathing`: Breathing Rate (breaths/min) and chest/abdominal respiratory traces.
   - `face`: 478 MediaPipe facial landmarks, blink frequency, facial expression probabilities (neutral, calm, surprise, resolve).
 - **Dual Bridge Implementation:**
-  - Desktop / Local Dev Mode: `local-runner/bridge.mjs` executes `@smartspectra/node-sdk` via native FFI and streams real-time decoded measurements over local WebSocket (`ws://localhost:8765`).
-  - Standalone Edge Mode: Browser-native optical chrominance analysis & face landmark pipeline + pre-validated synthetic rPPG sample playback for judges testing directly in browser without local terminal setup.
+  - **AWS App Runner / Cloud Container:** Dedicated Node.js backend container (`server/index.mjs` via `Dockerfile`) hosting the native `@smartspectra/node-sdk` C++ runtime, streaming full-duplex WebSockets (`wss://`) with real Presage cloud pairing within a $5 budget. See [docs/AWS_APP_RUNNER.md](file:///workspaces/Face-Day/docs/AWS_APP_RUNNER.md).
+  - **Desktop / Local Dev Mode:** `npm run backend` (`server/index.mjs`) or `local-runner/bridge.mjs` executing `@smartspectra/node-sdk` on `ws://localhost:8765`.
+  - **Standalone Edge Fallback:** Browser-native optical chrominance analysis & face landmark pipeline (`src/optical-vitals.ts`) for zero-latency testing when the hardware backend is offline.
 
 ---
 
@@ -58,7 +59,6 @@
 ---
 
 ## 5. Deployment Model
-- Built using **Vite + TypeScript**.
-- Target: Cloudflare Pages / Workers static assets.
-- Configuration: `wrangler.jsonc`.
-- Deployment command: `npx wrangler pages deploy dist` or `npx wrangler deploy`.
+- **Frontend:** Built using **Vite + TypeScript**, deployed to **Cloudflare Pages** (`face-day.pages.dev`).
+- **Backend (Native Presage SDK):** Containerized via `Dockerfile` and deployed to **AWS App Runner** (or local `npm run backend`).
+- **Full Guide:** See [docs/AWS_APP_RUNNER.md](file:///workspaces/Face-Day/docs/AWS_APP_RUNNER.md).

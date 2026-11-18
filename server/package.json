@@ -1,0 +1,14 @@
+{
+  "name": "face-day-presage-server",
+  "version": "1.0.0",
+  "description": "Dedicated AWS App Runner / Linux container backend for Presage SmartSpectra SDK",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "@smartspectra/node-sdk": "^3.5.0",
+    "ws": "^8.18.0"
+  }
+}

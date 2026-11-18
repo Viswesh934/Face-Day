@@ -77,11 +77,13 @@ npm run dev
 ```
 Open `http://localhost:5173` in your browser.
 
-### 4. Run the Presage SDK Local Bridge (Optional for Desktop FFI)
+### 4. Run the Presage SDK Dedicated Backend (AWS App Runner & Local)
 ```bash
 export SMARTSPECTRA_API_KEY="your-presage-api-key"
-npm run bridge
+npm run backend
 ```
+The backend starts on `ws://127.0.0.1:8765` with health checks on `http://127.0.0.1:8765/health`.
+For 1-click cloud deployment on AWS App Runner within a $5 budget, see **[AWS App Runner Deployment Guide](file:///workspaces/Face-Day/docs/AWS_APP_RUNNER.md)**.
 
 ### 5. Build for Production
 ```bash

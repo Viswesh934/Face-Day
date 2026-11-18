@@ -59,12 +59,16 @@ export class BiometricBridge {
     if (this.isWsConnected && this.ws) return;
 
     try {
+      const metaEnv = (import.meta as unknown as { env?: Record<string, string> }).env;
+      const configuredBackend = (window as unknown as { __PRESAGE_BACKEND_URL__?: string }).__PRESAGE_BACKEND_URL__ 
+        || metaEnv?.VITE_PRESAGE_BACKEND_URL;
+
       const isHttps = window.location.protocol === 'https:';
       const wsProto = isHttps ? 'wss:' : 'ws:';
-      // In dev with Vite, /presage-bridge proxies to 8765. Otherwise try direct 127.0.0.1:8765
-      const wsUrl = window.location.host 
+      // In production with AWS App Runner, use configured backend URL. In dev with Vite, proxy to 8765. Otherwise try direct 127.0.0.1:8765
+      const wsUrl = configuredBackend || (window.location.host 
         ? `${wsProto}//${window.location.host}/presage-bridge`
-        : 'ws://127.0.0.1:8765';
+        : 'ws://127.0.0.1:8765');
 
       const socket = new WebSocket(wsUrl);
 
@@ -190,24 +194,6 @@ export class BiometricBridge {
   }
 
   public async startTrial(videoEl: HTMLVideoElement, apiKey?: string): Promise<void> {
-    // Dispatch active Presage session to edge worker to consume API credits in production
-    try {
-      fetch('/api/presage-session?action=start', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(apiKey ? { 'x-api-key': apiKey } : {})
-        },
-        body: JSON.stringify({ action: 'start', durationSeconds: 30 })
-      }).then(res => res.json()).then(data => {
-        console.log('[Face Day] Presage Cloud Session initiated via edge proxy:', data);
-      }).catch(() => {
-        // Edge worker fallback
-      });
-    } catch {
-      // In-browser fallback
-    }
-
     // Always configure optical callbacks so camera preview, face tracking and fallback work flawlessly
     this.optical.onUpdate = (opt: OpticalMetrics) => {
       if (this.activeMode !== 'presage-hardware') {
@@ -229,25 +215,6 @@ export class BiometricBridge {
     };
 
     this.optical.onComplete = (opt: OpticalMetrics) => {
-      // Dispatch active Presage session completion to edge worker
-      try {
-        fetch('/api/presage-session?action=complete', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(apiKey ? { 'x-api-key': apiKey } : {})
-          },
-          body: JSON.stringify({
-            action: 'complete',
-            pulseBpm: opt.pulseBpm,
-            breathingRate: opt.breathingRate,
-            calmScore: opt.calmScore
-          })
-        }).then(res => res.json()).then(data => {
-          console.log('[Face Day] Presage Cloud Session completion logged:', data);
-        }).catch(() => {});
-      } catch {}
-
       if (this.activeMode !== 'presage-hardware') {
         const finalV: UnifiedVitals = {
           source: 'browser-camera',
@@ -286,10 +253,6 @@ export class BiometricBridge {
   }
 
   public stopTrial(): void {
-    try {
-      fetch('/api/presage-session?action=stop', { method: 'POST' }).catch(() => {});
-    } catch {}
-
     if (this.activeMode === 'presage-hardware' && this.ws) {
       this.ws.send(JSON.stringify({ type: 'stop' }));
     }

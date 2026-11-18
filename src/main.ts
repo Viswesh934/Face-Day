@@ -32,12 +32,19 @@ const elements = {
   // Phase 1 Heroes & Gate
   heroThorIcon: $('hero-thor-icon'),
   heroDoomIcon: $('hero-doom-icon'),
+  duelThorCard: $('duel-thor-card'),
+  duelDoomCard: $('duel-doom-card'),
+  duelVsBurst: $('duel-vs-burst'),
   choiceCameraIcon: $('choice-camera-icon'),
   choiceStrangeIcon: $('choice-strange-icon'),
   choiceInquiryIcon: $('choice-inquiry-icon'),
   btnStartCameraFlow: $('btn-start-camera-flow'),
   btnStartStrangeFlow: $('btn-start-strange-flow'),
   btnStartInquiryFlow: $('btn-start-inquiry-flow'),
+
+  // Marvel Intro Loader
+  marvelIntroLoader: $('marvel-intro-loader'),
+  btnSkipMarvel: $('btn-skip-marvel'),
 
   // Consent Modal
   modalConsent: $('modal-consent'),
@@ -534,9 +541,52 @@ function renderVaultList() {
   });
 }
 
+// Marvel Intro Loader
+function initMarvelIntroLoader() {
+  const loader = elements.marvelIntroLoader;
+  if (!loader) return;
+
+  // Sound: rapid page-turn flutter
+  setTimeout(() => {
+    sound.playPageFlutter();
+  }, 200);
+
+  const dismiss = () => {
+    loader.classList.add('fade-out');
+    setTimeout(() => {
+      loader.style.display = 'none';
+    }, 500);
+  };
+
+  elements.btnSkipMarvel?.addEventListener('click', () => {
+    sound.playClick();
+    dismiss();
+  });
+
+  // Auto-dismiss after 2.4s
+  setTimeout(dismiss, 2400);
+}
+
+// Compact Duel Interactions
+function initDuelInteractions() {
+  elements.duelThorCard?.addEventListener('click', () => {
+    sound.playThunder();
+  });
+
+  elements.duelDoomCard?.addEventListener('click', () => {
+    sound.playDoomClank();
+  });
+
+  elements.duelVsBurst?.addEventListener('click', () => {
+    sound.playClick();
+  });
+}
+
 // App Initialization
 function bootstrap() {
   mountIcons();
+  initMarvelIntroLoader();
+  initDuelInteractions();
   initSoundControls();
   initCameraFlow();
   initInquiryFlow();

@@ -1,0 +1,133 @@
+// src/biometric-bridge.ts
+// Dual-mode biometric connector: Bridges to local Presage SmartSpectra runner or browser camera
+
+import { OpticalVitalsScanner, OpticalMetrics } from './optical-vitals';
+
+export interface UnifiedVitals {
+  source: 'presage-hardware' | 'browser-camera' | 'synthetic';
+  elapsed: number;
+  remaining: number;
+  pulseBpm: number;
+  breathingRate: number;
+  rmssd?: number | null;
+  stressIndex?: number | null;
+  calmScore: number;
+}
+
+export class BiometricBridge {
+  private ws: WebSocket | null = null;
+  private optical: OpticalVitalsScanner = new OpticalVitalsScanner();
+  private isWsConnected: boolean = false;
+  private activeMode: 'presage-hardware' | 'browser-camera' | 'synthetic' = 'browser-camera';
+
+  public onUpdate?: (v: UnifiedVitals) => void;
+  public onComplete?: (finalVitals: UnifiedVitals) => void;
+  public onError?: (err: Error) => void;
+
+  constructor() {
+    this.probeLocalRunner();
+  }
+
+  // Attempt silent discovery of local Presage Node runner
+  private probeLocalRunner() {
+    try {
+      const socket = new WebSocket('ws://127.0.0.1:8765');
+      socket.onopen = () => {
+        this.isWsConnected = true;
+        this.ws = socket;
+        console.log('[Face Day] Connected to local Presage SmartSpectra Bridge.');
+        this.bindWsEvents(socket);
+      };
+      socket.onerror = () => {
+        this.isWsConnected = false;
+      };
+      socket.onclose = () => {
+        this.isWsConnected = false;
+        this.ws = null;
+      };
+    } catch {
+      this.isWsConnected = false;
+    }
+  }
+
+  private bindWsEvents(socket: WebSocket) {
+    socket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === 'metrics') {
+          const uv: UnifiedVitals = {
+            source: 'presage-hardware',
+            elapsed: data.elapsed || 0,
+            remaining: data.remaining || 30,
+            pulseBpm: data.pulseRate || 72,
+            breathingRate: data.breathingRate || 14,
+            rmssd: data.rmssd,
+            stressIndex: data.stressIndex,
+            calmScore: Math.round(data.rmssd ? (data.rmssd / 70) * 100 : 60)
+          };
+          if (this.onUpdate) this.onUpdate(uv);
+        } else if (data.type === 'session_complete') {
+          if (this.onComplete) {
+            this.onComplete({
+              source: 'presage-hardware',
+              elapsed: 30,
+              remaining: 0,
+              pulseBpm: 72,
+              breathingRate: 14,
+              calmScore: 65
+            });
+          }
+        }
+      } catch (e) {
+        console.error('[Face Day] Error parsing bridge frame:', e);
+      }
+    };
+  }
+
+  public async startTrial(videoEl: HTMLVideoElement, apiKey?: string): Promise<void> {
+    if (this.isWsConnected && this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.activeMode = 'presage-hardware';
+      this.ws.send(JSON.stringify({ type: 'start', apiKey }));
+    } else {
+      // Fallback to high-performance in-browser optical rPPG camera trial
+      this.activeMode = 'browser-camera';
+      this.optical.onUpdate = (opt: OpticalMetrics) => {
+        const uv: UnifiedVitals = {
+          source: 'browser-camera',
+          elapsed: opt.elapsedSeconds,
+          remaining: opt.remainingSeconds,
+          pulseBpm: opt.pulseBpm,
+          breathingRate: opt.breathingRate,
+          calmScore: opt.calmScore
+        };
+        if (this.onUpdate) this.onUpdate(uv);
+      };
+
+      this.optical.onComplete = (opt: OpticalMetrics) => {
+        const finalV: UnifiedVitals = {
+          source: 'browser-camera',
+          elapsed: 30,
+          remaining: 0,
+          pulseBpm: opt.pulseBpm,
+          breathingRate: opt.breathingRate,
+          calmScore: opt.calmScore
+        };
+        if (this.onComplete) this.onComplete(finalV);
+      };
+
+      this.optical.onError = (err) => {
+        if (this.onError) this.onError(err);
+      };
+
+      await this.optical.start(videoEl);
+    }
+  }
+
+  public stopTrial(): void {
+    if (this.activeMode === 'presage-hardware' && this.ws) {
+      this.ws.send(JSON.stringify({ type: 'stop' }));
+    } else {
+      this.optical.stop();
+    }
+  }
+}

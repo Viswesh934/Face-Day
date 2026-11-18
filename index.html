@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Face Day — Comic Trading Card Battleground</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2' fill='%23FFCC00'/></svg>" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <!-- Comic Header Navigation -->
+  <header class="comic-nav">
+    <div class="nav-brand">
+      <span id="nav-hammer-icon"></span>
+      <h1 class="brand-title">FACE DAY</h1>
+      <span class="brand-badge">SERIES 1</span>
+      <span id="nav-mask-icon"></span>
+    </div>
+    <div class="nav-controls">
+      <button id="btn-sound" class="comic-btn comic-btn-sm" title="Toggle Sound">
+        <span id="sound-icon"></span>
+      </button>
+      <button id="btn-open-vault" class="comic-btn comic-btn-sm comic-btn-gold" title="My Card Vault">
+        <span id="vault-icon"></span>
+        <span>MY DECK (<span id="vault-count-badge">0</span>)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-wrapper">
+    <!-- ============================================== -->
+    <!-- PHASE 1: THE CHOICE & GATE COVER               -->
+    <!-- ============================================== -->
+    <section id="phase-1" class="phase-panel active">
+      <div class="splash-hero">
+        <div class="hero-banner">
+          <span>ISSUE #01 // 2026 SPECIAL EDITION</span>
+          <span>CHOOSE YOUR DESTINY</span>
+        </div>
+        <div class="hero-split">
+          <!-- Thor Half -->
+          <div class="faction-half faction-thor">
+            <div>
+              <div class="faction-header">
+                <div class="faction-icon-box" id="hero-thor-icon"></div>
+                <div>
+                  <h2 class="faction-name">TEAM THOR</h2>
+                  <p class="faction-title">THE ASGARDIAN VANGUARD</p>
+                </div>
+              </div>
+              <p class="faction-desc">
+                For those whose spirit reflects unwavering calm, enduring stamina, and the resolute pulse of thunder.
+              </p>
+            </div>
+            <div class="faction-traits">
+              <span class="trait-tag">HIGH EQUILIBRIUM</span>
+              <span class="trait-tag">DEEP CADENCE</span>
+              <span class="trait-tag">RESOLUTE AGILITY</span>
+            </div>
+          </div>
+
+          <!-- Doom Half -->
+          <div class="faction-half faction-doom">
+            <div>
+              <div class="faction-header">
+                <div class="faction-icon-box" id="hero-doom-icon"></div>
+                <div>
+                  <h2 class="faction-name">TEAM DOOM</h2>
+                  <p class="faction-title">THE LATVERIAN OVERSEER</p>
+                </div>
+              </div>
+              <p class="faction-desc">
+                For those whose mind operates with razor-sharp intensity, unrelenting tactical focus, and iron will.
+              </p>
+            </div>
+            <div class="faction-traits">
+              <span class="trait-tag">TACTICAL INTENSITY</span>
+              <span class="trait-tag">ACUTE FOCUS</span>
+              <span class="trait-tag">IRON WILLPOWER</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Gate Selection -->
+      <div class="action-gate">
+        <h2 class="gate-headline">STEP FORTH TO BE SORTED</h2>
+        <p class="gate-subhead">
+          Your physical micro-rhythms or tactical instincts will forge your collectible trading card. Select your trial:
+        </p>
+        <div class="gate-options">
+          <div class="choice-box">
+            <div id="choice-camera-icon"></div>
+            <div>
+              <h3 class="choice-title">THE TRIAL OF WORTHINESS</h3>
+              <p class="choice-desc">
+                Hold your gaze upon the mirror. A 30-second reading determines your faction through real physiological cadence.
+              </p>
+            </div>
+            <button id="btn-start-camera-flow" class="comic-btn comic-btn-gold" style="width: 100%;">
+              <span>FACE THE MIRROR</span>
+            </button>
+          </div>
+
+          <div class="choice-box">
+            <div id="choice-inquiry-icon"></div>
+            <div>
+              <h3 class="choice-title">THE OVERSEER'S INQUIRY</h3>
+              <p class="choice-desc">
+                Prefer zero camera hardware? Four tactical scenario choices will immediately diagnose your allegiance.
+              </p>
+            </div>
+            <button id="btn-start-inquiry-flow" class="comic-btn comic-btn-emerald" style="width: 100%;">
+              <span>ANSWER THE INQUIRY</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- PHASE 2A: CAMERA TRIAL HUD                     -->
+    <!-- ============================================== -->
+    <section id="phase-2-camera" class="phase-panel">
+      <div class="trial-hud-container">
+        <div class="hud-topbar">
+          <div class="hud-title">
+            <span id="hud-crosshair-icon"></span>
+            <span>THE TRIAL OF WORTHINESS</span>
+          </div>
+          <div class="countdown-badge">
+            <span id="countdown-timer">30</span>s
+          </div>
+        </div>
+
+        <div class="hud-stage">
+          <video id="camera-preview" class="hud-video" playsinline muted autoplay></video>
+          <div class="reticle-frame">
+            <div class="reticle-oval"></div>
+          </div>
+        </div>
+
+        <div class="hud-telemetry">
+          <div class="hud-stat-box">
+            <div class="hud-stat-label">PULSE CADENCE</div>
+            <div class="hud-stat-val" id="hud-pulse-val">-- <span style="font-size: 16px;">BPM</span></div>
+          </div>
+          <div class="hud-stat-box">
+            <div class="hud-stat-label">RESPIRATION</div>
+            <div class="hud-stat-val" id="hud-breath-val">-- <span style="font-size: 16px;">/MIN</span></div>
+          </div>
+          <div class="hud-stat-box">
+            <div class="hud-stat-label">AUTONOMIC TONE</div>
+            <div class="hud-stat-val" id="hud-calm-val">STABILIZING</div>
+          </div>
+        </div>
+
+        <div style="padding: 0 24px 20px; text-align: center;">
+          <button id="btn-cancel-trial" class="comic-btn comic-btn-dark comic-btn-sm">
+            <span>ABORT TRIAL</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- PHASE 2B: INQUIRY QUIZ (BYPASS MODE)           -->
+    <!-- ============================================== -->
+    <section id="phase-2-inquiry" class="phase-panel">
+      <div class="inquiry-card">
+        <div class="inquiry-header">
+          <span class="inquiry-q-num" id="inquiry-step-indicator">QUESTION 1 OF 4</span>
+          <h2 class="inquiry-q-text" id="inquiry-prompt">Loading scenario...</h2>
+        </div>
+        <div class="inquiry-options" id="inquiry-options-container">
+          <!-- Dynamic options rendered here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- PHASE 3: THE DECREE & TRADING CARD REVEAL      -->
+    <!-- ============================================== -->
+    <section id="phase-3" class="phase-panel">
+      <div class="card-stage-container">
+        <div class="verdict-banner">
+          <h2 class="verdict-title" id="verdict-team-name">THE DECREE IS CAST!</h2>
+          <p class="verdict-subtitle" id="verdict-subtext">A NEW COLLECTIBLE CARD HAS BEEN MINTED</p>
+        </div>
+
+        <!-- 3D Card Display -->
+        <div class="card-3d-wrap" id="card-wrap-interactive">
+          <div id="card-canvas-mount">
+            <!-- Canvas is inserted here -->
+          </div>
+        </div>
+
+        <!-- Actions Toolbar -->
+        <div class="card-actions-toolbar">
+          <button id="btn-download-card" class="comic-btn comic-btn-gold">
+            <span id="btn-download-icon"></span>
+            <span>DOWNLOAD TRADING CARD</span>
+          </button>
+          <button id="btn-share-x" class="comic-btn comic-btn-dark">
+            <span id="btn-share-icon"></span>
+            <span>POST TO X</span>
+          </button>
+          <button id="btn-play-again" class="comic-btn">
+            <span>TRY ANOTHER TRIAL</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================== -->
+  <!-- MODAL: CAMERA PRIVACY & CONSENT GATE           -->
+  <!-- ============================================== -->
+  <div id="modal-consent" class="modal-backdrop" style="display: none;">
+    <div class="modal-comic-box">
+      <div class="modal-header">
+        <h3 class="modal-title">THE ARCHITECT'S PACT</h3>
+        <button id="btn-close-consent" class="comic-btn comic-btn-sm" style="padding: 4px 8px;">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>100% Client-Side Edge Privacy:</strong></p>
+        <ul>
+          <li>Camera video is processed strictly inside your browser memory.</li>
+          <li>Zero video frames, landmarks, or biometric numbers are ever sent to an external server or database.</li>
+          <li>The trial runs for an exact 30-second measurement cycle and immediately shuts down the camera.</li>
+        </ul>
+        <p>By entering, you authorize the optical cadence sensor for the duration of this single trial.</p>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-decline-consent" class="comic-btn">DECLINE</button>
+        <button id="btn-accept-consent" class="comic-btn comic-btn-gold">I CONSENT &bull; ENTER TRIAL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: MY CARD VAULT (DECK DRAWER)             -->
+  <!-- ============================================== -->
+  <div id="modal-vault" class="vault-drawer" style="display: none;">
+    <div class="vault-content">
+      <div class="vault-header">
+        <h2 class="brand-title" style="font-size: 26px;">MY CARD VAULT</h2>
+        <button id="btn-close-vault" class="comic-btn comic-btn-sm" style="padding: 4px 8px;">✕</button>
+      </div>
+
+      <div style="background: #FAF8F2; border: 2.5px solid var(--ink); border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-around; text-align: center;">
+          <div>
+            <div style="font-family: 'Bangers'; font-size: 24px; color: var(--thor-gold);" id="vault-stat-thor">0</div>
+            <div style="font-size: 11px; font-weight: 800;">HAMMER</div>
+          </div>
+          <div>
+            <div style="font-family: 'Bangers'; font-size: 24px; color: var(--doom-emerald);" id="vault-stat-doom">0</div>
+            <div style="font-size: 11px; font-weight: 800;">MASK</div>
+          </div>
+          <div>
+            <div style="font-family: 'Bangers'; font-size: 24px;" id="vault-stat-max">0</div>
+            <div style="font-size: 11px; font-weight: 800;">MAX PWR</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vault-deck-list" id="vault-deck-container">
+        <!-- Rendered card items -->
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

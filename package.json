@@ -1,0 +1,23 @@
+{
+  "name": "face-day",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Edge-powered comic trading card battleground for the Presage SmartSpectra SDK Challenge",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "deploy": "wrangler pages deploy dist --project-name=face-day",
+    "bridge": "node local-runner/bridge.mjs"
+  },
+  "dependencies": {
+    "canvas-confetti": "^1.9.4"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "wrangler": "^3.114.0"
+  }
+}

@@ -1,0 +1,707 @@
+/* src/style.css */
+/* Comic book styling, Ben-Day halftone textures, and physical card rendering */
+
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:ital,wght@0,700;1,700&family=Inter:wght@400;600;800&display=swap');
+
+:root {
+  --ink: #111116;
+  --paper: #FBF8EE;
+  --thor-gold: #FFCC00;
+  --thor-azure: #00E5FF;
+  --thor-navy: #0E1726;
+  --doom-emerald: #00C853;
+  --doom-steel: #D4D8DD;
+  --doom-dark: #141D17;
+  --card-border-radius: 20px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* Ben-Day Halftone Dot Overlay */
+  background-image: radial-gradient(rgba(17, 17, 22, 0.08) 1.5px, transparent 1.5px);
+  background-size: 16px 16px;
+}
+
+/* App Header Nav */
+.comic-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #FFFFFF;
+  border-bottom: 4px solid var(--ink);
+  box-shadow: 0 4px 0 var(--ink);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 32px;
+  letter-spacing: 1.5px;
+  color: var(--ink);
+  text-shadow: 2px 2px 0 var(--thor-gold);
+  line-height: 1;
+}
+
+.brand-badge {
+  font-family: 'Bangers', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  background: var(--ink);
+  color: #FFFFFF;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Comic Action Buttons */
+.comic-btn {
+  font-family: 'Bangers', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  padding: 10px 20px;
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #FFFFFF;
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.comic-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.comic-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.comic-btn-gold {
+  background: var(--thor-gold);
+}
+
+.comic-btn-emerald {
+  background: var(--doom-emerald);
+  color: #FFFFFF;
+}
+
+.comic-btn-dark {
+  background: var(--ink);
+  color: #FFFFFF;
+}
+
+.comic-btn-sm {
+  padding: 6px 12px;
+  font-size: 15px;
+  border-width: 2.5px;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.icon-svg {
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Main Container */
+.main-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+/* Phase Panels */
+.phase-panel {
+  display: none;
+  animation: comicFadeIn 0.25s ease-out;
+}
+
+.phase-panel.active {
+  display: block;
+}
+
+@keyframes comicFadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* PHASE 1: Comic Cover Splash Screen */
+.splash-hero {
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  background: #FFFFFF;
+  box-shadow: 8px 8px 0 var(--ink);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.hero-banner {
+  background: var(--ink);
+  color: #FFFFFF;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Bangers', sans-serif;
+  letter-spacing: 1px;
+}
+
+.hero-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 380px;
+}
+
+@media (max-width: 768px) {
+  .hero-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.faction-half {
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.faction-thor {
+  background: linear-gradient(135deg, #FFF9D2 0%, #FFF199 100%);
+  border-right: 4px solid var(--ink);
+}
+
+@media (max-width: 768px) {
+  .faction-thor {
+    border-right: none;
+    border-bottom: 4px solid var(--ink);
+  }
+}
+
+.faction-doom {
+  background: linear-gradient(135deg, #D4FCDA 0%, #A9F5B6 100%);
+}
+
+.faction-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.faction-icon-box {
+  width: 56px;
+  height: 56px;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.faction-name {
+  font-family: 'Bangers', sans-serif;
+  font-size: 38px;
+  letter-spacing: 1.5px;
+  line-height: 1;
+}
+
+.faction-title {
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  color: #4A4A52;
+}
+
+.faction-desc {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #2D2D33;
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+.faction-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.trait-tag {
+  background: #FFFFFF;
+  border: 2px solid var(--ink);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* Action Gate Card */
+.action-gate {
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  background: #FFFFFF;
+  box-shadow: 8px 8px 0 var(--ink);
+  padding: 32px;
+  text-align: center;
+}
+
+.gate-headline {
+  font-family: 'Bangers', sans-serif;
+  font-size: 36px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.gate-subhead {
+  font-size: 16px;
+  color: #4A4A52;
+  margin-bottom: 28px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gate-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .gate-options {
+    grid-template-columns: 1fr;
+  }
+}
+
+.choice-box {
+  border: 3.5px solid var(--ink);
+  border-radius: 12px;
+  padding: 24px 20px;
+  background: #FAF8F2;
+  box-shadow: 4px 4px 0 var(--ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.choice-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 24px;
+  letter-spacing: 1px;
+}
+
+.choice-desc {
+  font-size: 14px;
+  color: #55555C;
+  line-height: 1.4;
+}
+
+/* Consent Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 22, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 16px;
+  backdrop-filter: blur(3px);
+}
+
+.modal-comic-box {
+  background: #FFFFFF;
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  box-shadow: 8px 8px 0 var(--ink);
+  max-width: 540px;
+  width: 100%;
+  padding: 28px;
+  animation: modalPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 3px solid var(--ink);
+  padding-bottom: 12px;
+}
+
+.modal-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 28px;
+  letter-spacing: 1px;
+}
+
+.modal-body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333338;
+  margin-bottom: 24px;
+}
+
+.modal-body ul {
+  margin: 12px 0 12px 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* PHASE 2: The Chamber of Trials (Camera HUD) */
+.trial-hud-container {
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  background: #111116;
+  box-shadow: 8px 8px 0 var(--ink);
+  overflow: hidden;
+  color: #FFFFFF;
+}
+
+.hud-topbar {
+  background: #1C1E24;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #2B2F38;
+}
+
+.hud-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 24px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.countdown-badge {
+  font-family: 'Bangers', sans-serif;
+  font-size: 28px;
+  background: var(--thor-gold);
+  color: var(--ink);
+  padding: 4px 16px;
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 3px 3px 0 #000000;
+}
+
+.hud-stage {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 20px auto;
+  aspect-ratio: 4 / 3;
+  border: 4px solid #2B2F38;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000000;
+}
+
+.hud-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* Mirror camera */
+}
+
+/* Reticle Overlay */
+.reticle-frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reticle-oval {
+  width: 220px;
+  height: 280px;
+  border: 3px dashed var(--thor-azure);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+  animation: reticlePulse 2s infinite ease-in-out;
+}
+
+@keyframes reticlePulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.03); opacity: 1; }
+}
+
+/* HUD Live Readouts */
+.hud-telemetry {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 16px 24px 24px;
+}
+
+@media (max-width: 640px) {
+  .hud-telemetry {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hud-stat-box {
+  background: #1C1E24;
+  border: 2px solid #2B2F38;
+  border-radius: 8px;
+  padding: 12px 16px;
+  text-align: center;
+}
+
+.hud-stat-label {
+  font-family: 'Bangers', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #8C94A6;
+  margin-bottom: 4px;
+}
+
+.hud-stat-val {
+  font-family: 'Bangers', sans-serif;
+  font-size: 32px;
+  color: #FFFFFF;
+}
+
+/* PHASE 2 (BYPASS): The Overseer's Inquiry (Quiz) */
+.inquiry-card {
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  background: #FFFFFF;
+  box-shadow: 8px 8px 0 var(--ink);
+  padding: 32px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.inquiry-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.inquiry-q-num {
+  font-family: 'Bangers', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: var(--doom-emerald);
+}
+
+.inquiry-q-text {
+  font-family: 'Bangers', sans-serif;
+  font-size: 28px;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.inquiry-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.inquiry-opt-btn {
+  border: 3.5px solid var(--ink);
+  border-radius: 10px;
+  padding: 18px 24px;
+  background: #FAF8F2;
+  box-shadow: 4px 4px 0 var(--ink);
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.08s ease, background 0.08s ease;
+}
+
+.inquiry-opt-btn:hover {
+  background: #FFF199;
+  transform: translate(-1px, -1px);
+}
+
+.inquiry-opt-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* PHASE 3: The Trading Card Stage */
+.card-stage-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.verdict-banner {
+  text-align: center;
+  animation: shakeBurst 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shakeBurst {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(4px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+  40%, 60% { transform: translate3d(6px, 0, 0); }
+}
+
+.verdict-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 52px;
+  letter-spacing: 2px;
+  color: var(--ink);
+  text-shadow: 3px 3px 0 var(--thor-gold);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.verdict-subtitle {
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 1.5px;
+  color: #4A4A52;
+}
+
+/* Card 3D Wrap */
+.card-3d-wrap {
+  perspective: 1000px;
+  width: 360px;
+  max-width: 90vw;
+  cursor: pointer;
+}
+
+.card-canvas-display {
+  width: 100%;
+  height: auto;
+  border-radius: var(--card-border-radius);
+  box-shadow: 12px 16px 0 var(--ink), 0 20px 40px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.2s ease;
+  transform-style: preserve-3d;
+}
+
+.card-3d-wrap:hover .card-canvas-display {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 16px 22px 0 var(--ink), 0 28px 50px rgba(0, 0, 0, 0.35);
+}
+
+/* Card Actions Toolbar */
+.card-actions-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+}
+
+/* Deck Vault Drawer / Modal */
+.vault-drawer {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 22, 0.8);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 300;
+  backdrop-filter: blur(3px);
+}
+
+.vault-content {
+  background: #FFFFFF;
+  border-left: 4px solid var(--ink);
+  width: 100%;
+  max-width: 480px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.vault-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid var(--ink);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.vault-deck-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vault-item {
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  padding: 12px 16px;
+  background: #FAF8F2;
+  box-shadow: 3px 3px 0 var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vault-item-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
+.vault-item-meta {
+  font-size: 12px;
+  color: #666670;
+  font-weight: 600;
+}

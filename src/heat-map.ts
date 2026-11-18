@@ -17,87 +17,68 @@ export class FaceReadingHeatMap {
     container.innerHTML = `
       <div class="heatmap-panel-box">
         <div class="heatmap-header">
-          <div class="heatmap-title">STRANGE READING: ASTRAL FACIAL HEAT MAP</div>
-          <div class="heatmap-sub">MYSTICAL FACE READING & CHROMATIC THERMAL SCAN</div>
+          <div class="heatmap-title">ASTRAL MIRROR: THERMAL FACE SCAN</div>
+          <div class="heatmap-sub">MYSTICAL FACE READING & SENSORY MAPPING</div>
         </div>
 
         <div class="heatmap-body-layout">
           <!-- Canvas Container -->
           <div class="heatmap-canvas-wrap">
-            <canvas id="thermal-face-canvas" width="340" height="340" class="thermal-canvas"></canvas>
+            <canvas id="thermal-face-canvas" width="220" height="220" class="thermal-canvas"></canvas>
             <div class="thermal-legend-bar">
-              <span>COOL (ZEN)</span>
+              <span>ZEN (COOL)</span>
               <div class="thermal-gradient-strip"></div>
-              <span>WARM (HEAT)</span>
+              <span>HEAT (TENSE)</span>
             </div>
           </div>
 
-          <!-- Feature Cards Grid -->
-          <div class="heatmap-features-grid">
-            <!-- Feature 1: Third Eye -->
-            <div class="feature-card">
-              <div class="feature-card-header">
-                <span class="feature-badge" style="background: #E65100;">THIRD EYE</span>
-                <span class="feature-temp">${thirdEyeHeat}&deg;C AURA</span>
+          <!-- Sleek Diagnostic Trait List -->
+          <div class="heatmap-features-list">
+            <div class="trait-chip">
+              <div class="trait-chip-top">
+                <span class="trait-name">THIRD EYE (FOREHEAD)</span>
+                <span class="trait-temp">${thirdEyeHeat}&deg;C</span>
               </div>
-              <div class="feature-title">FOREHEAD: ASTRAL CONCENTRATION</div>
-              <p class="feature-desc">
-                ${calm >= 60 
-                  ? 'Deep cosmic serenity detected. Your mind is an unrippled astral lake.' 
-                  : 'High psychic activity. You currently have 47 mental browser tabs open simultaneously.'}
-              </p>
+              <div class="trait-punchline">
+                ${calm >= 60 ? 'Astral lake serenity. Multiverse-level calm.' : 'High psychic buzz. 47 mental browser tabs open.'}
+              </div>
             </div>
 
-            <!-- Feature 2: Cheeks -->
-            <div class="feature-card">
-              <div class="feature-card-header">
-                <span class="feature-badge" style="background: #FFB300;">VASCULAR QI</span>
-                <span class="feature-temp">${cheekRadiance}&deg;C RADIANCE</span>
+            <div class="trait-chip">
+              <div class="trait-chip-top">
+                <span class="trait-name">VASCULAR QI (CHEEKS)</span>
+                <span class="trait-temp">${cheekRadiance}&deg;C</span>
               </div>
-              <div class="feature-title">CHEEKBONES: CIRCULATORY VITALITY</div>
-              <p class="feature-desc">
-                ${pulse < 75 
-                  ? 'Smooth, balanced life-force circulation. Pure Asgardian stamina.' 
-                  : 'Radiant vascular heat surge. Either high tactical intensity or sudden room warmth.'}
-              </p>
+              <div class="trait-punchline">
+                ${pulse < 75 ? 'Smooth life-force cadence. High Asgardian stamina.' : 'Acute vascular heat surge. High intensity alert!'}
+              </div>
             </div>
 
-            <!-- Feature 3: Temples -->
-            <div class="feature-card">
-              <div class="feature-card-header">
-                <span class="feature-badge" style="background: #00E5FF; color: #111116;">AGAMOTTO NODES</span>
-                <span class="feature-temp">${templeZen}&deg;C ZEN</span>
+            <div class="trait-chip">
+              <div class="trait-chip-top">
+                <span class="trait-name">AGAMOTTO NODES (EYES)</span>
+                <span class="trait-temp">${templeZen}&deg;C</span>
               </div>
-              <div class="feature-title">PERIORBITAL: GAZE HARMONY</div>
-              <p class="feature-desc">
-                Unblinking mystic gaze detected. You are either meditating on ancient spells or you forgot to blink.
-              </p>
+              <div class="trait-punchline">
+                Unblinking mystic gaze. Fully locked on dimensional spells.
+              </div>
             </div>
 
-            <!-- Feature 4: Jawline -->
-            <div class="feature-card">
-              <div class="feature-card-header">
-                <span class="feature-badge" style="background: #00C853;">STOIC AXIS</span>
-                <span class="feature-temp">${jawTension}&deg;C TENSION</span>
+            <div class="trait-chip">
+              <div class="trait-chip-top">
+                <span class="trait-name">STOIC AXIS (JAWLINE)</span>
+                <span class="trait-temp">${jawTension}&deg;C</span>
               </div>
-              <div class="feature-title">JAWLINE: WILLPOWER ANCHOR</div>
-              <p class="feature-desc">
-                ${calm >= 60 
-                  ? 'Relaxed stoicism. Perfectly poised between peace and battle readiness.' 
-                  : 'Tight jaw clench detected. Latverian steel resolve (or intense desire for snacks).'}
-              </p>
+              <div class="trait-punchline">
+                ${calm >= 60 ? 'Relaxed composure. Perfectly poised for battle.' : 'Iron jaw clench. Pure Latverian tactical resolve.'}
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Prominent Comic Disclaimer -->
-        <div class="heatmap-disclaimer-box">
-          <div class="disclaimer-title">NOTICE: ASTRAL ADVISORY & RECREATIONAL DISCLAIMER</div>
-          <p class="disclaimer-text">
-            This mystical facial heat map and face reading are generated <strong>purely for comic amusement, entertainment, and face-reading lore</strong>. 
-            It is <strong>NOT medically accurate, NOT scientifically calibrated, and can be completely and delightfully wrong</strong>. 
-            Do not consult the Sorcerer Supreme or this comic mirror for actual medical or physiological advice!
-          </p>
+        <!-- Sleek 1-Line Comic Disclaimer -->
+        <div class="heatmap-compact-disclaimer">
+          ★ ASTRAL ADVISORY: Comic entertainment reading &bull; Non-diagnostic &bull; May be delightfully inaccurate! ★
         </div>
       </div>
     `;
@@ -114,8 +95,14 @@ export class FaceReadingHeatMap {
 
     const w = canvas.width;
     const h = canvas.height;
-    const cx = w / 2;
-    const cy = h / 2;
+    
+    // Scale coordinate system from 340 to target size
+    const scale = w / 340;
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    const cx = 170;
+    const cy = 170;
 
     // Dark cosmic background
     ctx.fillStyle = '#080A12';
@@ -247,6 +234,8 @@ export class FaceReadingHeatMap {
     ctx.font = '900 11px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('ASTRAL RETICLE', cx, cy - 88);
+
+    ctx.restore();
   }
 }
 

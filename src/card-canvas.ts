@@ -331,12 +331,12 @@ export class CardCanvasRenderer {
 
   private drawStrangeCoverArt(ctx: CanvasRenderingContext2D, primary: string, _secondary: string) {
     const cx = this.width / 2;
-    const cy = 490;
+    const cy = 485;
 
-    // Eye of Agamotto Astral Mandalas
+    // Eye of Agamotto Astral Mandalas (Sleek, balanced proportions)
     ctx.strokeStyle = primary;
-    ctx.lineWidth = 5;
-    for (let r = 70; r <= 180; r += 40) {
+    ctx.lineWidth = 4;
+    for (let r = 50; r <= 130; r += 35) {
       ctx.beginPath();
       ctx.arc(cx, cy, r, 0, Math.PI * 2);
       ctx.stroke();
@@ -345,19 +345,19 @@ export class CardCanvasRenderer {
     // Glowing Eye of Agamotto Center
     ctx.fillStyle = '#E65100';
     ctx.beginPath();
-    ctx.ellipse(cx, cy, 95, 55, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx, cy, 75, 44, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle = '#FFD54F';
     ctx.beginPath();
-    ctx.arc(cx, cy, 38, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 30, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle = '#111116';
     ctx.beginPath();
-    ctx.ellipse(cx, cy, 15, 32, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx, cy, 12, 25, 0, 0, Math.PI * 2);
     ctx.fill();
   }
 

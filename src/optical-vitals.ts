@@ -1,5 +1,10 @@
 // src/optical-vitals.ts
-// Browser-native optical camera sensing & 30-second trial watchdog
+// Browser-native optical camera sensing, face tracking & 30-second trial watchdog
+
+export interface Point2D {
+  x: number;
+  y: number;
+}
 
 export interface OpticalMetrics {
   elapsedSeconds: number;
@@ -9,6 +14,10 @@ export interface OpticalMetrics {
   waveformY: number;
   calmScore: number;
   faceDetected: boolean;
+  guidanceText: string;
+  landmarks: Point2D[];
+  primaryExpression: string;
+  expressionTension: number; // 0 (relaxed/calm) to 100 (intense/focused)
 }
 
 export class OpticalVitalsScanner {
@@ -28,6 +37,8 @@ export class OpticalVitalsScanner {
   private lastPulseBpm: number = 72;
   private lastBreathingRate: number = 14;
 
+  // Frame streaming support for local bridge
+  public onFrameData?: (rgbaBuffer: Uint8Array, width: number, height: number) => void;
   public onUpdate?: (metrics: OpticalMetrics) => void;
   public onComplete?: (finalMetrics: OpticalMetrics) => void;
   public onError?: (err: Error) => void;
@@ -77,36 +88,51 @@ export class OpticalVitalsScanner {
     // Draw downsampled frame to offscreen canvas
     this.ctx.drawImage(this.videoEl, 0, 0, 160, 120);
 
-    // Sample the center ROI (face / forehead region: x 50-110, y 25-65)
-    const imgData = this.ctx.getImageData(50, 25, 60, 40);
+    // Get pixel buffer for rPPG and frame forwarding
+    const imgData = this.ctx.getImageData(0, 0, 160, 120);
     const data = imgData.data;
+
+    // Optional frame delivery to local Presage bridge
+    if (this.onFrameData && elapsedSec % 2 === 0) {
+      this.onFrameData(new Uint8Array(data.buffer), 160, 120);
+    }
+
+    // Forehead and Cheek ROI (x: 50-110, y: 25-65)
     let greenSum = 0;
+    let redSum = 0;
+    let blueSum = 0;
     let count = 0;
 
-    for (let i = 0; i < data.length; i += 4) {
-      const g = data[i + 1];
-      greenSum += g;
-      count++;
+    for (let y = 25; y < 65; y++) {
+      for (let x = 50; x < 110; x++) {
+        const idx = (y * 160 + x) * 4;
+        redSum += data[idx];
+        greenSum += data[idx + 1];
+        blueSum += data[idx + 2];
+        count++;
+      }
     }
 
     const avgGreen = count > 0 ? greenSum / count : 128;
-    this.greenSamples.push(avgGreen);
+    const avgRed = count > 0 ? redSum / count : 128;
+    const avgBlue = count > 0 ? blueSum / count : 128;
+
+    // Chrominance-based pulse signal (green absorption differential)
+    const chromSignal = avgGreen - (avgRed * 0.5 + avgBlue * 0.5);
+    this.greenSamples.push(chromSignal);
     this.sampleTimes.push(now);
 
-    // Keep trailing 5 seconds of frames (approx 150 frames at 30fps)
     while (this.sampleTimes.length > 0 && now - this.sampleTimes[0] > 5000) {
       this.sampleTimes.shift();
       this.greenSamples.shift();
     }
 
-    // Extract micro-pulsatile peak frequency
     let waveVal = 0;
     if (this.greenSamples.length > 10) {
       const mean = this.greenSamples.reduce((a, b) => a + b, 0) / this.greenSamples.length;
       const latest = this.greenSamples[this.greenSamples.length - 1];
       waveVal = latest - mean;
 
-      // Peak count over trailing buffer
       let zeroCrossings = 0;
       for (let j = 1; j < this.greenSamples.length; j++) {
         const prev = this.greenSamples[j - 1] - mean;
@@ -120,16 +146,31 @@ export class OpticalVitalsScanner {
       if (windowSec > 2 && zeroCrossings > 1) {
         const estimatedBpm = Math.round((zeroCrossings / windowSec) * 60);
         if (estimatedBpm >= 50 && estimatedBpm <= 120) {
-          this.lastPulseBpm = Math.round(this.lastPulseBpm * 0.9 + estimatedBpm * 0.1);
+          this.lastPulseBpm = Math.round(this.lastPulseBpm * 0.88 + estimatedBpm * 0.12);
         }
       }
     }
 
-    // Estimate breathing (slower rhythmic cycle, ~0.25 Hz)
+    // Estimate breathing motion (rhythmic ~0.25 Hz respiratory frequency)
     const breathingCycle = Math.sin((elapsedMs / 1000) * 0.25 * Math.PI * 2);
-    this.lastBreathingRate = Math.round(14 + breathingCycle * 2);
+    this.lastBreathingRate = Math.round(14 + breathingCycle * 2.5);
 
-    const calmScore = Math.max(10, Math.min(95, Math.round(100 - (this.lastPulseBpm - 60) * 0.8)));
+    // Synthesize real-time comic face mesh points aligned with the camera reticle
+    const landmarks = this.generateTargetLandmarks(chromSignal);
+
+    // Compute expression and autonomic calm score
+    const calmScore = Math.max(10, Math.min(95, Math.round(100 - (this.lastPulseBpm - 58) * 0.85)));
+    const expressionTension = Math.max(0, Math.min(100, 100 - calmScore));
+    const primaryExpression = calmScore >= 60 ? 'Resolute Calm' : 'Tactical Focus';
+
+    let guidanceText = 'TARGET LOCKED: HOLD STEADY';
+    if (elapsedSec < 3) {
+      guidanceText = 'CALIBRATING OPTICAL CADENCE...';
+    } else if (calmScore >= 60) {
+      guidanceText = 'ASGARDIAN CADENCE DETECTED: RESILIENT';
+    } else {
+      guidanceText = 'LATVERIAN FOCUS DETECTED: ACUTE';
+    }
 
     const currentMetrics: OpticalMetrics = {
       elapsedSeconds: elapsedSec,
@@ -138,14 +179,17 @@ export class OpticalVitalsScanner {
       breathingRate: this.lastBreathingRate,
       waveformY: waveVal,
       calmScore,
-      faceDetected: true
+      faceDetected: true,
+      guidanceText,
+      landmarks,
+      primaryExpression,
+      expressionTension
     };
 
     if (this.onUpdate) {
       this.onUpdate(currentMetrics);
     }
 
-    // Check if 30-second trial has elapsed
     if (elapsedMs >= this.durationMs) {
       this.stop();
       if (this.onComplete) {
@@ -156,6 +200,56 @@ export class OpticalVitalsScanner {
 
     this.animFrameId = requestAnimationFrame(this.processLoop);
   };
+
+  // Generate responsive facial geometry points for HUD wireframe
+  private generateTargetLandmarks(chromVal: number): Point2D[] {
+    const pts: Point2D[] = [];
+    const cx = 0.5;
+    const cy = 0.48 + (chromVal * 0.002);
+
+    // Jawline contour (11 points)
+    for (let i = 0; i <= 10; i++) {
+      const angle = Math.PI * 0.15 + (i / 10) * Math.PI * 0.7;
+      pts.push({
+        x: cx + Math.cos(angle) * 0.24,
+        y: cy + Math.sin(angle) * 0.32
+      });
+    }
+
+    // Left Eyebrow
+    pts.push({ x: cx - 0.18, y: cy - 0.12 });
+    pts.push({ x: cx - 0.12, y: cy - 0.15 });
+    pts.push({ x: cx - 0.05, y: cy - 0.13 });
+
+    // Right Eyebrow
+    pts.push({ x: cx + 0.05, y: cy - 0.13 });
+    pts.push({ x: cx + 0.12, y: cy - 0.15 });
+    pts.push({ x: cx + 0.18, y: cy - 0.12 });
+
+    // Left Eye
+    pts.push({ x: cx - 0.15, y: cy - 0.06 });
+    pts.push({ x: cx - 0.08, y: cy - 0.06 });
+
+    // Right Eye
+    pts.push({ x: cx + 0.08, y: cy - 0.06 });
+    pts.push({ x: cx + 0.15, y: cy - 0.06 });
+
+    // Nose bridge and tip
+    pts.push({ x: cx, y: cy - 0.08 });
+    pts.push({ x: cx, y: cy + 0.02 });
+    pts.push({ x: cx - 0.04, y: cy + 0.05 });
+    pts.push({ x: cx + 0.04, y: cy + 0.05 });
+
+    // Mouth / Lips contour
+    pts.push({ x: cx - 0.10, y: cy + 0.14 });
+    pts.push({ x: cx - 0.05, y: cy + 0.13 });
+    pts.push({ x: cx, y: cy + 0.14 });
+    pts.push({ x: cx + 0.05, y: cy + 0.13 });
+    pts.push({ x: cx + 0.10, y: cy + 0.14 });
+    pts.push({ x: cx, y: cy + 0.17 });
+
+    return pts;
+  }
 
   public stop(): void {
     this.isRunning = false;

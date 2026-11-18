@@ -45,10 +45,13 @@ const elements = {
   // Phase 2A Camera HUD
   hudCrosshairIcon: $('hud-crosshair-icon'),
   cameraPreview: $('camera-preview') as HTMLVideoElement,
+  faceMeshCanvas: $('face-mesh-canvas') as HTMLCanvasElement,
+  hudGuidanceBanner: $('hud-guidance-banner'),
   countdownTimer: $('countdown-timer'),
   hudPulseVal: $('hud-pulse-val'),
   hudBreathVal: $('hud-breath-val'),
   hudCalmVal: $('hud-calm-val'),
+  hudExprVal: $('hud-expr-val'),
   btnCancelTrial: $('btn-cancel-trial'),
 
   // Phase 2B Inquiry
@@ -186,6 +189,54 @@ function initCameraFlow() {
   });
 }
 
+function drawFaceMesh(landmarks: { x: number; y: number }[] | null | undefined, calmScore: number) {
+  const canvas = elements.faceMeshCanvas;
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  // Sync canvas size
+  if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
+    canvas.width = canvas.clientWidth || 640;
+    canvas.height = canvas.clientHeight || 480;
+  }
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (!landmarks || landmarks.length === 0) return;
+
+  const w = canvas.width;
+  const h = canvas.height;
+  const isThor = calmScore >= 55;
+  const strokeColor = isThor ? '#00E5FF' : '#00E676';
+  const nodeColor = isThor ? '#FFCC00' : '#ECEFF1';
+
+  // Draw wireframe connecting lines
+  ctx.strokeStyle = strokeColor;
+  ctx.lineWidth = 2;
+  ctx.shadowColor = strokeColor;
+  ctx.shadowBlur = 8;
+
+  ctx.beginPath();
+  for (let i = 0; i < landmarks.length; i++) {
+    const px = landmarks[i].x * w;
+    const py = landmarks[i].y * h;
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Draw nodes
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = nodeColor;
+  for (let i = 0; i < landmarks.length; i++) {
+    const px = landmarks[i].x * w;
+    const py = landmarks[i].y * h;
+    ctx.beginPath();
+    ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
 async function startCameraTrial() {
   showPhase('phase-2-camera');
   sound.playClick();
@@ -194,6 +245,8 @@ async function startCameraTrial() {
   elements.hudPulseVal.innerHTML = '-- <span style="font-size: 16px;">BPM</span>';
   elements.hudBreathVal.innerHTML = '-- <span style="font-size: 16px;">/MIN</span>';
   elements.hudCalmVal.textContent = 'STABILIZING';
+  elements.hudExprVal.textContent = 'CALIBRATING';
+  elements.hudGuidanceBanner.textContent = 'CALIBRATING OPTICAL CADENCE...';
 
   let lastVitals: UnifiedVitals = {
     source: 'browser-camera',
@@ -204,12 +257,24 @@ async function startCameraTrial() {
     calmScore: 60
   };
 
+  bridge.onGuidance = (text: string) => {
+    elements.hudGuidanceBanner.textContent = text;
+  };
+
   bridge.onUpdate = (v: UnifiedVitals) => {
     lastVitals = v;
     elements.countdownTimer.textContent = String(v.remaining);
     elements.hudPulseVal.innerHTML = `${v.pulseBpm} <span style="font-size: 16px;">BPM</span>`;
     elements.hudBreathVal.innerHTML = `${v.breathingRate} <span style="font-size: 16px;">/MIN</span>`;
     elements.hudCalmVal.textContent = v.calmScore >= 55 ? 'ASGARDIAN CALM' : 'LATVERIAN FOCUS';
+    elements.hudExprVal.textContent = (v.primaryExpression || 'RESOLUTE').toUpperCase();
+
+    if (v.guidanceText) {
+      elements.hudGuidanceBanner.textContent = v.guidanceText;
+    }
+
+    // Render live face mesh overlay
+    drawFaceMesh(v.landmarks, v.calmScore);
   };
 
   bridge.onComplete = (finalV: UnifiedVitals) => {

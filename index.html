@@ -134,8 +134,13 @@
           </div>
         </div>
 
+        <div class="hud-guidance-banner" id="hud-guidance-banner">
+          CALIBRATING OPTICAL CADENCE...
+        </div>
+
         <div class="hud-stage">
           <video id="camera-preview" class="hud-video" playsinline muted autoplay></video>
+          <canvas id="face-mesh-canvas" class="hud-mesh-canvas"></canvas>
           <div class="reticle-frame">
             <div class="reticle-oval"></div>
           </div>
@@ -153,6 +158,10 @@
           <div class="hud-stat-box">
             <div class="hud-stat-label">AUTONOMIC TONE</div>
             <div class="hud-stat-val" id="hud-calm-val">STABILIZING</div>
+          </div>
+          <div class="hud-stat-box">
+            <div class="hud-stat-label">FACE DISPOSITION</div>
+            <div class="hud-stat-val" id="hud-expr-val" style="font-size: 22px;">RESOLUTE</div>
           </div>
         </div>
 

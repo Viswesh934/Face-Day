@@ -136,32 +136,23 @@ export class PresageDiagnostics {
     const key = this.currentKey;
     const results: ProbeResult[] = [];
 
-    // Probe 1: Presage Physiology Platform Portal
-    results.push(await this.probeHttp(
+    // Probe 1: Edge Proxy -> Presage Physiology Platform (Bypasses Browser CORS)
+    results.push(await this.probeEdgeProxy(
       'https://physiology.presagetech.com/',
-      'Presage Physiology Portal',
-      'GET',
-      { 'x-api-key': key }
+      'Edge Proxy &bull; Presage Physiology Platform (Live Response)'
     ));
 
-    // Probe 2: Presage MCP Infrastructure
-    results.push(await this.probeHttp(
+    // Probe 2: Edge Proxy -> Presage MCP AWS API Gateway (Bypasses Browser CORS)
+    results.push(await this.probeEdgeProxy(
       'https://mcp.presagetech.com/',
-      'Presage MCP Gateway (AWS API-GW)',
-      'GET',
-      { 'x-api-key': key }
+      'Edge Proxy &bull; Presage AWS API Gateway (Live Response)'
     ));
 
-    // Probe 3: Presage MCP JSON-RPC Streamable HTTP Endpoint
-    results.push(await this.probeHttp(
-      'https://mcp.presagetech.com/mcp',
-      'Presage MCP Tools RPC (/mcp)',
-      'POST',
-      { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${key}`
-      },
-      JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/list', params: {} })
+    // Probe 3: Direct Client-Side Browser Fetch (Shows raw browser CORS restriction)
+    results.push(await this.probeDirectBrowser(
+      'https://mcp.presagetech.com/',
+      'Direct Browser Fetch &bull; Raw Origin (Client-Side)',
+      key
     ));
 
     // Probe 4: Local Presage Hardware Bridge WebSocket
@@ -175,41 +166,73 @@ export class PresageDiagnostics {
     return results;
   }
 
-  private async probeHttp(
+  private async probeEdgeProxy(targetUrl: string, name: string): Promise<ProbeResult> {
+    const start = performance.now();
+    try {
+      const probeUrl = `/api/presage-probe?url=${encodeURIComponent(targetUrl)}`;
+      const res = await fetch(probeUrl, {
+        headers: { 'x-api-key': this.currentKey }
+      });
+      const data = await res.json();
+      const latency = Math.round(performance.now() - start);
+
+      if (data.ok) {
+        return {
+          endpoint: targetUrl,
+          name,
+          status: 'SUCCESS',
+          httpCode: data.status,
+          latencyMs: data.latencyMs || latency,
+          details: `Edge Proxy Verified: HTTP ${data.status} ${data.statusText || 'OK'} (${data.latencyMs || latency}ms)`,
+          rawResponse: `HTTP Status: ${data.status} ${data.statusText || 'OK'}\nTarget: ${targetUrl}\nCloudFront/Server Headers: ${JSON.stringify(data.headers || {}, null, 2)}\n\nPayload Preview:\n${(data.bodySnippet || '').slice(0, 400)}`
+        };
+      } else {
+        return {
+          endpoint: targetUrl,
+          name,
+          status: data.status === 403 ? 'ERROR' : 'ERROR',
+          httpCode: data.status,
+          latencyMs: data.latencyMs || latency,
+          details: `Presage Server Responded: HTTP ${data.status} ${data.statusText || ''} (${data.latencyMs || latency}ms)`,
+          rawResponse: `HTTP Status: ${data.status} ${data.statusText || 'Error'}\nTarget: ${targetUrl}\nAWS Request Headers: ${JSON.stringify(data.headers || {}, null, 2)}\n\nResponse Body:\n${data.bodySnippet || data.error || ''}`
+        };
+      }
+    } catch (err: unknown) {
+      return {
+        endpoint: targetUrl,
+        name,
+        status: 'ERROR',
+        details: `Edge proxy dispatch failed: ${String(err)}`,
+        rawResponse: String(err)
+      };
+    }
+  }
+
+  private async probeDirectBrowser(
     url: string,
     name: string,
-    method: 'GET' | 'POST',
-    headers: Record<string, string>,
-    body?: string
+    key: string
   ): Promise<ProbeResult> {
     const start = performance.now();
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6000);
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
 
       const res = await fetch(url, {
-        method,
-        headers,
-        body,
+        method: 'GET',
+        headers: { 'x-api-key': key },
         signal: controller.signal,
         mode: 'cors'
       });
 
       clearTimeout(timeoutId);
       const latency = Math.round(performance.now() - start);
+      const text = await res.text();
 
-      let text = '';
-      try {
-        text = await res.text();
-      } catch {
-        text = '(Could not parse body text)';
-      }
-
-      const isOk = res.status >= 200 && res.status < 400;
       return {
         endpoint: url,
         name,
-        status: isOk ? 'SUCCESS' : 'ERROR',
+        status: res.ok ? 'SUCCESS' : 'ERROR',
         httpCode: res.status,
         latencyMs: latency,
         details: `HTTP ${res.status} ${res.statusText || ''} (${latency}ms)`,
@@ -217,20 +240,13 @@ export class PresageDiagnostics {
       };
     } catch (err: unknown) {
       const latency = Math.round(performance.now() - start);
-      const errStr = String(err);
-      const isCors = errStr.includes('Failed to fetch') || errStr.includes('NetworkError');
-
       return {
         endpoint: url,
         name,
         status: 'BLOCKED',
         latencyMs: latency,
-        details: isCors 
-          ? `Browser CORS Policy Blocked direct origin request (${latency}ms)`
-          : `Network Exception: ${errStr} (${latency}ms)`,
-        rawResponse: isCors
-          ? `CORS Preflight / Origin Restricted by server policy. Cloudflare Pages origin (https://*) cannot directly cross-fetch raw endpoints unless Presage enables Access-Control-Allow-Origin: * on this route.`
-          : errStr
+        details: `Browser CORS Security Block (${latency}ms)`,
+        rawResponse: `CORS Policy Blocked: Presage cloud servers (${url}) do not emit 'Access-Control-Allow-Origin: *' headers for static third-party browser origins. Error: ${String(err)}\nThis is why Face Day routes requests through Cloudflare Edge Proxy (/api/presage-probe).`
       };
     }
   }

@@ -1,9 +1,8 @@
 // src/golden-ratio.ts
-// Golden Ratio (Phi = 1.618) & Dermal Aesthetic Assessment Engine
-// Features spinning celestial orb, craniofacial structure, skin clarity/acne index, skin type, and iris analysis.
+// GRD: Golden Ratio (Phi = 1.618) & Dermal Aesthetic Assessment Engine
+// Features a single animated Green Steel Ball radar, craniofacial structure, skin clarity/acne index, skin type, and iris analysis.
 
 import { CardProfile } from './sorting-engine';
-import { icons } from './icons';
 
 export interface GoldenRatioReport {
   score: number;
@@ -149,15 +148,14 @@ export class GoldenRatioAnalyzer {
         <!-- Hero Header -->
         <div class="golden-header">
           <div class="golden-title-wrap">
-            <span class="golden-orb-header-icon">${icons.spinningOrb}</span>
             <div>
-              <div class="golden-title">GOLDEN RATIO &amp; DERMA MATRIX</div>
-              <div class="golden-sub">PHI (&Phi; = 1.618) AESTHETIC HARMONY &bull; FACIAL ARCHITECTURE &bull; SKIN TELEMETRY</div>
+              <div class="golden-title">GRD MATRIX &bull; GOLDEN RATIO &amp; DERMA</div>
+              <div class="golden-sub">PHI (&Phi; = 1.618) AESTHETIC HARMONY &bull; SKIN FEATURES &bull; DERMAL TELEMETRY</div>
             </div>
           </div>
         </div>
 
-        <!-- Spinning Green Steel Ball & Golden Harmony Hero Score -->
+        <!-- Spinning Green Steel Ball & Golden Harmony Hero Score (EXACTLY ONE BALL) -->
         <div class="golden-hero-panel">
           <!-- Animated Spinning Green Steel Ball -->
           <div class="spinning-ball-chamber">
@@ -188,12 +186,11 @@ export class GoldenRatioAnalyzer {
           </div>
         </div>
 
-        <!-- 4 Detailed Dermal & Structural Cards -->
+        <!-- 4 Detailed Dermal & Structural Cards (Clean Layout, Zero Duplicate Icons) -->
         <div class="golden-cards-grid">
           <!-- 1. Bone Structure Architecture -->
           <div class="golden-card">
             <div class="golden-card-header">
-              <span class="golden-card-icon">${icons.structure}</span>
               <span class="golden-card-title">CRANIOFACIAL STRUCTURE</span>
             </div>
             <div class="golden-card-body">
@@ -209,7 +206,6 @@ export class GoldenRatioAnalyzer {
           <!-- 2. Skin Clarity & Acne Variance -->
           <div class="golden-card">
             <div class="golden-card-header">
-              <span class="golden-card-icon">${icons.dermal}</span>
               <span class="golden-card-title">SKIN CLARITY &amp; ACNE INDEX</span>
             </div>
             <div class="golden-card-body">
@@ -225,7 +221,6 @@ export class GoldenRatioAnalyzer {
           <!-- 3. Skin Type & Undertone -->
           <div class="golden-card">
             <div class="golden-card-header">
-              <span class="golden-card-icon">${icons.calipers}</span>
               <span class="golden-card-title">COMPLEXION &amp; UNDERTONE</span>
             </div>
             <div class="golden-card-body">
@@ -241,7 +236,6 @@ export class GoldenRatioAnalyzer {
           <!-- 4. Eye Color & Iris Luminescence -->
           <div class="golden-card">
             <div class="golden-card-header">
-              <span class="golden-card-icon">${icons.eyeIris}</span>
               <span class="golden-card-title">IRIS COLOR &amp; LUMINESCENCE</span>
             </div>
             <div class="golden-card-body">

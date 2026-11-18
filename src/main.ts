@@ -88,7 +88,6 @@ const elements = {
   btnTabDossier: $('btn-tab-dossier'),
   btnTabHeatmap: $('btn-tab-heatmap'),
   btnTabGolden: $('btn-tab-golden'),
-  tabGoldenIcon: $('tab-golden-icon'),
   heatmapMount: $('heatmap-mount'),
   statDossierMount: $('stat-dossier-mount'),
   goldenRatioMount: $('golden-ratio-mount'),
@@ -168,7 +167,6 @@ function mountIcons() {
 
   elements.btnDownloadIcon.innerHTML = icons.download;
   elements.btnShareIcon.innerHTML = icons.shareX;
-  if (elements.tabGoldenIcon) elements.tabGoldenIcon.innerHTML = icons.spinningOrb;
 }
 
 // Navigation & Phase Transitions

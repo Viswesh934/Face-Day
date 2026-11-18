@@ -41,6 +41,45 @@ class SoundEngine {
     osc.stop(this.ctx.currentTime + 0.05);
   }
 
+  // Rapid comic page-turn flutter (Marvel Studios Intro style)
+  public playPageFlutter() {
+    if (this.isMuted) return;
+    this.initCtx();
+    if (!this.ctx) return;
+
+    const count = 12;
+    for (let i = 0; i < count; i++) {
+      const delay = i * 0.09;
+      const t = this.ctx.currentTime + delay;
+
+      const bufferSize = Math.floor(this.ctx.sampleRate * 0.06);
+      const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let j = 0; j < bufferSize; j++) {
+        output[j] = Math.random() * 2 - 1;
+      }
+
+      const whiteNoise = this.ctx.createBufferSource();
+      whiteNoise.buffer = noiseBuffer;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1200 + i * 80, t);
+      filter.Q.setValueAtTime(3, t);
+
+      const gain = this.ctx.createGain();
+      gain.gain.setValueAtTime(0.08, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+
+      whiteNoise.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      whiteNoise.start(t);
+      whiteNoise.stop(t + 0.06);
+    }
+  }
+
   // Thunder Crash (Team Thor / The Hammer)
   public playThunder() {
     if (this.isMuted) return;

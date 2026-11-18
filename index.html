@@ -4,10 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Face Day — Comic Trading Card Battleground</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2' fill='%23FFCC00'/></svg>" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 <body>
+  <!-- Marvel-Style Cinematic Flipbook Intro Loader -->
+  <div id="marvel-intro-loader" class="marvel-loader-backdrop">
+    <div class="marvel-logo-box">
+      <div class="marvel-flipbook-container">
+        <div class="flip-panel"></div>
+      </div>
+      <div class="marvel-logo-title">FACE DAY</div>
+      <div class="marvel-logo-sub">COMIC BATTLEGROUND</div>
+    </div>
+    <button id="btn-skip-marvel" class="marvel-skip-btn">ENTER BATTLEGROUND &rarr;</button>
+  </div>
+
   <!-- Comic Header Navigation -->
   <header class="comic-nav">
     <div class="nav-brand">
@@ -33,51 +45,26 @@
     <!-- PHASE 1: THE CHOICE & GATE COVER               -->
     <!-- ============================================== -->
     <section id="phase-1" class="phase-panel active">
-      <div class="splash-hero">
-        <div class="hero-banner">
-          <span>ISSUE #01 // 2026 SPECIAL EDITION</span>
-          <span>CHOOSE YOUR DESTINY</span>
-        </div>
-        <div class="hero-split">
-          <!-- Thor Half -->
-          <div class="faction-half faction-thor">
-            <div>
-              <div class="faction-header">
-                <div class="faction-icon-box" id="hero-thor-icon"></div>
-                <div>
-                  <h2 class="faction-name">TEAM THOR</h2>
-                  <p class="faction-title">THE ASGARDIAN VANGUARD</p>
-                </div>
-              </div>
-              <p class="faction-desc">
-                For those whose spirit reflects unwavering calm, enduring stamina, and the resolute pulse of thunder.
-              </p>
-            </div>
-            <div class="faction-traits">
-              <span class="trait-tag">HIGH EQUILIBRIUM</span>
-              <span class="trait-tag">DEEP CADENCE</span>
-              <span class="trait-tag">RESOLUTE AGILITY</span>
+      <!-- Compact Interactive Faction Showcase -->
+      <div class="splash-hero compact-hero">
+        <div class="hero-compact-duel">
+          <div id="duel-thor-card" class="duel-faction-pill duel-thor" title="Click to summon Asgardian Thunder!">
+            <div class="duel-icon-circle" id="hero-thor-icon"></div>
+            <div class="duel-info">
+              <div class="duel-name">TEAM THOR</div>
+              <div class="duel-sub">THE ASGARDIAN VANGUARD &bull; HIGH EQUILIBRIUM</div>
             </div>
           </div>
 
-          <!-- Doom Half -->
-          <div class="faction-half faction-doom">
-            <div>
-              <div class="faction-header">
-                <div class="faction-icon-box" id="hero-doom-icon"></div>
-                <div>
-                  <h2 class="faction-name">TEAM DOOM</h2>
-                  <p class="faction-title">THE LATVERIAN OVERSEER</p>
-                </div>
-              </div>
-              <p class="faction-desc">
-                For those whose mind operates with razor-sharp intensity, unrelenting tactical focus, and iron will.
-              </p>
-            </div>
-            <div class="faction-traits">
-              <span class="trait-tag">TACTICAL INTENSITY</span>
-              <span class="trait-tag">ACUTE FOCUS</span>
-              <span class="trait-tag">IRON WILLPOWER</span>
+          <div class="duel-vs-badge" id="duel-vs-burst" title="The War of Micro-Signals">
+            <span>VS</span>
+          </div>
+
+          <div id="duel-doom-card" class="duel-faction-pill duel-doom" title="Click to summon Latverian Steel!">
+            <div class="duel-icon-circle" id="hero-doom-icon"></div>
+            <div class="duel-info">
+              <div class="duel-name">TEAM DOOM</div>
+              <div class="duel-sub">THE LATVERIAN OVERSEER &bull; ACUTE TACTICAL WILL</div>
             </div>
           </div>
         </div>
@@ -87,9 +74,10 @@
       <div class="action-gate">
         <h2 class="gate-headline">STEP FORTH TO BE SORTED</h2>
         <p class="gate-subhead">
-          Your physical micro-rhythms or tactical instincts will forge your collectible trading card. Select your trial:
+          Your physical micro-rhythms, facial nature, or tactical instincts will forge your vintage comic cover:
         </p>
         <div class="gate-options">
+          <!-- Choice 1: The Trial of Worthiness (Presage) -->
           <div class="choice-box">
             <div id="choice-camera-icon"></div>
             <div>
@@ -103,6 +91,21 @@
             </button>
           </div>
 
+          <!-- Choice 2: Strange Reading (Astral Face Reading) -->
+          <div class="choice-box">
+            <div id="choice-strange-icon"></div>
+            <div>
+              <h3 class="choice-title">STRANGE READING</h3>
+              <p class="choice-desc">
+                The Astral Mirror reads your natural temperament — diagnosing serene calm vs arcane tactical focus from facial micro-signals.
+              </p>
+            </div>
+            <button id="btn-start-strange-flow" class="comic-btn" style="width: 100%; background: #E65100; color: #FFFFFF;">
+              <span>ASTRAL FACE READING</span>
+            </button>
+          </div>
+
+          <!-- Choice 3: The Overseer's Inquiry (Bypass Mode) -->
           <div class="choice-box">
             <div id="choice-inquiry-icon"></div>
             <div>
@@ -134,8 +137,13 @@
           </div>
         </div>
 
+        <div class="hud-guidance-banner" id="hud-guidance-banner">
+          CALIBRATING OPTICAL CADENCE...
+        </div>
+
         <div class="hud-stage">
           <video id="camera-preview" class="hud-video" playsinline muted autoplay></video>
+          <canvas id="face-mesh-canvas" class="hud-mesh-canvas"></canvas>
           <div class="reticle-frame">
             <div class="reticle-oval"></div>
           </div>
@@ -153,6 +161,10 @@
           <div class="hud-stat-box">
             <div class="hud-stat-label">AUTONOMIC TONE</div>
             <div class="hud-stat-val" id="hud-calm-val">STABILIZING</div>
+          </div>
+          <div class="hud-stat-box">
+            <div class="hud-stat-label">FACE DISPOSITION</div>
+            <div class="hud-stat-val" id="hud-expr-val" style="font-size: 22px;">RESOLUTE</div>
           </div>
         </div>
 
@@ -200,7 +212,7 @@
         <div class="card-actions-toolbar">
           <button id="btn-download-card" class="comic-btn comic-btn-gold">
             <span id="btn-download-icon"></span>
-            <span>DOWNLOAD TRADING CARD</span>
+            <span>DOWNLOAD COMIC COVER</span>
           </button>
           <button id="btn-share-x" class="comic-btn comic-btn-dark">
             <span id="btn-share-icon"></span>
@@ -210,6 +222,12 @@
             <span>TRY ANOTHER TRIAL</span>
           </button>
         </div>
+
+        <!-- Strange Reading Thermal Heat Map Mount -->
+        <div id="heatmap-mount" style="width: 100%; display: flex; justify-content: center;"></div>
+
+        <!-- Biometric Stat Dashboard Mount -->
+        <div id="stat-dossier-mount" style="width: 100%; display: flex; justify-content: center;"></div>
       </div>
     </section>
   </main>

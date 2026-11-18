@@ -12,6 +12,8 @@
   --doom-emerald: #00C853;
   --doom-steel: #D4D8DD;
   --doom-dark: #141D17;
+  --strange-orange: #E65100;
+  --strange-amber: #FFD54F;
   --card-border-radius: 20px;
 }
 
@@ -24,13 +26,132 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: var(--paper);
-  color: var(--ink);
+  color: #111116;
   min-height: 100vh;
   overflow-x: hidden;
-  /* Ben-Day Halftone Dot Overlay */
-  background-image: radial-gradient(rgba(17, 17, 22, 0.08) 1.5px, transparent 1.5px);
-  background-size: 16px 16px;
+  /* Dual Faction Clash: Thunder Azure/Gold on Left vs Emerald Latverian Mist on Right */
+  background: 
+    radial-gradient(rgba(0, 0, 0, 0.35) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 10% 20%, rgba(0, 229, 255, 0.28) 0%, transparent 45%),
+    radial-gradient(circle at 25% 70%, rgba(255, 204, 0, 0.22) 0%, transparent 40%),
+    radial-gradient(circle at 90% 20%, rgba(0, 200, 83, 0.3) 0%, transparent 45%),
+    radial-gradient(circle at 75% 75%, rgba(0, 230, 118, 0.22) 0%, transparent 40%),
+    linear-gradient(115deg, #07111D 0%, #0c1a2c 45%, #092015 55%, #05140b 100%);
+  background-size: 16px 16px, auto, auto, auto, auto, auto;
+  background-attachment: fixed;
+}
+
+/* MARVEL-STYLE COMIC FLIPBOOK INTRO LOADER */
+.marvel-loader-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #080406;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+  overflow: hidden;
+}
+
+.marvel-loader-backdrop.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.marvel-logo-box {
+  background: #E23636;
+  border: 4px solid #FFFFFF;
+  box-shadow: 0 0 50px rgba(226, 54, 54, 0.7), 8px 8px 0 #111116;
+  padding: 16px 36px 12px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: logoZoom 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.marvel-flipbook-container {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flip-panel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    #111116,
+    #111116 10px,
+    #FFFFFF 10px,
+    #FFFFFF 20px
+  );
+  animation: pageFlip 0.12s linear infinite;
+}
+
+@keyframes pageFlip {
+  0% { transform: scale(1) rotate(0deg); opacity: 0.7; filter: grayscale(1); }
+  50% { transform: scale(1.04) rotate(0.8deg); opacity: 0.35; filter: contrast(1.6); }
+  100% { transform: scale(0.97) rotate(-0.8deg); opacity: 0.85; filter: sepia(0.6); }
+}
+
+@keyframes logoZoom {
+  0% { transform: scale(0.7); opacity: 0; }
+  25% { transform: scale(1.03); opacity: 1; }
+  80% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.1); opacity: 0.95; }
+}
+
+.marvel-logo-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 76px;
+  letter-spacing: 4px;
+  color: #FFFFFF;
+  text-shadow: 3px 3px 0 #111116;
+  line-height: 0.9;
+  position: relative;
+  z-index: 2;
+}
+
+.marvel-logo-sub {
+  font-family: 'Bangers', sans-serif;
+  font-size: 16px;
+  letter-spacing: 6px;
+  color: #FFFFFF;
+  background: #111116;
+  padding: 3px 12px;
+  margin-top: 8px;
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+}
+
+.marvel-skip-btn {
+  position: absolute;
+  bottom: 32px;
+  font-family: 'Bangers', sans-serif;
+  font-size: 15px;
+  letter-spacing: 1.5px;
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  padding: 6px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.marvel-skip-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
 }
 
 /* App Header Nav */
@@ -157,120 +278,120 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
-/* PHASE 1: Comic Cover Splash Screen */
-.splash-hero {
+/* COMPACT & INTERACTIVE FACTION DUEL SHOWCASE */
+.splash-hero.compact-hero {
   border: 4px solid var(--ink);
   border-radius: 16px;
-  background: #FFFFFF;
+  background: #111116;
   box-shadow: 8px 8px 0 var(--ink);
   overflow: hidden;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
-.hero-banner {
-  background: var(--ink);
-  color: #FFFFFF;
-  padding: 12px 20px;
+.hero-compact-duel {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-family: 'Bangers', sans-serif;
-  letter-spacing: 1px;
-}
-
-.hero-split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 380px;
-}
-
-@media (max-width: 768px) {
-  .hero-split {
-    grid-template-columns: 1fr;
-  }
-}
-
-.faction-half {
-  padding: 36px 28px;
-  display: flex;
-  flex-direction: column;
   justify-content: space-between;
+  gap: 14px;
+  padding: 12px 18px;
+  background: #111116;
   position: relative;
-  overflow: hidden;
 }
 
-.faction-thor {
-  background: linear-gradient(135deg, #FFF9D2 0%, #FFF199 100%);
-  border-right: 4px solid var(--ink);
-}
-
-@media (max-width: 768px) {
-  .faction-thor {
-    border-right: none;
-    border-bottom: 4px solid var(--ink);
+@media (max-width: 680px) {
+  .hero-compact-duel {
+    flex-direction: column;
+    gap: 8px;
   }
 }
 
-.faction-doom {
-  background: linear-gradient(135deg, #D4FCDA 0%, #A9F5B6 100%);
-}
-
-.faction-header {
+.duel-faction-pill {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 16px;
-}
-
-.faction-icon-box {
-  width: 56px;
-  height: 56px;
+  padding: 10px 16px;
   border: 3px solid var(--ink);
   border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.2, 0, 0.2, 1);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
+}
+
+.duel-thor {
+  background: linear-gradient(135deg, #FFF9D2 0%, #FFCC00 100%);
+}
+
+.duel-thor:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.7), 4px 4px 0 var(--ink);
+  border-color: var(--thor-azure);
+}
+
+.duel-doom {
+  background: linear-gradient(135deg, #D4FCDA 0%, #00C853 100%);
+  color: #111116;
+}
+
+.duel-doom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px rgba(0, 200, 83, 0.7), 4px 4px 0 var(--ink);
+  border-color: #A9F5B6;
+}
+
+.duel-icon-circle {
+  width: 44px;
+  height: 44px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--ink);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #FFFFFF;
-  box-shadow: 3px 3px 0 var(--ink);
-}
-
-.faction-name {
-  font-family: 'Bangers', sans-serif;
-  font-size: 38px;
-  letter-spacing: 1.5px;
-  line-height: 1;
-}
-
-.faction-title {
-  font-weight: 800;
-  font-size: 13px;
-  letter-spacing: 1.5px;
-  color: #4A4A52;
-}
-
-.faction-desc {
-  font-size: 15px;
-  line-height: 1.5;
-  color: #2D2D33;
-  margin-bottom: 24px;
-  font-weight: 600;
-}
-
-.faction-traits {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.trait-tag {
-  background: #FFFFFF;
-  border: 2px solid var(--ink);
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
+  flex-shrink: 0;
   box-shadow: 2px 2px 0 var(--ink);
+}
+
+.duel-info {
+  text-align: left;
+}
+
+.duel-name {
+  font-family: 'Bangers', sans-serif;
+  font-size: 26px;
+  letter-spacing: 1px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.duel-sub {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #2D2D33;
+  margin-top: 2px;
+}
+
+.duel-vs-badge {
+  background: #E23636;
+  border: 3px solid #FFFFFF;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bangers', sans-serif;
+  font-size: 20px;
+  color: #FFFFFF;
+  box-shadow: 0 0 12px rgba(226, 54, 54, 0.6), 2px 2px 0 var(--ink);
+  flex-shrink: 0;
+  animation: vsPulse 1.8s infinite ease-in-out;
+}
+
+@keyframes vsPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 
 /* Action Gate Card */
@@ -301,11 +422,11 @@ body {
 
 .gate-options {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   .gate-options {
     grid-template-columns: 1fr;
   }
@@ -437,11 +558,26 @@ body {
   box-shadow: 3px 3px 0 #000000;
 }
 
+.hud-guidance-banner {
+  background: #1C1E24;
+  color: var(--thor-gold);
+  border: 2px solid var(--thor-gold);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-family: 'Bangers', sans-serif;
+  font-size: 17px;
+  letter-spacing: 1px;
+  text-align: center;
+  margin: 14px 24px 0;
+  box-shadow: 0 0 12px rgba(255, 204, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
 .hud-stage {
   position: relative;
   width: 100%;
   max-width: 640px;
-  margin: 20px auto;
+  margin: 16px auto 20px;
   aspect-ratio: 4 / 3;
   border: 4px solid #2B2F38;
   border-radius: 12px;
@@ -456,6 +592,16 @@ body {
   transform: scaleX(-1); /* Mirror camera */
 }
 
+.hud-mesh-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  transform: scaleX(-1); /* Mirror overlay matching video */
+}
+
 /* Reticle Overlay */
 .reticle-frame {
   position: absolute;
@@ -464,6 +610,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 5;
 }
 
 .reticle-oval {
@@ -483,12 +630,18 @@ body {
 /* HUD Live Readouts */
 .hud-telemetry {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  padding: 16px 24px 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 0 24px 20px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .hud-telemetry {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
   .hud-telemetry {
     grid-template-columns: 1fr;
   }
@@ -615,26 +768,207 @@ body {
   color: #4A4A52;
 }
 
-/* Card 3D Wrap */
+/* Card 3D Wrap & Comic Cover Presentation */
 .card-3d-wrap {
   perspective: 1000px;
-  width: 360px;
-  max-width: 90vw;
+  width: 480px;
+  max-width: 94vw;
   cursor: pointer;
 }
 
 .card-canvas-display {
   width: 100%;
   height: auto;
-  border-radius: var(--card-border-radius);
-  box-shadow: 12px 16px 0 var(--ink), 0 20px 40px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  box-shadow: 12px 16px 0 var(--ink), 0 20px 40px rgba(0, 0, 0, 0.35);
   transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.2s ease;
   transform-style: preserve-3d;
 }
 
 .card-3d-wrap:hover .card-canvas-display {
   transform: translateY(-8px) scale(1.02);
-  box-shadow: 16px 22px 0 var(--ink), 0 28px 50px rgba(0, 0, 0, 0.35);
+  box-shadow: 16px 24px 0 var(--ink), 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* BIOMETRIC STAT DOSSIER DASHBOARD */
+.stat-dossier-box {
+  width: 100%;
+  max-width: 860px;
+  background: #FFFFFF;
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  box-shadow: 8px 8px 0 var(--ink);
+  padding: 24px 28px;
+  margin-top: 10px;
+}
+
+.dossier-header {
+  border-bottom: 3px solid var(--ink);
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.dossier-title-tag {
+  font-family: 'Bangers', sans-serif;
+  font-size: 26px;
+  letter-spacing: 1px;
+}
+
+.dossier-sub-id {
+  font-size: 12px;
+  font-weight: 700;
+  color: #61616B;
+}
+
+.dossier-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .dossier-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dossier-card {
+  background: #FAF8F2;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.dossier-card-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+
+.dossier-metrics-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.dossier-metric {
+  text-align: center;
+  flex: 1;
+}
+
+.dossier-val {
+  font-family: 'Bangers', sans-serif;
+  font-size: 32px;
+  line-height: 1;
+  display: block;
+}
+
+.dossier-unit {
+  font-size: 11px;
+  font-weight: 800;
+  color: #71717A;
+}
+
+.dossier-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #52525B;
+  margin-top: 4px;
+}
+
+.dossier-bar-wrap {
+  margin-top: 10px;
+}
+
+.dossier-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.dossier-bar-track {
+  height: 12px;
+  background: #E4E4E7;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.dossier-bar-fill {
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+.dossier-note {
+  font-size: 13px;
+  font-weight: 600;
+  color: #3F3F46;
+  line-height: 1.4;
+  margin-top: 8px;
+}
+
+.dossier-expr-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.expr-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.expr-name {
+  width: 70px;
+  font-family: 'Bangers', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.expr-track {
+  flex: 1;
+  height: 10px;
+  background: #E4E4E7;
+  border: 2px solid var(--ink);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.expr-fill {
+  height: 100%;
+}
+
+.expr-num {
+  width: 36px;
+  text-align: right;
+  font-family: 'Bangers', sans-serif;
+  font-size: 14px;
+}
+
+.dossier-summary-stat {
+  text-align: left;
+}
+
+.dossier-summary-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-family: 'Bangers', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  box-shadow: 2px 2px 0 var(--ink);
 }
 
 /* Card Actions Toolbar */
@@ -705,3 +1039,179 @@ body {
   color: #666670;
   font-weight: 600;
 }
+
+/* STRANGE READING: ASTRAL FACIAL HEAT MAP & DISCLAIMER */
+.heatmap-panel-box {
+  width: 100%;
+  max-width: 860px;
+  background: #0E1322;
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  box-shadow: 8px 8px 0 var(--ink);
+  padding: 24px 28px;
+  margin-top: 16px;
+  color: #FFFFFF;
+}
+
+.heatmap-header {
+  border-bottom: 3px solid #232B45;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.heatmap-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 30px;
+  letter-spacing: 1.5px;
+  color: #FF9800;
+  text-shadow: 2px 2px 0 var(--ink);
+  line-height: 1.1;
+}
+
+.heatmap-sub {
+  font-size: 12px;
+  font-weight: 800;
+  color: #00E5FF;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+.heatmap-body-layout {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+}
+
+@media (max-width: 768px) {
+  .heatmap-body-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.heatmap-canvas-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #060810;
+  padding: 14px;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 var(--ink);
+  flex-shrink: 0;
+}
+
+.thermal-canvas {
+  border-radius: 8px;
+  border: 2px solid #232B45;
+  max-width: 100%;
+  height: auto;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.thermal-legend-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #A0AABF;
+}
+
+.thermal-gradient-strip {
+  flex: 1;
+  height: 10px;
+  margin: 0 10px;
+  border-radius: 5px;
+  border: 1px solid #232B45;
+  background: linear-gradient(90deg, #00E5FF 0%, #00C853 35%, #FFB300 70%, #FF1744 100%);
+}
+
+.heatmap-features-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  flex: 1;
+}
+
+@media (max-width: 580px) {
+  .heatmap-features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feature-card {
+  background: #161D33;
+  border: 2px solid #2E3856;
+  border-radius: 10px;
+  padding: 12px 14px;
+  text-align: left;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.feature-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.feature-badge {
+  font-family: 'Bangers', sans-serif;
+  font-size: 13px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #FFFFFF;
+  letter-spacing: 0.5px;
+}
+
+.feature-temp {
+  font-family: 'Bangers', sans-serif;
+  font-size: 14px;
+  color: #FFCC00;
+  letter-spacing: 0.5px;
+}
+
+.feature-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0.6px;
+  margin-bottom: 4px;
+}
+
+.feature-desc {
+  font-size: 12px;
+  color: #C5CEE0;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.heatmap-disclaimer-box {
+  margin-top: 20px;
+  background: #FFF3E0;
+  border: 3px solid #E65100;
+  border-radius: 10px;
+  padding: 14px 18px;
+  box-shadow: 4px 4px 0 #E65100;
+  text-align: left;
+}
+
+.disclaimer-title {
+  font-family: 'Bangers', sans-serif;
+  font-size: 18px;
+  color: #D84315;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+
+.disclaimer-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #37474F;
+  line-height: 1.5;
+}
+

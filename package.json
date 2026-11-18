@@ -8,10 +8,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "deploy": "wrangler pages deploy dist --project-name=face-day",
+    "deploy": "wrangler deploy",
     "bridge": "node local-runner/bridge.mjs",
-    "mcp-auth": "node scripts/mcp-auth.mjs",
-    "postinstall": "node scripts/patch-wrangler.mjs"
+    "mcp-auth": "node scripts/mcp-auth.mjs"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4"
@@ -20,6 +19,6 @@
     "@types/canvas-confetti": "^1.9.0",
     "typescript": "^5.8.2",
     "vite": "^6.2.0",
-    "wrangler": "^3.114.0"
+    "wrangler": "^3.114.17"
   }
 }

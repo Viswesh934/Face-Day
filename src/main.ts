@@ -19,8 +19,6 @@ const elements = {
   // Navigation
   navHammer: $('nav-hammer-icon'),
   navMask: $('nav-mask-icon'),
-  btnNavWarbid: $('btn-nav-warbid'),
-  navWarbidIcon: $('nav-warbid-icon'),
   soundIcon: $('sound-icon'),
   vaultIcon: $('vault-icon'),
   btnSound: $('btn-sound'),
@@ -162,7 +160,6 @@ const inquiryAnswers: number[] = [];
 function mountIcons() {
   if (elements.navHammer) elements.navHammer.innerHTML = icons.hammer;
   if (elements.navMask) elements.navMask.innerHTML = icons.mask;
-  if (elements.navWarbidIcon) elements.navWarbidIcon.innerHTML = icons.capShield;
   if (elements.soundIcon) elements.soundIcon.innerHTML = icons.soundOn;
   if (elements.vaultIcon) elements.vaultIcon.innerHTML = icons.deck;
 
@@ -764,7 +761,7 @@ function renderVaultList() {
   });
 }
 
-// Compact Duel Interactions & Warbid Nav
+// Compact Duel Interactions
 function initDuelShowcase() {
   elements.duelThorCard?.addEventListener('click', () => {
     sound.playThunder();
@@ -777,39 +774,11 @@ function initDuelShowcase() {
   elements.duelVsBurst?.addEventListener('click', () => {
     sound.playClick();
   });
-
-  // Top Nav Warbid Console Trigger
-  elements.btnNavWarbid?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    multiverseNexusPod.toggleMenu();
-  });
-}
-
-// Live Bridge Status Indicator
-function initBridgeStatus() {
-  const updateUi = (info: { connected: boolean; hasApiKey: boolean; sdkAvailable: boolean; mode: string }) => {
-    if (elements.bridgeDot && elements.bridgeStatusLabel) {
-      if (info.connected && info.sdkAvailable) {
-        elements.bridgeDot.className = 'bridge-dot online';
-        elements.bridgeStatusLabel.textContent = 'PRESAGE C-API: ACTIVE';
-      } else if (info.connected) {
-        elements.bridgeDot.className = 'bridge-dot online';
-        elements.bridgeStatusLabel.textContent = 'BRIDGE: CONNECTED';
-      } else {
-        elements.bridgeDot.className = 'bridge-dot local';
-        elements.bridgeStatusLabel.textContent = 'BROWSER OPTICAL: READY';
-      }
-    }
-  };
-
-  bridge.onConnectionChange = updateUi;
-  updateUi(bridge.currentStatus);
 }
 
 // App Initialization
 function bootstrap() {
   mountIcons();
-  initBridgeStatus();
   initDuelShowcase();
   initSoundControls();
   initCameraFlow();

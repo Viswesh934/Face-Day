@@ -1,133 +1,133 @@
-# ⚡ Face Day: The Biometric Battleground
-> *"An edge-powered comic trading card battleground where real physiological micro-signals determine your allegiance to Team Thor (The Hammer) or Team Doom (The Mask)."*
-
-Built for the **Presage SmartSpectra SDK Challenge on DEV Community (Creativity Track)**.
-
----
-
-## 🎮 The Concept
-
-Rather than displaying vital signs in clinical charts or diagnostic dashboards, **Face Day** transforms contactless human sensing into a tangible, collectible trading card game.
-
-Players step before the interface and undergo sorting into one of two legendary comic factions:
-* **Team Thor (The Asgardian Vanguard):** Driven by parasympathetic calm, resilient heart-rate variability (HRV), and deep rhythmic cadence. Represented by the **War Hammer (Mjolnir)**.
-* **Team Doom (The Latverian Overseer):** Driven by tactical intensity, acute sympathetic focus, and iron willpower. Represented by the **Iron Mask**.
-
-Every completed trial mints an authentic **RPG Collectible Trading Card** (complete with rarity tiers, foil sheen, custom vector artwork, numbered edition stamp, and attributes: *Agility, Endurance, Focus, Willpower*).
+# FACE DAY: THE BIOMETRIC BATTLEGROUND
+> **Issue #001 &bull; Fall of the Sovereign &bull; An Edge-Powered Comic Trading Card Game**
+> 
+> *Created for the Presage SmartSpectra SDK Challenge on DEV Community (Creativity Track).*
 
 ---
 
-## 🕹️ Core Gameplay (The 3 Phases)
-
-### Phase 1: The Choice & Consent Gate
-* **Vintage Comic Cover:** Inked borders, halftone Ben-Day dots, split faction preview.
-* **Explicit Consent Flow:** 100% client-side privacy disclosure informing users that video frames are processed locally in browser memory with zero network transmission.
-* **Two Gameplay Paths:**
-  1. **The Trial of Worthiness (Live Camera):** 30-second contactless physiological reading.
-  2. **The Overseer's Inquiry (Bypass Mode):** 4-question interactive comic tactical scenario trial for zero-camera or restricted devices.
-
-### Phase 2: The Chamber of Trials
-* **Live Camera HUD:** Mirrored video feed with comic targeting reticle, real-time pulse cadence (BPM), respiratory rhythm (/min), and autonomic equilibrium status.
-* **Overseer's Inquiry Matrix:** Dynamic tactical dilemmas diagnosing player disposition through action choices.
-
-### Phase 3: The Decree & Collectible Card
-* **Faction Decree:** Dramatic screen shake, procedural Web Audio fanfare (Thunder crash for Thor, Latverian metallic resonance for Doom), and confetti burst.
-* **Trading Card Canvas:** High-resolution 750x1050 HTML5 2D Canvas rendering a physical card (Pokémon / Marvel Snap / OverPower style) with holographic foil effect on Ultra-Rare and Legendary tiers.
-* **Actions:**
-  * 1-Click **Download PNG** for your offline collection.
-  * Direct **Post to X (Twitter)** intent.
-  * **My Card Vault:** Stored locally in `localStorage` to view, inspect, and re-download past minted cards.
+![Face Day Front Cover](docs/screenshots/01-comic-cover.png)
 
 ---
 
-## 🔒 Privacy & Edge Architecture
+## The Concept
 
-* **100% Client-Side:** Deployed on **Cloudflare Edge** via Wrangler (`wrangler.jsonc`).
-* **Zero Backend Storage:** No external databases, no analytics logging, and zero image/video data leaves the client device.
-* **Local Storage Sandbox:** The user's deck is saved strictly in browser `localStorage`.
-* **Zero Emoji Spam:** Strict visual design using custom inline vector SVGs (Hammer, Mask, Shield, Crosshairs, Stars) and bold comic typography (`Bangers`, `Comic Neue`, `Inter`).
+In vintage comic lore, destiny is never chosen—it is revealed. 
 
----
+**Face Day** transforms contactless facial sensing into a physical retro comic trading card battleground. Instead of sterile medical dashboards or clinical heart-rate graphs, your real physiological cadence, facial expressions, and tactical instincts forge an authentic, collectible trading card drafting you into one of two legendary factions:
 
-## ⚡ Presage SmartSpectra Integration & 30s Credit Guard
+* **TEAM THOR (The Asgardian Vanguard):** Powered by deep parasympathetic calm, resilient cardiac variability, and unshakeable fortitude. Bearing the **War Hammer (Mjolnir)** in Celestial Gold and Lightning Azure.
+* **TEAM DOOM (The Latverian Overseer):** Powered by acute sympathetic focus, tactical composure under pressure, and relentless iron willpower. Bearing the **Iron Mask** in Emerald Green and Titanium Steel.
 
-Presage developer accounts allocate 1 credit per 30-second measurement. Face Day implements a strict **30-Second Credit Guard**:
-1. At millisecond 30,000, the session automatically invokes `sdk.stop()`, consuming exactly 1 credit per live run.
-2. Dual-mode engine architecture:
-   * **Local Hardware Bridge (`local-runner/bridge.mjs`):** Connects to `@smartspectra/node-sdk` via native C-API FFI, decoding metrics (`cardio`, `breathing`, `face`) over local WebSocket (`ws://127.0.0.1:8765`).
-   * **In-Browser Camera Scanner (`src/optical-vitals.ts`):** Native optical chrominance & respiratory tracking inside the browser canvas for direct edge testing.
-   * **Overseer's Inquiry (Bypass Mode):** 100% camera-free evaluation.
+Every completed trial renders an authentic **Physical Trading Card** with dynamic foil shimmer, unique collector numbers (`#001/050`), rarity grades, and RPG combat stats (*Agility, Endurance, Focus, Willpower*).
 
 ---
 
-## 🚀 Quickstart & Development
+## Minted Trading Cards
 
-### 1. Prerequisites
-* Node.js 20+ (Node 24 recommended)
-* npm 10+
+| Team Thor &bull; The Asgardian Vanguard | Team Doom &bull; The Latverian Overseer |
+| :---: | :---: |
+| ![Team Thor Minted Card](docs/screenshots/06-minted-card-thor.png) | ![Team Doom Minted Card](docs/screenshots/05-minted-card-doom.png) |
+| *High Calm &bull; Resilient Cadence &bull; Legendary Foil* | *Acute Focus &bull; Tactical Will &bull; Ultra-Rare Foil* |
 
-### 2. Install Dependencies
+---
+
+## The Game Experience
+
+### 1. The Chamber of Decision & Consent Gate
+Before any trial begins, players are presented with an explicit, vintage comic consent gate. 
+
+![The Chamber of Decision](docs/screenshots/02-consent-gate.png)
+
+* **100% Client-Side:** Video frames are analyzed in local runtime memory. Zero video or photographic data is ever recorded, stored, or transmitted over the wire.
+* **Two Playable Paths:** Players can enter via the live camera mirror or bypass directly into the tactical scenario inquiry.
+
+---
+
+### 2. Path A: The Trial of Worthiness (Live Camera HUD)
+Step before the mirror for a 30-second assessment. 
+
+![The Chamber of Trials](docs/screenshots/04-camera-trial-hud.png)
+
+* **Comic Reticle & Dynamic Resonance:** The live camera HUD tracks your face within an inked targeting frame. The **Asgardian vs Latverian Resonance Gauge** shifts in real time between Thor (Azure) and Doom (Emerald) as your micro-signals fluctuate.
+* **Live Cardiac Oscilloscope:** A vintage cathode-ray CRT wave displays real-time pulse cadence alongside breath cadence and facial expression classifications.
+* **Strict 30-Second Watchdog:** The session automatically concludes at second 30, preserving API credits while collecting sufficient cadence data.
+
+---
+
+### 3. Path B: The Overseer's Inquiry (Tactical Quiz Bypass)
+For players on devices without a webcam or who prefer pure tactical decision-making.
+
+![The Overseer's Inquiry](docs/screenshots/03-inquiry-quiz.png)
+
+* Four high-stakes tactical comic scenarios diagnose your moral alignment, instinct under fire, and faction allegiance.
+* Immediate calculation into the sorting engine with custom RPG stats.
+
+---
+
+### 4. The Decree & The Collector's Vault
+Upon trial completion, procedural Web Audio fanfare erupts (Asgardian thunder crash for Thor, heavy metallic resonance for Doom), minting your card directly onto an HTML5 canvas.
+
+![My Card Vault](docs/screenshots/07-card-vault.png)
+
+* **1-Click Download:** Export a high-resolution 750×1050 PNG ready for print or digital collection.
+* **Share on X:** Instant social sharing intent with your minted faction and archetype.
+* **The Deck Vault:** All your previously minted cards are automatically cataloged in your offline browser vault (`localStorage`), letting you inspect past draws, track faction balances, and build your deck.
+
+---
+
+## Visual Design System
+
+Face Day strictly adheres to a handcrafted retro comic book aesthetic:
+* **Inked Linework:** 2px to 4px solid `#111116` borders with offset drop shadows (`4px 4px 0 #111116`).
+* **Ben-Day Halftones:** Custom SVG dot patterns and action burst starbursts.
+* **Paper Textures:** Parchment undertones (`#F8F9FA` to `#FBF8EE`) evocative of classic newsprint comic panels.
+* **Zero Pictorial Emojis:** Strict prohibition on modern emoji characters in the UI. All emblems are custom vector SVGs (Mjolnir war hammer, Latverian iron mask, Captain America vibranium shield, targeting reticle, action bursts).
+* **Typography:** Vintage comic display typography (`Bangers`, `Comic Neue`, `Inter`).
+
+---
+
+## Quickstart
+
+### 1. Run the Frontend Locally
 ```bash
+# Clone the repository
+git clone https://github.com/Viswesh934/Face-Day.git
+cd Face-Day
+
+# Install dependencies
 npm install
-```
 
-### 3. Run Web App Locally
-```bash
+# Start Vite dev server
 npm run dev
 ```
-Open `http://localhost:5173` in your browser.
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### 4. Run the Presage SDK Dedicated Backend Locally
+---
+
+### 2. Run the Presage SmartSpectra Backend
+To power the live camera trial with genuine Presage SmartSpectra C++ biometrics:
+
 ```bash
+# Set your API Key from the Presage Developer Portal
 export SMARTSPECTRA_API_KEY="your-presage-api-key"
+
+# Start the dedicated WebSocket server
 npm run backend
 ```
-The backend starts on `ws://127.0.0.1:8765` with health checks on `http://127.0.0.1:8765/health`.
-
-### 5. Deploy Fullstack to Zerops (Frontend + Backend in One Repo)
-Face Day includes a ready-to-use `zerops.yml` that deploys both the native C++ Node backend and the Vite static frontend on [Zerops](https://zerops.io). See **[Zerops Fullstack Deployment Guide](file:///workspaces/Face-Day/docs/ZEROPS_DEPLOYMENT.md)**.
-
-### 6. Build for Production
-```bash
-npm run build
-```
-
-### 7. Deploy to Cloudflare Pages via Wrangler
-```bash
-npx wrangler pages deploy dist --project-name=face-day
-```
+The backend initializes the native SDK (`@smartspectra/node-sdk`) on port `8765`, listening for WebSocket camera streams and exposing health telemetry on `/health`.
 
 ---
 
-## 📁 Repository Structure
+### 3. Deploy Fullstack to Zerops
+Face Day includes a turnkey [zerops.yml](zerops.yml) configuration that deploys both the Ubuntu C++ Node.js backend container and the static Nginx frontend bundle in a single repository:
 
-```text
-Face-Day/
-├── AGENTS.md                  # Comic design rules & coding guidelines
-├── index.html                 # App layout & comic UI panels
-├── wrangler.jsonc             # Cloudflare Pages / Assets config
-├── docs/
-│   ├── ARCHITECTURE.md        # Technical architecture & security spec
-│   └── DEMO_SPEC.md           # 90s video demo script & judge criteria
-├── local-runner/
-│   ├── bridge.mjs             # Presage @smartspectra/node-sdk WebSocket bridge
-│   └── package.json           # Native FFI dependencies
-└── src/
-    ├── main.ts                # Application coordinator & phase controller
-    ├── style.css              # Vintage comic book styling & card foil CSS
-    ├── icons.ts               # Clean vector SVGs (Hammer, Mask, etc. - No emojis)
-    ├── sound-engine.ts        # Procedural Web Audio API sound synthesizer
-    ├── sorting-engine.ts      # Thor vs Doom heuristic & RPG stats calculator
-    ├── card-canvas.ts         # High-resolution physical trading card renderer
-    ├── card-deck.ts           # Local storage card vault manager
-    ├── optical-vitals.ts      # Browser-native camera optical vitals engine
-    └── biometric-bridge.ts    # Dual-mode connector (Hardware Bridge + Fallback)
-```
+* Read the complete deployment guide: [Zerops Fullstack Deployment Guide](docs/ZEROPS_DEPLOYMENT.md).
 
 ---
 
-## 🏆 Hackathon Submission Metadata
+## Submission Details
 
-* **Track:** Creativity Track
-* **Tags:** `#presagechallenge`, `javascript`, `webdev`, `cloudflare`
+* **Event:** Presage SmartSpectra SDK Challenge on DEV Community
+* **Category:** Creativity Track
+* **Core Technologies:** Presage SmartSpectra SDK (`@smartspectra/node-sdk`), TypeScript, Vite, Web Audio API, HTML5 Canvas 2D, Zerops
 * **License:** MIT

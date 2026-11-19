@@ -11,13 +11,15 @@
     "deploy": "wrangler deploy",
     "backend": "node server/index.mjs",
     "bridge": "node local-runner/bridge.mjs",
-    "mcp-auth": "node scripts/mcp-auth.mjs"
+    "mcp-auth": "node scripts/mcp-auth.mjs",
+    "screenshots": "node scripts/capture-screenshots.mjs"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
+    "playwright": "^1.65.1",
     "typescript": "^5.8.2",
     "vite": "^6.2.0",
     "wrangler": "^3.114.17"

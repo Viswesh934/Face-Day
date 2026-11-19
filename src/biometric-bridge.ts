@@ -25,6 +25,9 @@ export class BiometricBridge {
   private isWsConnected: boolean = false;
   private needsFrames: boolean = false;
   private activeMode: 'presage-hardware' | 'browser-camera' | 'synthetic' = 'browser-camera';
+  private latestPresageVitals: Partial<UnifiedVitals> = {};
+  private latestPresageGuidance: string = '';
+  private isTrialActive: boolean = false;
 
   public onUpdate?: (v: UnifiedVitals) => void;
   public onComplete?: (finalVitals: UnifiedVitals) => void;
@@ -139,8 +142,9 @@ export class BiometricBridge {
           this.needsFrames = !!data.needsFrames;
           console.log(`[Face Day] Presage Bridge configured: mode=${data.mode}, needsFrames=${this.needsFrames}`);
         } else if (data.type === 'validationStatus') {
-          if (this.onGuidance && data.guidance) {
-            this.onGuidance(data.guidance);
+          if (data.guidance) {
+            this.latestPresageGuidance = data.guidance;
+            if (this.onGuidance) this.onGuidance(data.guidance);
           }
         } else if (data.type === 'error') {
           console.warn('[Face Day] Presage Bridge returned error:', data.message);
@@ -148,31 +152,60 @@ export class BiometricBridge {
             // Presage server rejected key: seamlessly switch to optical scanner
             this.activeMode = 'browser-camera';
           }
+        } else if (data.type === 'tick') {
+          // Hardware bridge 1-second pulse to guarantee moving countdown
+          if (this.isTrialActive && this.activeMode === 'presage-hardware') {
+            const uv: UnifiedVitals = {
+              source: 'presage-hardware',
+              elapsed: data.elapsed ?? 0,
+              remaining: data.remaining ?? 30,
+              pulseBpm: this.latestPresageVitals.pulseBpm || 72,
+              breathingRate: this.latestPresageVitals.breathingRate || 14,
+              rmssd: this.latestPresageVitals.rmssd,
+              stressIndex: this.latestPresageVitals.stressIndex,
+              calmScore: this.latestPresageVitals.calmScore ?? 60,
+              landmarks: this.latestPresageVitals.landmarks,
+              expressions: this.latestPresageVitals.expressions,
+              primaryExpression: this.latestPresageVitals.primaryExpression,
+              guidanceText: this.latestPresageGuidance,
+              waveformY: this.latestPresageVitals.waveformY || 0
+            };
+            if (this.onUpdate) this.onUpdate(uv);
+          }
         } else if (data.type === 'metrics') {
           const uv: UnifiedVitals = {
             source: 'presage-hardware',
-            elapsed: data.elapsed || 0,
-            remaining: data.remaining || 30,
-            pulseBpm: data.pulseRate || 72,
-            breathingRate: data.breathingRate || 14,
+            elapsed: data.elapsed ?? 0,
+            remaining: data.remaining ?? 30,
+            pulseBpm: data.pulseRate || this.latestPresageVitals.pulseBpm || 72,
+            breathingRate: data.breathingRate || this.latestPresageVitals.breathingRate || 14,
             rmssd: data.rmssd,
             stressIndex: data.stressIndex,
-            calmScore: Math.round(data.rmssd ? Math.min(95, Math.max(10, (data.rmssd / 65) * 100)) : 60),
+            calmScore: Math.round(data.rmssd ? Math.min(95, Math.max(10, (data.rmssd / 65) * 100)) : (this.latestPresageVitals.calmScore ?? 60)),
             landmarks: data.landmarks,
             expressions: data.expressions,
-            primaryExpression: data.expressions ? this.getTopExpression(data.expressions) : undefined
+            primaryExpression: data.expressions ? this.getTopExpression(data.expressions) : this.latestPresageVitals.primaryExpression,
+            guidanceText: this.latestPresageGuidance
           };
+          this.latestPresageVitals = uv;
           if (this.onUpdate) this.onUpdate(uv);
         } else if (data.type === 'session_complete') {
-          if (this.onComplete) {
-            this.onComplete({
-              source: 'presage-hardware',
-              elapsed: 30,
-              remaining: 0,
-              pulseBpm: 72,
-              breathingRate: 14,
-              calmScore: 65
-            });
+          if (this.isTrialActive) {
+            this.isTrialActive = false;
+            if (this.onComplete) {
+              this.onComplete({
+                source: 'presage-hardware',
+                elapsed: 30,
+                remaining: 0,
+                pulseBpm: this.latestPresageVitals.pulseBpm || 72,
+                breathingRate: this.latestPresageVitals.breathingRate || 14,
+                calmScore: this.latestPresageVitals.calmScore ?? 65,
+                rmssd: this.latestPresageVitals.rmssd,
+                stressIndex: this.latestPresageVitals.stressIndex,
+                primaryExpression: this.latestPresageVitals.primaryExpression || 'Resolute',
+                expressions: this.latestPresageVitals.expressions
+              });
+            }
           }
         }
       } catch (e) {
@@ -194,8 +227,14 @@ export class BiometricBridge {
   }
 
   public async startTrial(videoEl: HTMLVideoElement, apiKey?: string): Promise<void> {
-    // Always configure optical callbacks so camera preview, face tracking and fallback work flawlessly
+    this.isTrialActive = true;
+    this.latestPresageVitals = {};
+    this.latestPresageGuidance = '';
+
+    // Always configure optical callbacks so camera preview, face tracking, countdown timer, and fallback work flawlessly
     this.optical.onUpdate = (opt: OpticalMetrics) => {
+      if (!this.isTrialActive) return;
+
       if (this.activeMode !== 'presage-hardware') {
         const uv: UnifiedVitals = {
           source: 'browser-camera',
@@ -211,22 +250,46 @@ export class BiometricBridge {
         };
         if (this.onUpdate) this.onUpdate(uv);
         if (this.onGuidance && opt.guidanceText) this.onGuidance(opt.guidanceText);
+      } else {
+        // Presage hardware active: keep the countdown timer moving on every frame, plus live waveform and fallback telemetry!
+        const uv: UnifiedVitals = {
+          source: 'presage-hardware',
+          elapsed: opt.elapsedSeconds,
+          remaining: opt.remainingSeconds,
+          pulseBpm: this.latestPresageVitals.pulseBpm || opt.pulseBpm,
+          breathingRate: this.latestPresageVitals.breathingRate || opt.breathingRate,
+          rmssd: this.latestPresageVitals.rmssd,
+          stressIndex: this.latestPresageVitals.stressIndex,
+          calmScore: this.latestPresageVitals.calmScore ?? opt.calmScore,
+          guidanceText: this.latestPresageGuidance || opt.guidanceText,
+          landmarks: this.latestPresageVitals.landmarks || opt.landmarks,
+          primaryExpression: this.latestPresageVitals.primaryExpression || opt.primaryExpression,
+          expressions: this.latestPresageVitals.expressions,
+          waveformY: opt.waveformY
+        };
+        if (this.onUpdate) this.onUpdate(uv);
+        if (this.onGuidance && (this.latestPresageGuidance || opt.guidanceText)) {
+          this.onGuidance(this.latestPresageGuidance || opt.guidanceText);
+        }
       }
     };
 
     this.optical.onComplete = (opt: OpticalMetrics) => {
-      if (this.activeMode !== 'presage-hardware') {
-        const finalV: UnifiedVitals = {
-          source: 'browser-camera',
-          elapsed: 30,
-          remaining: 0,
-          pulseBpm: opt.pulseBpm,
-          breathingRate: opt.breathingRate,
-          calmScore: opt.calmScore,
-          primaryExpression: opt.primaryExpression
-        };
-        if (this.onComplete) this.onComplete(finalV);
-      }
+      if (!this.isTrialActive) return;
+      this.isTrialActive = false;
+      const finalV: UnifiedVitals = {
+        source: this.activeMode,
+        elapsed: 30,
+        remaining: 0,
+        pulseBpm: this.latestPresageVitals.pulseBpm || opt.pulseBpm,
+        breathingRate: this.latestPresageVitals.breathingRate || opt.breathingRate,
+        calmScore: this.latestPresageVitals.calmScore ?? opt.calmScore,
+        rmssd: this.latestPresageVitals.rmssd,
+        stressIndex: this.latestPresageVitals.stressIndex,
+        primaryExpression: this.latestPresageVitals.primaryExpression || opt.primaryExpression,
+        expressions: this.latestPresageVitals.expressions
+      };
+      if (this.onComplete) this.onComplete(finalV);
     };
 
     this.optical.onError = (err) => {
@@ -253,7 +316,8 @@ export class BiometricBridge {
   }
 
   public stopTrial(): void {
-    if (this.activeMode === 'presage-hardware' && this.ws) {
+    this.isTrialActive = false;
+    if (this.activeMode === 'presage-hardware' && this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify({ type: 'stop' }));
     }
     this.optical.stop();

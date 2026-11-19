@@ -1,0 +1,45 @@
+# zerops.yml — Fullstack Deployment on Zerops
+# Deploys both:
+# 1. backend: Presage SmartSpectra Native C++ Engine (Ubuntu Node.js 20 with WebSockets)
+# 2. frontend: Face Day Comic Battleground (Vite Static SPA with Nginx)
+
+zerops:
+  # ========================================================
+  # Service 1: Backend (Presage SmartSpectra C++ WebSocket Server)
+  # ========================================================
+  - setup: backend
+    build:
+      base: ubuntu/nodejs@20
+      prepareCommands:
+        - sudo apt-get update
+        - sudo apt-get install -y --no-install-recommends libgomp1
+      buildCommands:
+        - cd server && npm install
+      deployFiles:
+        - server
+    run:
+      base: ubuntu/nodejs@20
+      prepareCommands:
+        - sudo apt-get update
+        - sudo apt-get install -y --no-install-recommends libgomp1
+      ports:
+        - port: 8765
+          httpSupport: true
+      envVariables:
+        PORT: 8765
+      start: node server/index.mjs
+
+  # ========================================================
+  # Service 2: Frontend (Face Day Comic Battleground SPA)
+  # ========================================================
+  - setup: frontend
+    build:
+      base: nodejs@20
+      buildCommands:
+        - npm install
+        - npm run build
+      deployFiles:
+        - dist/~
+      cache: node_modules
+    run:
+      base: static

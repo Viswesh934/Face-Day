@@ -77,20 +77,22 @@ npm run dev
 ```
 Open `http://localhost:5173` in your browser.
 
-### 4. Run the Presage SDK Dedicated Backend (AWS App Runner & Local)
+### 4. Run the Presage SDK Dedicated Backend Locally
 ```bash
 export SMARTSPECTRA_API_KEY="your-presage-api-key"
 npm run backend
 ```
 The backend starts on `ws://127.0.0.1:8765` with health checks on `http://127.0.0.1:8765/health`.
-For 1-click cloud deployment on AWS App Runner within a $5 budget, see **[AWS App Runner Deployment Guide](file:///workspaces/Face-Day/docs/AWS_APP_RUNNER.md)**.
 
-### 5. Build for Production
+### 5. Deploy Fullstack to Zerops (Frontend + Backend in One Repo)
+Face Day includes a ready-to-use `zerops.yml` that deploys both the native C++ Node backend and the Vite static frontend on [Zerops](https://zerops.io). See **[Zerops Fullstack Deployment Guide](file:///workspaces/Face-Day/docs/ZEROPS_DEPLOYMENT.md)**.
+
+### 6. Build for Production
 ```bash
 npm run build
 ```
 
-### 6. Deploy to Cloudflare Pages via Wrangler
+### 7. Deploy to Cloudflare Pages via Wrangler
 ```bash
 npx wrangler pages deploy dist --project-name=face-day
 ```

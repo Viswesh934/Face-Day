@@ -33,6 +33,8 @@ console.log(`[Face Day Bridge] WebSocket bridge listening on ws://127.0.0.1:${PO
 
 let sdkInstance = null;
 let watchdogTimer = null;
+let tickTimer = null;
+let sessionStartTime = 0;
 let activeSessionMode = 'none';
 
 // Load @smartspectra/node-sdk
@@ -85,6 +87,10 @@ async function stopSession() {
   if (watchdogTimer) {
     clearTimeout(watchdogTimer);
     watchdogTimer = null;
+  }
+  if (tickTimer) {
+    clearInterval(tickTimer);
+    tickTimer = null;
   }
   if (sdkInstance) {
     try {
@@ -222,8 +228,13 @@ wss.on('connection', (ws) => {
               }
             }
 
+            const elapsed = Math.min(30, Math.floor((Date.now() - sessionStartTime) / 1000));
+            const remaining = Math.max(0, 30 - elapsed);
+
             broadcast({
               type: 'metrics',
+              elapsed,
+              remaining,
               pulseRate,
               breathingRate,
               rmssd,
@@ -251,8 +262,22 @@ wss.on('connection', (ws) => {
           }
         });
 
+        sessionStartTime = Date.now();
         sdkInstance.start();
         broadcast({ type: 'session_started', durationSeconds: 30 });
+
+        // Ticking interval to ensure countdown timer updates every second
+        tickTimer = setInterval(() => {
+          if (activeSessionMode !== 'none') {
+            const elapsed = Math.min(30, Math.floor((Date.now() - sessionStartTime) / 1000));
+            const remaining = Math.max(0, 30 - elapsed);
+            broadcast({
+              type: 'tick',
+              elapsed,
+              remaining
+            });
+          }
+        }, 1000);
 
         // Enforce exact 30-second measurement cycle to use exactly 1 credit
         watchdogTimer = setTimeout(async () => {
